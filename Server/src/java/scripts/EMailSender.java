@@ -20,7 +20,6 @@ public class EMailSender {
     public static synchronized boolean send(User user, String token) {
 
         String to = user.geteMail();
-        String from = "olesialokkina@gmail.com";
 
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
