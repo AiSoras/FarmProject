@@ -25,8 +25,5 @@ public interface ObjectService {
     public void deleteObject(Object object);
     
     public List<User> getListOfUsersLike(String query);
-    
-//    public void serialization(Object object);
-//    
-//    public Object deserialization();
+   
 }
