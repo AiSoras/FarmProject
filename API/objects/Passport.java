@@ -1,11 +1,12 @@
 package objects;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "List_of_animals")
-public class Passport {
+public class Passport implements Serializable{
     @Id
     private String ID;
     @Column

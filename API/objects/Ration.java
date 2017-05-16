@@ -1,9 +1,10 @@
 package objects;
 
+import java.io.Serializable;
 import javax.persistence.*;
 
 @Embeddable
-public class Ration {
+public class Ration implements Serializable{
     @Column
     private TypeOfFood food;
     @Column

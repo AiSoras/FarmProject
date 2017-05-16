@@ -1,11 +1,12 @@
 package objects;
 
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "List_of_vaccinations")
-public class Vaccination {
+public class Vaccination implements Serializable{
 
     @Id
     private String ID;

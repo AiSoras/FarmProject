@@ -5,11 +5,14 @@
  */
 package objects;
 
+import java.io.Serializable;
+
+
 /**
  *
  * @author Student
  */
-public enum Positions {
+public enum Positions implements Serializable{
     CLEANER,
     BREADWINNER,
     VET,

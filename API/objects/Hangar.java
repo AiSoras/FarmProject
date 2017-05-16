@@ -1,10 +1,11 @@
 package objects;
 
+import java.io.Serializable;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "List_of_hangars")
-public class Hangar {
+public class Hangar implements Serializable{
 
     @Id
     private String ID;

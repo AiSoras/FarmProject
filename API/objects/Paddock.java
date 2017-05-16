@@ -1,12 +1,12 @@
 package objects;
 
+import java.io.Serializable;
 import java.sql.Time;
-import java.util.List;
 import javax.persistence.*;
 
 @Entity
 @Table(name="List_of_paddocks")
-public class Paddock {
+public class Paddock implements Serializable{
     @Id
     private String ID;
     @Embedded

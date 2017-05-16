@@ -1,6 +1,8 @@
 package objects;
 
-public enum TypeOfVaccination {
+import java.io.Serializable;
+
+public enum TypeOfVaccination implements Serializable{
     SEASONAL,
     ONETIME
 }

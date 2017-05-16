@@ -1,6 +1,8 @@
 package objects;
 
-public enum SpeciesOfAnimal {
+import java.io.Serializable;
+
+public enum SpeciesOfAnimal implements Serializable{
     HORSE,
     COW,
     CHICKEN,
