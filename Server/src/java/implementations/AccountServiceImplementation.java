@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.Positions;
 import objects.User;
+import scripts.Crypt;
 import scripts.EMailSender;
 import scripts.TokenGeneration;
 import scripts.UUIDGeneration;
@@ -35,10 +36,16 @@ public class AccountServiceImplementation implements AccountService {
     }
 
     @Override
-    public boolean signUp(User user) {
-        if (DBService.existenceOfLoginAndEMail(user.getLogin(),user.geteMail())) { //Проверка на существование в БД такого логина и/или почты.
+    public boolean signUp(User user) { //Будет использоватся и при изменении пользователем пароля, логина, почты. Может, стоит переименовать?
+        if (DBService.existenceOfLoginAndEMail(user.getLogin(),user.geteMail())) { //Проверка на существование в БД такого логина и/или почты. 
             return false;
         } else {
+            try {
+                user.setPassword(Crypt.encryptMD5(user.getPassword()));
+            } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
+                Logger.getLogger(AccountServiceImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            user.setToken("USED");
             DBService.saveObject(user);
             return true;
         }
@@ -56,9 +63,6 @@ public class AccountServiceImplementation implements AccountService {
     @Override
     public User getByToken(String token) { //can be null
         User user = DBService.checkByToken(token);
-        if (user != null){
-            user.setToken("USED");
-        }
         return user;
     }
 
@@ -66,7 +70,7 @@ public class AccountServiceImplementation implements AccountService {
     public boolean resetPassword(String eMail) {
         String token = TokenGeneration.create();
         User user = DBService.getByEMail(eMail);
-        if (EMailSender.send(user, token)) {
+        if (user != null && EMailSender.send(user, token)) {
             user.setToken(token);
             DBService.saveObject(user);
             return true;

@@ -5,8 +5,6 @@
  */
 package database;
 
-import api.ObjectService;
-import implementations.ObjectServiceImplementation;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -41,20 +39,26 @@ public class DBService {
         try (Session session = dBManager.getSession()) {
             session.beginTransaction();
             final CriteriaBuilder builder = session.getCriteriaBuilder();
-            final CriteriaQuery<Object> createQuery = builder.createQuery(classObject);
-            TypedQuery<Object> typed = session.createQuery(createQuery);
-            return typed.getResultList();
+            final CriteriaQuery<Object> criteriaQuery = builder.createQuery(classObject);
+            Root<Object> root = criteriaQuery.from(classObject);
+            criteriaQuery.select(root);
+            try {
+                TypedQuery<Object> typed = session.createQuery(criteriaQuery);
+                return typed.getResultList();
+            } catch (final NoResultException ignore) {
+                return null;
+            }
         }
     }
 
-    public static synchronized void deleteObject(Object object) {
+    public static synchronized void deleteObject(Object object, String ID) {
         final DBManager dBManager = DBManager.getInstance();
         try (Session session = dBManager.getSession()) {
             session.beginTransaction();
-            ObjectService objectService = new ObjectServiceImplementation();
             try {
-                Object persistentInstance = session.load(object.getClass(), objectService.getObjectID(object));
-                session.delete(persistentInstance);
+                Object persistentInstance = session.load(object.getClass(), ID);
+                session.remove(persistentInstance);
+                session.flush();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -134,6 +138,25 @@ public class DBService {
                 return typed.getSingleResult() != null;
             } catch (final NoResultException ignore) {
                 return false;
+            }
+        }
+    }
+    
+    public static synchronized List<User> getUserLikeList (String query){
+        final DBManager dBManager = DBManager.getInstance();
+        try (Session session = dBManager.getSession()) {
+            session.beginTransaction();
+            final CriteriaBuilder builder = session.getCriteriaBuilder();
+            final CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
+            Root<User> root = criteriaQuery.from(User.class);
+            criteriaQuery.where(builder.or(builder.like(root.<String>get(User_.firstName), "%"+query+"%"),builder.like(root.<String>get(User_.secondName), "%"+query+"%"),builder.like(root.<String>get(User_.middleName), "%"+query+"%")));
+            criteriaQuery.orderBy(builder.asc(root.get(User_.secondName)));
+            //criteriaQuery.orderBy(builder.asc(builder.coalesce(root.get(User_.secondName),root.get(User_.firstName))));
+            try {
+                TypedQuery<User> typed = session.createQuery(criteriaQuery);
+                return typed.getResultList();
+            } catch (final NoResultException ignore) {
+                return null;
             }
         }
     }
