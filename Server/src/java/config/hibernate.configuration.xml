@@ -4,7 +4,6 @@
 <comment>Hibernate settings</comment>
 <entry key="hibernate.connection.username">root</entry>
 <entry key="hibernate.connection.password">root</entry>
-<entry key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</entry>
 <entry key="hibernate.connection.pool_size">5</entry>
 <entry key="hibernate.connection.url">jdbc:mysql://localhost:3306/farmproject</entry>
 <entry key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</entry>
