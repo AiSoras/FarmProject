@@ -10,6 +10,7 @@ import javax.mail.*;
 import javax.mail.internet.*;
 
 import objects.User;
+import org.apache.logging.log4j.LogManager;
 
 /**
  *
@@ -17,11 +18,21 @@ import objects.User;
  */
 public class EMailSender {
 
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(EMailSender.class.getName());
+
+    /**
+     * Sends eMail with <code>token</code> to <code>user</code>.
+     *
+     * @param user
+     * @param token
+     * @return <code>true</code> if the message is sent successfully, otherwise
+     * <code>false</code>.
+     */
     public static synchronized boolean send(User user, String token) {
 
         String to = user.geteMail();
         String from = "specialforoop@gmail.com";
-        
+
         Properties properties = new Properties();
         properties.put("mail.smtp.host", "smtp.gmail.com");
         properties.put("mail.smtp.starttls.enable", "true");
@@ -45,9 +56,10 @@ public class EMailSender {
             message.setText("Dear, " + user.getFirstName() + " " + user.getSecondName() + "!\nThis is your reset password token: " + token + ".\n");
 
             Transport.send(message);
-
+            logger.info("The message was sent successfully");
             return true;
         } catch (MessagingException ignore) {
+            logger.error("Exception: ", ignore);
             return false;
         }
 

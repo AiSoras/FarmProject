@@ -6,66 +6,84 @@
 package implementations;
 
 import api.AccountService;
+import api.ObjectService;
 import database.DBService;
-import java.io.UnsupportedEncodingException;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import objects.Positions;
 import objects.User;
+import org.apache.logging.log4j.LogManager;
 import scripts.Crypt;
 import scripts.EMailSender;
 import scripts.TokenGeneration;
-import scripts.UUIDGeneration;
 
 /**
+ * Handles requests related with the user account.
  *
  * @author OlesiaPC
  */
 public class AccountServiceImplementation implements AccountService {
 
+    private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(AccountService.class.getName());
+
+    /**
+     *
+     * @param login
+     * @param password
+     * @return
+     */
     @Override
-    public Positions signIn(String login, String password) { //return null if login doesn't exist or password is wrong
-        Positions userLevel = null;
-        try {
-            userLevel = DBService.chechByLoginAndPassword(login, password);
-        } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-            Logger.getLogger(AccountServiceImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return userLevel;
+    public User signIn(String login, String password) {
+        User user = DBService.getByLoginAndPassword(login, Crypt.encryptMD5(password));
+        return user;
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     @Override
-    public boolean signUp(User user) { //Будет использоватся и при изменении пользователем пароля, логина, почты. Может, стоит переименовать?
-        if (DBService.existenceOfLoginAndEMail(user.getLogin(),user.geteMail())) { //Проверка на существование в БД такого логина и/или почты. 
+    public boolean saveAccountChanges(User user) { 
+        if (DBService.isLoginOrEMailExists(user.getLogin(), user.geteMail())) { //Проверка на существование в БД такого логина и/или почты. 
             return false;
         } else {
-            try {
-                user.setPassword(Crypt.encryptMD5(user.getPassword()));
-            } catch (NoSuchAlgorithmException | UnsupportedEncodingException ex) {
-                Logger.getLogger(AccountServiceImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            user.setPassword(Crypt.encryptMD5(user.getPassword()));
+            if (!user.getToken().equals("USED")) {
+                user.setToken("USED");
             }
-            user.setToken("USED");
             DBService.saveObject(user);
             return true;
         }
     }
 
+    /**
+     *
+     * @param user
+     * @return
+     */
     @Override
     public String createUser(User user) {
+        ObjectService objectService = new ObjectServiceImplementation();
         String token = TokenGeneration.create();
         user.setToken(token);
-        user.setID(UUIDGeneration.create('U'));
-        DBService.saveObject(user);
+        objectService.createObject(user, 'U');
         return token;
     }
 
+    /**
+     *
+     * @param token
+     * @return
+     */
     @Override
     public User getByToken(String token) { //can be null
-        User user = DBService.checkByToken(token);
+        User user = DBService.getByToken(token);
         return user;
     }
 
+    /**
+     *
+     * @param eMail
+     * @return
+     */
     @Override
     public boolean resetPassword(String eMail) {
         String token = TokenGeneration.create();

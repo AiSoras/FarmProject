@@ -8,11 +8,18 @@ package scripts;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- *
+ * 
  * @author OlesiaPC
  */
 public class TokenGeneration {
 
+    /**
+     * Generates the string consisting of 12 characters including letters and
+     * numbers.
+     *
+     * @return The string consisting of 12 characters including letters and
+     * numbers.
+     */
     public static synchronized String create() {
         return RandomStringUtils.random(12, true, true);
     }

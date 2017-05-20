@@ -18,11 +18,17 @@ import objects.User;
 import scripts.UUIDGeneration;
 
 /**
+ * Handles requests related to objects.
  *
  * @author OlesiaPC
  */
 public class ObjectServiceImplementation implements ObjectService {
 
+    /**
+     *
+     * @param object
+     * @param symbol
+     */
     @Override
     public void createObject(Object object, char symbol) {
         try {
@@ -34,6 +40,11 @@ public class ObjectServiceImplementation implements ObjectService {
         }
     }
 
+    /**
+     *
+     * @param object
+     * @return
+     */
     @Override
     public String getObjectID(Object object) {
         try {
@@ -45,22 +56,40 @@ public class ObjectServiceImplementation implements ObjectService {
         return null;
     }
 
+    /**
+     *
+     * @param objectClass
+     * @return
+     */
     @Override
     public List<Object> getListOfObjects(Class objectClass) {
         return DBService.loadObjects(objectClass);
     }
 
+    /**
+     *
+     * @param object
+     */
     @Override
     public void deleteObject(Object object) {
-        DBService.deleteObject(object,getObjectID(object));
+        DBService.deleteObject(object, getObjectID(object));
     }
 
+    /**
+     *
+     * @param query
+     * @return
+     */
     @Override
     public List<User> getListOfUsersLike(String query) {
         List<User> usersList = DBService.getUserLikeList(query);
-        return usersList==null ? new ArrayList<User>() : usersList; //Или можно оставить null?
+        return usersList == null ? new ArrayList<User>() : usersList;
     }
 
+    /**
+     *
+     * @param object
+     */
     @Override
     public void updateObject(Object object) {
         DBService.saveObject(object);
