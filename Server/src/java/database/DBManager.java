@@ -56,7 +56,6 @@ public final class DBManager {
                 .setProperty("hibernate.connection.url", properties.getProperty("hibernate.connection.url"))
                 .setProperty("hibernate.connection.driver_class", properties.getProperty("hibernate.connection.driver_class"))
                 .setProperty("hibernate.hbm2ddl.auto", properties.getProperty("hibernate.hbm2ddl.auto"))
-                .setProperty("hibernate.dialect", properties.getProperty("hibernate.dialect"))
                 .addAnnotatedClass(Hangar.class)
                 .addAnnotatedClass(Paddock.class)
                 .addAnnotatedClass(Ration.class)
