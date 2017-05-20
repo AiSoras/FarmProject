@@ -1,11 +1,14 @@
 package windows;
 
+import api.ObjectService;
+import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebTextField;
+import com.alee.managers.notification.NotificationManager;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -13,23 +16,28 @@ import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
+import objects.Hangar;
 import objects.Positions;
 import objects.TypeOfHangar;
+import settings.RegEx;
+import settings.ServerConnection;
 //import scripts.UUIDGeneration;
 
 public class AddHangarWindow extends WebDialog {
     
     private final Container contentPane;
     
-//    public static void main(String[] args) {
-//        WebLookAndFeel.install();
-//        AddHangarWindow  addHangar = new AddHangarWindow();
-//        addHangar.setSize(450, 250);
-//        addHangar.setResizable(false);
-//        addHangar.setLocationRelativeTo(null);
-//        addHangar.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        addHangar.setVisible(true);
-//    }
+    public static void main(String[] args) {
+        WebLookAndFeel.install();
+        AddHangarWindow addHangar = new AddHangarWindow(new WebFrame(""));
+        addHangar.setSize(450, 250);
+        addHangar.setResizable(false);
+        addHangar.setLocationRelativeTo(null);
+        addHangar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addHangar.setVisible(true);
+    }
     
     public AddHangarWindow(WebFrame owner) throws HeadlessException {
         super(owner,"Добавление ангара",ModalityType.APPLICATION_MODAL);
@@ -41,8 +49,8 @@ public class AddHangarWindow extends WebDialog {
     private void initAddHangar(){
         WebLabel level = new WebLabel("Уровень доступа ");
         WebLabel type = new WebLabel("Тип ангара ");
-        WebLabel hangarName = new WebLabel("Желаемое название ");
-        WebTextField name = new WebTextField(20);
+        WebLabel hangarLabel= new WebLabel("Желаемое название ");
+        WebTextField hangarName = new WebTextField(20);
         WebComboBox setLevel = new WebComboBox(Positions.values());
         WebComboBox setType = new WebComboBox(TypeOfHangar.values());
 //        WebButton addAndBack = new WebButton("Добавить и вернуться");
@@ -59,8 +67,16 @@ public class AddHangarWindow extends WebDialog {
         
         addButton.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                AddHangarWindow.this.dispose();
+            public void actionPerformed(ActionEvent e) { 
+                if (RegEx.checkName(hangarName.getText())) {
+                    Hangar hangar = new Hangar(hangarName.getText(), (Positions) setLevel.getSelectedItem(), (TypeOfHangar) setType.getSelectedItem());
+                    ObjectService objectService = ServerConnection.getObjectConnecttion();
+                    objectService.createObject(hangar, 'H');
+                    NotificationManager.showNotification("Ангар успешно добавлен в БД!");
+                    AddHangarWindow.this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Желаемое название\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
         
@@ -90,11 +106,11 @@ public class AddHangarWindow extends WebDialog {
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        contentPane.add(hangarName,c); 
+        contentPane.add(hangarLabel,c); 
         
         c.gridx = 1; 
         c.anchor = GridBagConstraints.WEST; 
-        contentPane.add(name,c);
+        contentPane.add(hangarName,c);
         
         c.gridx = 0; 
         c.gridy = 1; 

@@ -19,7 +19,7 @@ public class UsersTableModel extends AbstractTableModel {
     private User user;
     private String query;
 
-    public UsersTableModel() throws MalformedURLException {
+    public UsersTableModel(){
         this.query = "";
         this.objectService = ServerConnection.getObjectConnecttion();
         this.usersList = objectService.getListOfUsersLike(query);

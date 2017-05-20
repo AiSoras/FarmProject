@@ -60,17 +60,13 @@ public class UserInfWindow extends WebDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    user.setFirstName(firstNameField.getText());
-                    user.setSecondName(secondNameField.getText());
-                    user.setMiddleName(middleNameField.getText());
-                    user.setLevelOfAccess((Positions) positionBox.getSelectedItem());
-                    ObjectService objectService = ServerConnection.getObjectConnecttion();
-                    objectService.updateObject(user);                    
-                    UserInfWindow.this.dispose();
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(UserInfWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                user.setFirstName(firstNameField.getText());
+                user.setSecondName(secondNameField.getText());
+                user.setMiddleName(middleNameField.getText());
+                user.setLevelOfAccess((Positions) positionBox.getSelectedItem());
+                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                objectService.updateObject(user);
+                UserInfWindow.this.dispose();
             }
         });
 
@@ -79,13 +75,9 @@ public class UserInfWindow extends WebDialog {
             public void actionPerformed(ActionEvent e) {
                 int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Вы уверены?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
                 if (сonfirm == JOptionPane.YES_OPTION) {
-                    try {
-                        ObjectService objectService = ServerConnection.getObjectConnecttion();
-                        objectService.deleteObject(user);
-                        UserInfWindow.this.dispose();
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(UserInfWindow.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    ObjectService objectService = ServerConnection.getObjectConnecttion();
+                    objectService.deleteObject(user);
+                    UserInfWindow.this.dispose();
                 }
             }
         });

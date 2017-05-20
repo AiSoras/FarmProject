@@ -9,6 +9,8 @@ import api.AccountService;
 import api.ObjectService;
 import com.caucho.hessian.client.HessianProxyFactory;
 import java.net.MalformedURLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,20 +23,28 @@ public class ServerConnection {
     private static HessianProxyFactory factory;
     private static String serverAddress = "localhost";
 
-    public static synchronized AccountService getAccountConnecttion() throws MalformedURLException { //
+    public static synchronized AccountService getAccountConnecttion() { //
         if (accountService == null) {
-            getHessianProxyFactory();
-            String url = "http://" + serverAddress + ":8080/Server/AccountService";
-            accountService = (AccountService) factory.create(AccountService.class, url);
+            try {
+                getHessianProxyFactory();
+                String url = "http://" + serverAddress + ":8080/Server/AccountService";
+                accountService = (AccountService) factory.create(AccountService.class, url);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return accountService;
     }
 
-    public static synchronized ObjectService getObjectConnecttion() throws MalformedURLException {
+    public static synchronized ObjectService getObjectConnecttion() {
         if (objectService == null) {
-            getHessianProxyFactory();
-            String url = "http://" + serverAddress + ":8080/Server/ObjectService";
-            objectService = (ObjectService) factory.create(ObjectService.class, url);
+            try {
+                getHessianProxyFactory();
+                String url = "http://" + serverAddress + ":8080/Server/ObjectService";
+                objectService = (ObjectService) factory.create(ObjectService.class, url);
+            } catch (MalformedURLException ex) {
+                Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         return objectService;
     }

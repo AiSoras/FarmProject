@@ -24,19 +24,28 @@ import objects.User;
 import settings.ServerConnection;
 
 public class AddUserWindow extends WebDialog {
-    
+
     private final Container contentPane;
-    
+
+    public static void main(String[] args) {
+        WebDialog addUser = new AddUserWindow(new WebFrame(""));
+        addUser.setSize(450, 250);
+        addUser.setResizable(false);
+        addUser.setLocationRelativeTo(null);
+        addUser.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        addUser.setVisible(true);
+    }
+
     public AddUserWindow(WebFrame owner) throws HeadlessException {
-        super(owner,"Добавление пользователя",ModalityType.APPLICATION_MODAL);
+        super(owner, "Добавление пользователя", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         setLayout(new GridBagLayout());
         initAddUser();
     }
-    
-    private void initAddUser(){
+
+    private void initAddUser() {
         WebLabel positionLabel = new WebLabel("Должность ");
-        WebComboBox positionBox = new WebComboBox(Positions.values()); 
+        WebComboBox positionBox = new WebComboBox(Positions.values());
         WebLabel firstNameLabel = new WebLabel("Имя ");
         WebTextField firstNameField = new WebTextField(20);
         WebLabel secondNamedLabel = new WebLabel("Фамилия ");
@@ -46,37 +55,31 @@ public class AddUserWindow extends WebDialog {
         WebButton codeButton = new WebButton("Сгенерировать пригласительный код");
         WebButton addButton = new WebButton("Добавить");
         WebButton cancelButton = new WebButton("Отмена");
-        
+
         cancelButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AddUserWindow.this.dispose();
             }
         });
-        
+
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    AccountService accountService = ServerConnection.getAccountConnecttion();
-                    User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(),(Positions) positionBox.getSelectedItem());
-                    String token = accountService.createUser(user);                   
-                    NotificationManager.showNotification("Пользователь успешно добавлен в БД!");
-                    
-                    TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
-                    tokenFrame.setSize(300, 150);
-                    tokenFrame.setResizable(false);
-                    tokenFrame.setLocationRelativeTo(null);
-                    tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                    tokenFrame.setVisible(true);
-                    
-                    AddUserWindow.this.dispose();
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(AddUserWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                AccountService accountService = ServerConnection.getAccountConnecttion();
+                User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), (Positions) positionBox.getSelectedItem());
+                String token = accountService.createUser(user);
+                NotificationManager.showNotification("Пользователь успешно добавлен в БД!");
+                TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
+                tokenFrame.setSize(300, 150);
+                tokenFrame.setResizable(false);
+                tokenFrame.setLocationRelativeTo(null);
+                tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                tokenFrame.setVisible(true);
+                AddUserWindow.this.dispose();
             }
         });
-        
+
         GridBagConstraints c = new GridBagConstraints();
 
         c.anchor = GridBagConstraints.EAST;
@@ -133,5 +136,5 @@ public class AddUserWindow extends WebDialog {
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(cancelButton, c);
     }
-    
+
 }

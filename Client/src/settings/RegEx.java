@@ -14,27 +14,33 @@ import java.util.regex.Pattern;
  */
 public class RegEx {
 
-    public static boolean stringCheck(String string) {
-        Pattern pattern = Pattern.compile("^[a-z0-9_A-Z]{4,20}$"); 
+    public static boolean checkLoginAndPassword(String string) { //Хотя не особо правильно ограничивать человека в выборе пароля
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9\\.]{4,20}$"); 
         Matcher matcher = pattern.matcher(string);
         return matcher.matches();
     }
     
-    public static boolean eMailCheck(String string) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]+[@]{1}[a-z]+\\.(com|ua|ru)$");
+    public static boolean checkEMail(String string) {
+        Pattern pattern = Pattern.compile("^[\\w\\.]+[@]{1}[a-z]+\\.(com|ua|ru)$");
         Matcher matcher = pattern.matcher(string);
         return matcher.matches();
     }
     
-    public static boolean tokenCheck(String string) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]{12}$");
+    public static boolean checkToken(String string) {
+        Pattern pattern = Pattern.compile("^[\\p{L}0-9]{12}$");
         Matcher matcher = pattern.matcher(string);
         return matcher.matches();
     }
     
-     public static boolean nameCheck(String string) { //Чтоб не было цифр и специальных знаков
-        Pattern pattern = Pattern.compile("^[a-zA-Z]+$");
+     public static boolean checkName(String string) {
+        Pattern pattern = Pattern.compile("^[\\p{L}_\\d]+$"); 
         Matcher matcher = pattern.matcher(string);
         return matcher.matches();
      }
+     
+//     public static boolean checkSpecialName(String string) { //Hangar, paddock etc. 
+//        Pattern pattern = Pattern.compile("^[a-zA-Z0-9]+$");
+//        Matcher matcher = pattern.matcher(string);
+//        return matcher.matches();
+//     }
 }

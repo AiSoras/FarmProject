@@ -85,16 +85,12 @@ public class StartWindow extends WebFrame {
             public void actionPerformed(ActionEvent e) {
                 WebFrame requestLogin = new WebFrame();
                 String eMail = JOptionPane.showInputDialog(requestLogin, "Введите почту", "Восстановление пароля", HEIGHT);
-                if (eMail != null && RegEx.eMailCheck(eMail)) {
-                    try {
-                        AccountService accountService = ServerConnection.getAccountConnecttion();
-                        if (accountService.resetPassword(eMail)) {
-                            JOptionPane.showMessageDialog(new WebFrame(), "Письмо отправлено на указанный почтовый ящик!", "Успешно!", JOptionPane.INFORMATION_MESSAGE);
-                        } else {
-                            JOptionPane.showMessageDialog(new WebFrame(), "Указанный почтовый ящик не существует,\nили при отправке письма произошла ошибка!", "Ошибка!", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(StartWindow.class.getName()).log(Level.SEVERE, null, ex);
+                if (eMail != null && RegEx.checkEMail(eMail)) {
+                    AccountService accountService = ServerConnection.getAccountConnecttion();
+                    if (accountService.resetPassword(eMail)) {
+                        JOptionPane.showMessageDialog(new WebFrame(), "Письмо отправлено на указанный почтовый ящик!", "Успешно!", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(new WebFrame(), "Указанный почтовый ящик не существует,\nили при отправке письма произошла ошибка!", "Ошибка!", JOptionPane.ERROR_MESSAGE);
                     }
 
                 }
@@ -104,26 +100,22 @@ public class StartWindow extends WebFrame {
         signInButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (loginField == null || passwordField == null || !RegEx.stringCheck(loginField.getText()) || !RegEx.stringCheck(passwordField.getText())) {
-                    JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя строчные буквы,\nцифры и знак нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                if (loginField == null || passwordField == null || !RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText())) {
+                    JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя строчные буквы,\nцифры и точку!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    try {
-                        AccountService accountService = ServerConnection.getAccountConnecttion();
-                        User user = accountService.signIn(loginField.getText(), passwordField.getText());
-                        if (user == null) {
-                            JOptionPane.showMessageDialog(new WebFrame(), "Неверный логин и/или пароль!", "Внимание!", JOptionPane.WARNING_MESSAGE);
-                        } else {
-                            StartWindow.this.dispose();
-                            NotificationManager.showNotification("Успешный вход в систему!");
-                            MainWindow mainFrame = new MainWindow();
-                            mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                            mainFrame.setSize(600, 400);
-                            mainFrame.setResizable(false);
-                            mainFrame.setLocationRelativeTo(null);
-                            mainFrame.setVisible(true);
-                        }
-                    } catch (MalformedURLException ex) {
-                        Logger.getLogger(StartWindow.class.getName()).log(Level.SEVERE, null, ex);
+                    AccountService accountService = ServerConnection.getAccountConnecttion();
+                    User user = accountService.signIn(loginField.getText(), passwordField.getText());
+                    if (user == null) {
+                        JOptionPane.showMessageDialog(new WebFrame(), "Неверный логин и/или пароль!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                    } else {
+                        StartWindow.this.dispose();
+                        NotificationManager.showNotification("Успешный вход в систему!");
+                        MainWindow mainFrame = new MainWindow();
+                        mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                        mainFrame.setSize(600, 400);
+                        mainFrame.setResizable(false);
+                        mainFrame.setLocationRelativeTo(null);
+                        mainFrame.setVisible(true);
                     }
                 }
             }
@@ -132,26 +124,22 @@ public class StartWindow extends WebFrame {
         signUpButton.addActionListener(new ActionListener() { //Переход на панель регистрации
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    String token = JOptionPane.showInputDialog(new WebFrame(), "Введите пригласительный код!", "Внимание!", JOptionPane.QUESTION_MESSAGE);
-                    if (token != null) {
-                        if (RegEx.tokenCheck(token)) {
-                            user = null; //Если человек вернулся на окно входа
-
-                            AccountService accountService = ServerConnection.getAccountConnecttion();
-                            user = accountService.getByToken(token);
-                            if (user != null) {
-                                initSignUpPanel();
-                                cardLayout.show(rightPanel, "SignUp");
-                            } else {
-                                JOptionPane.showMessageDialog(new WebFrame(), "Неверный пригласительный код!", "Внимание!", JOptionPane.WARNING_MESSAGE);
-                            }
+                String token = JOptionPane.showInputDialog(new WebFrame(), "Введите пригласительный код!", "Внимание!", JOptionPane.QUESTION_MESSAGE);
+                if (token != null) {
+                    if (RegEx.checkToken(token)) {
+                        user = null; //Если человек вернулся на окно входа
+                        
+                        AccountService accountService = ServerConnection.getAccountConnecttion();
+                        user = accountService.getByToken(token);
+                        if (user != null) {
+                            initSignUpPanel();
+                            cardLayout.show(rightPanel, "SignUp");
                         } else {
-                            JOptionPane.showMessageDialog(new WebFrame(), "Неверный формат ввода!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                            JOptionPane.showMessageDialog(new WebFrame(), "Неверный пригласительный код!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                         }
+                    } else {
+                        JOptionPane.showMessageDialog(new WebFrame(), "Неверный формат ввода!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                     }
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(StartWindow.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -187,26 +175,22 @@ public class StartWindow extends WebFrame {
         signUpButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (loginField == null || passwordField == null || passwordRepeatField == null || eMailField == null || !RegEx.stringCheck(loginField.getText()) || !RegEx.stringCheck(passwordField.getText()) || !RegEx.stringCheck(passwordRepeatField.getText())) {
+                if (loginField == null || passwordField == null || passwordRepeatField == null || eMailField == null || !RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText()) || !RegEx.checkLoginAndPassword(passwordRepeatField.getText())) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя латинские буквы,\nцифры и знак нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    if (RegEx.eMailCheck(eMailField.getText())) {
+                    if (RegEx.checkEMail(eMailField.getText())) {
                         if (passwordField.getText().equals(passwordRepeatField.getText())) {
                             if (license.isSelected()) {
-                                try {
-                                    AccountService accountService = ServerConnection.getAccountConnecttion();
-                                    user.setLogin(loginField.getText());
-                                    user.seteMail(eMailField.getText());
-                                    user.setPassword(passwordField.getText());
-                                    if (!accountService.saveAccountChanges(user)) {
-                                        JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
-                                    }
-                                    else{
-                                        cardLayout.show(rightPanel, "SignIn");
-                                        NotificationManager.showNotification("Вы успешно зарегистрировались! Ввойдите в систему, используя ваш логин и пароль.");
-                                    }
-                                } catch (MalformedURLException ex) {
-                                    Logger.getLogger(StartWindow.class.getName()).log(Level.SEVERE, null, ex);
+                                AccountService accountService = ServerConnection.getAccountConnecttion();
+                                user.setLogin(loginField.getText());
+                                user.seteMail(eMailField.getText());
+                                user.setPassword(passwordField.getText());
+                                if (!accountService.saveAccountChanges(user)) {
+                                    JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                                }
+                                else{
+                                    cardLayout.show(rightPanel, "SignIn");
+                                    NotificationManager.showNotification("Вы успешно зарегистрировались! Ввойдите в систему, используя ваш логин и пароль.");
                                 }
                             } else {
                                 JOptionPane.showMessageDialog(new WebFrame(), "Вы должны принять соглашение!", "Внимание!", JOptionPane.WARNING_MESSAGE);

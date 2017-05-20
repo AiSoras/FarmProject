@@ -59,10 +59,10 @@ public class AccountSettingsWindow extends WebDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (loginField == null || passwordField == null || passwordRepeatField == null || mailField == null || !RegEx.stringCheck(loginField.getText()) || !RegEx.stringCheck(passwordField.getText()) || !RegEx.stringCheck(passwordRepeatField.getText())) {
+                if (loginField == null || passwordField == null || passwordRepeatField == null || mailField == null || !RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText()) || !RegEx.checkLoginAndPassword(passwordRepeatField.getText())) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя латинские буквы,\nцифры и знак нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                 } else {
-                    if (RegEx.eMailCheck(mailField.getText())) {
+                    if (RegEx.checkEMail(mailField.getText())) {
                         if (passwordField.getText().equals(passwordRepeatField.getText())) {
                             AccountSettingsWindow.this.dispose();
                         } else {
