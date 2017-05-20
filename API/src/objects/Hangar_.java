@@ -5,6 +5,7 @@
  */
 package objects;
 
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -19,4 +20,5 @@ public class Hangar_ {
     public static volatile SingularAttribute<Hangar, String> name;
     public static volatile SingularAttribute<Hangar, Positions> minimalLevelOfAccess;
     public static volatile SingularAttribute<Hangar, TypeOfHangar> type;
+    public static volatile ListAttribute<Hangar,Paddock> paddocks;
 }

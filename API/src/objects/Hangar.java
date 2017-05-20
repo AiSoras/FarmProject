@@ -1,6 +1,8 @@
 package objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -15,6 +17,9 @@ public class Hangar implements Serializable {
     private Positions minimalLevelOfAccess;
     @Column
     private TypeOfHangar type;
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn (name = "Hangar_ID")
+    private List<Paddock> paddocks;
 
     public Hangar() {
     }
@@ -23,6 +28,7 @@ public class Hangar implements Serializable {
         this.name = name;
         this.minimalLevelOfAccess = minimalLevelOfAccess;
         this.type = type;
+        this.paddocks = new ArrayList<Paddock>();
     }
 
     public String getName() {
@@ -55,6 +61,18 @@ public class Hangar implements Serializable {
 
     public void setType(TypeOfHangar type) {
         this.type = type;
+    }
+
+    public List<Paddock> getPaddocks() {
+        return paddocks;
+    }
+
+    public void setPaddocks(List<Paddock> paddocks) {
+        this.paddocks = paddocks;
+    }
+    
+    public void addPaddock(Paddock paddock){
+        this.paddocks.add(paddock);
     }
 
 }

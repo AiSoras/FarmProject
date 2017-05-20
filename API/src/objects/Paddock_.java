@@ -6,6 +6,7 @@
 package objects;
 
 import java.sql.Time;
+import javax.persistence.metamodel.ListAttribute;
 import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
@@ -17,9 +18,9 @@ import javax.persistence.metamodel.StaticMetamodel;
 public class Paddock_ {
 
     public static volatile SingularAttribute<Paddock, String> ID;
-     public static volatile SingularAttribute<Paddock, String> name;
+    public static volatile SingularAttribute<Paddock, String> name;
     public static volatile SingularAttribute<Paddock, Ration> ration;
     public static volatile SingularAttribute<Paddock, SpeciesOfAnimal> species;
     public static volatile SingularAttribute<Paddock, Time> time;
-    public static volatile SingularAttribute<Paddock, Hangar> hangar;
+    public static volatile ListAttribute<Paddock,Passport> animals;
 }

@@ -1,12 +1,15 @@
 package objects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "List_of_animals")
-public class Passport implements Serializable{
+public class Passport implements Serializable {
+
     @Id
     private String ID;
     @Column
@@ -15,17 +18,18 @@ public class Passport implements Serializable{
     private float weight; //В кг
     @Column
     private String breed;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Paddock paddock;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "Animal_ID")
+    private List<Vaccination> vaccinations;
 
     public Passport() {
     }
 
-    public Passport(Date dateOfBirth, float weight, String breed, Paddock paddock) {
+    public Passport(Date dateOfBirth, float weight, String breed) {
         this.dateOfBirth = dateOfBirth;
         this.weight = weight;
         this.breed = breed;
-        this.paddock = paddock;
+        this.vaccinations = new ArrayList<Vaccination>();
     }
 
     public String getID() {
@@ -60,12 +64,12 @@ public class Passport implements Serializable{
         this.breed = breed;
     }
 
-    public Paddock getPaddock() {
-        return paddock;
+    public List<Vaccination> getVaccinations() {
+        return vaccinations;
     }
 
-    public void setPaddock(Paddock paddock) {
-        this.paddock = paddock;
+    public void setVaccinations(List<Vaccination> vaccinations) {
+        this.vaccinations = vaccinations;
     }
 
 }

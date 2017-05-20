@@ -21,5 +21,4 @@ public class Vaccination_ {
     public static volatile SingularAttribute<Vaccination, Date> dateOfVaccination;
     public static volatile SingularAttribute<Vaccination, TypeOfVaccination> type;
     public static volatile SingularAttribute<Vaccination, Date> date;
-    public static volatile SingularAttribute<Vaccination, Passport> animal;
 }

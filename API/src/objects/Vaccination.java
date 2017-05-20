@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "List_of_vaccinations")
-public class Vaccination implements Serializable{
+public class Vaccination implements Serializable {
 
     @Id
     private String ID;
@@ -18,18 +18,15 @@ public class Vaccination implements Serializable{
     private TypeOfVaccination type;
     @Column
     private Date date;
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Passport animal;
 
     public Vaccination() {
     }
 
-    public Vaccination(String name, Date dateOfVaccination, TypeOfVaccination type, Date date, Passport animal) {
+    public Vaccination(String name, Date dateOfVaccination, TypeOfVaccination type, Date date) {
         this.name = name;
         this.dateOfVaccination = dateOfVaccination;
         this.type = type;
         this.date = date;
-        this.animal = animal;
     }
 
     public String getName() {
@@ -70,14 +67,6 @@ public class Vaccination implements Serializable{
 
     public void setType(TypeOfVaccination type) {
         this.type = type;
-    }
-
-    public Passport getAnimal() {
-        return animal;
-    }
-
-    public void setAnimal(Passport animal) {
-        this.animal = animal;
     }
 
 }

@@ -2,6 +2,8 @@ package objects;
 
 import java.io.Serializable;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -18,18 +20,19 @@ public class Paddock implements Serializable {
     private SpeciesOfAnimal species; //Вид один для загона
     @Column
     private Time time; //Время последнего кормления (одинаково для всего загона)
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Hangar hangar;
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn (name = "Paddock_ID")
+    private List<Passport> animals;
 
     public Paddock() {
     }
 
-    public Paddock(String name, Ration ration, SpeciesOfAnimal species, Time time, Hangar hangar) {
+    public Paddock(String name, Ration ration, SpeciesOfAnimal species, Time time) {
         this.name = name;
         this.ration = ration;
         this.species = species;
         this.time = time;
-        this.hangar = hangar;
+        this.animals = new ArrayList<Passport>();
     }
 
     public String getName() {
@@ -72,12 +75,13 @@ public class Paddock implements Serializable {
         this.time = time;
     }
 
-    public Hangar getHangar() {
-        return hangar;
+    public List<Passport> getAnimals() {
+        return animals;
     }
 
-    public void setHangar(Hangar hangar) {
-        this.hangar = hangar;
+    public void setAnimals(List<Passport> animals) {
+        this.animals = animals;
     }
-
+    
+    
 }
