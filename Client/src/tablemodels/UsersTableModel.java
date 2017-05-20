@@ -10,6 +10,7 @@ import settings.ServerConnection;
 /**
  *
  * @author BG
+ * @author OlesiaPC
  */
 public class UsersTableModel extends AbstractTableModel {
 
