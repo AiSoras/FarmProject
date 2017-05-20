@@ -78,67 +78,60 @@ public class AddUserWindow extends WebDialog {
         });
         
         GridBagConstraints c = new GridBagConstraints();
-        
-        c.anchor = GridBagConstraints.EAST;  
-        c.fill = GridBagConstraints.NONE;  
+
+        c.anchor = GridBagConstraints.EAST;
+        c.fill = GridBagConstraints.NONE;
         c.gridheight = 1;
-        c.gridwidth = 1; 
-        c.gridx = 0; 
-        c.gridy = 0; 
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 0;
         c.ipadx = 0;
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        contentPane.add(secondNamedLabel,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST; 
-        contentPane.add(secondNameField,c);
-        
-        c.gridx = 0; 
-        c.gridy = 1; 
-        c.insets = new Insets(10,0,0,0);
-        c.anchor = GridBagConstraints.EAST;  
-        contentPane.add(firstNameLabel,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST; 
-        contentPane.add(firstNameField,c);
-        
-        c.gridx = 0; 
-        c.gridy = 2; 
-        c.anchor = GridBagConstraints.EAST;  
-        contentPane.add(middleNamedLabel,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST; 
-        contentPane.add(middleNameField,c);
-        
-        c.gridx = 0; 
-        c.gridy = 3; 
-        c.anchor = GridBagConstraints.EAST;  
-        contentPane.add(positionLabel,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST; 
-        contentPane.add(positionBox,c);
-        
-        c.gridx = 0; 
-        c.gridy = 4; 
-        c.gridwidth = 2; 
-        c.anchor = GridBagConstraints.EAST; 
-        c.fill = GridBagConstraints.HORIZONTAL; 
-        contentPane.add(codeButton,c);
-        
-        c.gridx = 0; 
-        c.gridy = 5;   
-        c.gridwidth = 1; 
-        c.fill = GridBagConstraints.NONE; 
-        contentPane.add(addButton,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.EAST; 
-        contentPane.add(cancelButton,c);
+        contentPane.add(secondNamedLabel, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(secondNameField, c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(10, 0, 0, 0);
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(firstNameLabel, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(firstNameField, c);
+
+        c.gridx = 0;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(middleNamedLabel, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(middleNameField, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(positionLabel, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(positionBox, c);
+
+        c.gridx = 0;
+        c.gridy = 4;
+        c.gridwidth = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(addButton, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(cancelButton, c);
     }
     
 }
