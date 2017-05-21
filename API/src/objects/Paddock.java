@@ -20,19 +20,22 @@ public class Paddock implements Serializable {
     private SpeciesOfAnimal species; //Вид один для загона
     @Column
     private Time time; //Время последнего кормления (одинаково для всего загона)
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn (name = "Paddock_ID")
     private List<Passport> animals;
+    @ManyToOne
+    @JoinColumn (name = "Hangar_ID", nullable = false)
+    private Hangar hangar;
 
     public Paddock() {
     }
 
-    public Paddock(String name, Ration ration, SpeciesOfAnimal species, Time time) {
+    public Paddock(String name, Ration ration, SpeciesOfAnimal species, Time time, Hangar hangar) {
         this.name = name;
         this.ration = ration;
         this.species = species;
         this.time = time;
-        this.animals = new ArrayList<Passport>();
+        this.hangar = hangar;
     }
 
     public String getName() {
@@ -82,6 +85,15 @@ public class Paddock implements Serializable {
     public void setAnimals(List<Passport> animals) {
         this.animals = animals;
     }
+
+    public Hangar getHangar() {
+        return hangar;
+    }
+
+    public void setHangar(Hangar hangar) {
+        this.hangar = hangar;
+    }
+    
     
     
 }

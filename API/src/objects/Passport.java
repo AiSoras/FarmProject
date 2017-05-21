@@ -18,7 +18,7 @@ public class Passport implements Serializable {
     private float weight; //В кг
     @Column
     private String breed;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "Animal_ID")
     private List<Vaccination> vaccinations;
 
