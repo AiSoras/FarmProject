@@ -23,7 +23,7 @@ import org.hibernate.Session;
  *
  * @author OlesiaPC
  */
-public class DBService {
+public class DBService {    
 
     private static final Logger logger = LogManager.getLogger(DBService.class.getName());
 
