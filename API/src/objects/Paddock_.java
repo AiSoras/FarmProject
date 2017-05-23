@@ -23,4 +23,5 @@ public class Paddock_ {
     public static volatile SingularAttribute<Paddock, SpeciesOfAnimal> species;
     public static volatile SingularAttribute<Paddock, Time> time;
     public static volatile ListAttribute<Paddock,Passport> animals;
+    public static volatile SingularAttribute<Paddock, Hangar> hangar;
 }
