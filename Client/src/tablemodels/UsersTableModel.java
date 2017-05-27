@@ -5,7 +5,7 @@ import java.net.MalformedURLException;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import objects.User;
-import settings.ServerConnection;
+import scripts.ServerConnection;
 
 /**
  *

@@ -12,12 +12,14 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.JOptionPane;
+import objects.Ration;
+import objects.TypeOfFood;
 
-public class AddRationWindow extends WebDialog { 
-    
+public class AddRationWindow extends WebDialog {
+
     private final Container contentPane;
-    
+
 //    public static void main(String[] args) {
 //        WebLookAndFeel.install();
 //        AddRationWindow addRation = new AddRationWindow();
@@ -27,22 +29,21 @@ public class AddRationWindow extends WebDialog {
 //        addRation.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 //        addRation.setVisible(true);
 //    }
-    
     public AddRationWindow(WebFrame owner) throws HeadlessException {
-        super(owner,"Настроить рацион",ModalityType.APPLICATION_MODAL);
+        super(owner, "Настроить рацион", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         setLayout(new GridBagLayout());
         initAddRation();
     }
-    
+
     public AddRationWindow(WebDialog owner) throws HeadlessException {
-        super(owner,"Настроить рацион",ModalityType.APPLICATION_MODAL);
+        super(owner, "Настроить рацион", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         setLayout(new GridBagLayout());
         initAddRation();
     }
-    
-    private void initAddRation(){
+
+    private void initAddRation() {
         WebLabel type = new WebLabel("Тип корма ");
         WebLabel volume = new WebLabel("Объем, г ");
         WebLabel period = new WebLabel("Период ");
@@ -51,79 +52,86 @@ public class AddRationWindow extends WebDialog {
         WebTextField setVolume = new WebTextField(10);
         WebTextField setHour = new WebTextField(10);
         WebTextField setMin = new WebTextField(10);
-        String types [] = {"сухой","влажный"};
-        WebComboBox setType = new WebComboBox(types);
+        WebComboBox setType = new WebComboBox(TypeOfFood.values());
         WebButton saveButton = new WebButton("Сохранить");
         WebButton cancelButton = new WebButton("Отмена");
-        
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddRationWindow.this.dispose();
+
+        cancelButton.addActionListener((ActionEvent e) -> {
+            AddRationWindow.this.dispose();
+        });
+
+        saveButton.addActionListener((ActionEvent e) -> {
+            if (setVolume.getText().compareTo("") != 0) {
+                if (setHour.getText().compareTo("") != 0) {
+                    if (setMin.getText().compareTo("") != 0) {
+                        Ration ration = new Ration((TypeOfFood) setType.getSelectedItem(), Integer.parseInt(setVolume.getText()), Integer.parseInt(setHour.getText()) * 60 + Integer.parseInt(setMin.getText()));
+                        AddPaddockWindow.setRation(ration);
+                        AddRationWindow.this.dispose();
+                    } else {
+                        JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести количество минут!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести количество часов!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести объем!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             }
         });
-        
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddRationWindow.this.dispose();
-            }
-        });
-        
+
         GridBagConstraints c = new GridBagConstraints();
-        
-        c.anchor = GridBagConstraints.EAST;  
-        c.fill = GridBagConstraints.NONE;  
+
+        c.anchor = GridBagConstraints.EAST;
+        c.fill = GridBagConstraints.NONE;
         c.gridheight = 1;
-        c.gridwidth = 1; 
-        c.gridx = 0; 
-        c.gridy = 0; 
+        c.gridwidth = 1;
+        c.gridx = 0;
+        c.gridy = 0;
         c.ipadx = 0;
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        contentPane.add(type,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST; 
-        contentPane.add(setType,c);
-        
-        c.gridx = 0; 
-        c.gridy = 1; 
-        c.insets = new Insets(10,0,0,0);
-        c.anchor = GridBagConstraints.EAST;  
-        contentPane.add(volume,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST;  
-        contentPane.add(setVolume,c);
-        
-        c.gridx = 0; 
-        c.gridy = 2; 
-        c.anchor = GridBagConstraints.EAST; 
-        contentPane.add(period,c);
-        
-        c.gridx = 1; 
-        c.anchor = GridBagConstraints.WEST;  
-        contentPane.add(setHour,c);
-        
-        c.gridx = 2; 
-        contentPane.add(hour,c);
-        
-        c.gridx = 3; 
-        contentPane.add(setMin,c);
-        
-        c.gridx = 4; 
-        contentPane.add(min,c);
-        
-        c.gridx = 0; 
-        c.gridy = 3; 
-        c.gridwidth  = 2; 
-        c.anchor = GridBagConstraints.WEST;   
-        contentPane.add(saveButton,c);
-        
+        contentPane.add(type, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(setType, c);
+
+        c.gridx = 0;
+        c.gridy = 1;
+        c.insets = new Insets(10, 0, 0, 0);
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(volume, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(setVolume, c);
+
+        c.gridx = 0;
+        c.gridy = 2;
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(period, c);
+
+        c.gridx = 1;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(setHour, c);
+
+        c.gridx = 2;
+        contentPane.add(hour, c);
+
         c.gridx = 3;
-        c.anchor = GridBagConstraints.EAST;   
-        contentPane.add(cancelButton,c);
-     } 
+        contentPane.add(setMin, c);
+
+        c.gridx = 4;
+        contentPane.add(min, c);
+
+        c.gridx = 0;
+        c.gridy = 3;
+        c.gridwidth = 2;
+        c.anchor = GridBagConstraints.WEST;
+        contentPane.add(saveButton, c);
+
+        c.gridx = 3;
+        c.anchor = GridBagConstraints.EAST;
+        contentPane.add(cancelButton, c);
+    }
 }

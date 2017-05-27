@@ -14,14 +14,10 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.WindowConstants;
 import objects.Positions;
 import objects.User;
-import settings.ServerConnection;
+import scripts.ServerConnection;
 
 public class AddUserWindow extends WebDialog {
 
@@ -52,32 +48,25 @@ public class AddUserWindow extends WebDialog {
         WebTextField secondNameField = new WebTextField(20);
         WebLabel middleNamedLabel = new WebLabel("Отчество ");
         WebTextField middleNameField = new WebTextField(20);
-        WebButton codeButton = new WebButton("Сгенерировать пригласительный код");
         WebButton addButton = new WebButton("Добавить");
         WebButton cancelButton = new WebButton("Отмена");
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddUserWindow.this.dispose();
-            }
+        cancelButton.addActionListener((ActionEvent e) -> {
+            AddUserWindow.this.dispose();
         });
 
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AccountService accountService = ServerConnection.getAccountConnecttion();
-                User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), (Positions) positionBox.getSelectedItem());
-                String token = accountService.createUser(user);
-                NotificationManager.showNotification("Пользователь успешно добавлен в БД!");
-                TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
-                tokenFrame.setSize(300, 150);
-                tokenFrame.setResizable(false);
-                tokenFrame.setLocationRelativeTo(null);
-                tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                tokenFrame.setVisible(true);
-                AddUserWindow.this.dispose();
-            }
+        addButton.addActionListener((ActionEvent e) -> {
+            AccountService accountService = ServerConnection.getAccountConnecttion();
+            User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), (Positions) positionBox.getSelectedItem());
+            String token = accountService.createUser(user);
+            NotificationManager.showNotification("Пользователь успешно добавлен в БД!").setDisplayTime(5000);
+            TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
+            tokenFrame.setSize(300, 150);
+            tokenFrame.setResizable(false);
+            tokenFrame.setLocationRelativeTo(null);
+            tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            tokenFrame.setVisible(true);
+            AddUserWindow.this.dispose();
         });
 
         GridBagConstraints c = new GridBagConstraints();

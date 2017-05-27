@@ -1,17 +1,15 @@
 package windows;
 
+import api.ObjectService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
-import com.alee.laf.scroll.WebScrollPane;
-import com.alee.laf.tree.TreeSelectionStyle;
-import com.alee.laf.tree.WebTree;
+import com.alee.managers.notification.NotificationManager;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,10 +17,14 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.WindowConstants;
 import layout.TableLayout;
+import objects.Hangar;
+import objects.Paddock;
+import scripts.ServerConnection;
 
 /**
  *
  * @author BG
+ * @author OlesiaPC
  */
 public class MainWindow extends WebFrame {
 
@@ -38,7 +40,7 @@ public class MainWindow extends WebFrame {
         double[][] size = {{.26, .74}, {TableLayout.FILL}};
         contentPane.setLayout(new TableLayout(size));
         initMenu();
-        initListOfHangars();
+        initRightPanel();
     }
 
     private void initMenu() {
@@ -48,122 +50,136 @@ public class MainWindow extends WebFrame {
         WebButton addUserButton = new WebButton("Добавить пользователя");
         WebButton tableOfUsersButton = new WebButton("Список пользователей");
         WebButton statisticButton = new WebButton("Статистика посещения");
-        WebButton saveDataBaseButton = new WebButton("Сохранить базу данных");
         WebButton settingsButton = new WebButton("Настройки аккаунта");
-        WebButton exitButton = new WebButton("Выход");
+        WebButton logOutButton = new WebButton("Выход");
 
-//        WebList menuChoice = new WebList(menuPoints());
         menuPanel.add(menuLabel);
 
-//        GroupPanel tmp = new GroupPanel(new WebScrollPane(menuChoice));
         menuPanel.add(Box.createRigidArea(new Dimension(10, 10))); //делает отступы
         menuPanel.add(addUserButton);
         menuPanel.add(tableOfUsersButton);
         menuPanel.add(statisticButton);
-        menuPanel.add(saveDataBaseButton);
-        menuPanel.add(Box.createRigidArea(new Dimension(10, 170)));
+        menuPanel.add(Box.createRigidArea(new Dimension(10, 210)));
         menuPanel.add(settingsButton);
-        menuPanel.add(exitButton);
+        menuPanel.add(logOutButton);
 
-        exitButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //тут должен быть выход из аккаунта
-                MainWindow.this.dispose();
+        logOutButton.addActionListener((ActionEvent e) -> {
+            //тут должен быть выход из аккаунта
+            MainWindow.this.dispose();
+            StartWindow startWindow = new StartWindow();
+            startWindow.setSize(700, 500);
+            startWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+            startWindow.setLocationRelativeTo(null);
+            startWindow.setVisible(true);
+            NotificationManager.showNotification("Успешный выход из системы!").setDisplayTime(5000);
+        });
+
+        tableOfUsersButton.addActionListener((ActionEvent e) -> {
+            try {
+                TableOfUsersWindow tableOfUsers = new TableOfUsersWindow(MainWindow.this);
+                tableOfUsers.setSize(450, 250);
+                tableOfUsers.setResizable(true);
+                tableOfUsers.setLocationRelativeTo(null);
+                tableOfUsers.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                tableOfUsers.setVisible(true);
+            } catch (HeadlessException | MalformedURLException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
 
-        tableOfUsersButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    TableOfUsersWindow tableOfUsers = new TableOfUsersWindow(MainWindow.this);
-                    tableOfUsers.setSize(450, 250);
-                    tableOfUsers.setResizable(true);
-                    tableOfUsers.setLocationRelativeTo(null);
-                    tableOfUsers.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                    tableOfUsers.setVisible(true);
-                } catch (HeadlessException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (MalformedURLException ex) {
-                    Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
+        addUserButton.addActionListener((ActionEvent e) -> {
+            AddUserWindow addUser = new AddUserWindow(MainWindow.this);
+            addUser.setSize(450, 250);
+            addUser.setResizable(false);
+            addUser.setLocationRelativeTo(null);
+            addUser.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            addUser.setVisible(true);
         });
 
-        addUserButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddUserWindow addUser = new AddUserWindow(MainWindow.this);
-                addUser.setSize(450, 250);
-                addUser.setResizable(false);
-                addUser.setLocationRelativeTo(null);
-                addUser.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                addUser.setVisible(true);
-            }
-        });
-
-        settingsButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AccountSettingsWindow accountSettings = new AccountSettingsWindow(MainWindow.this);
-                accountSettings.setSize(450, 400);
-                accountSettings.setResizable(false);
-                accountSettings.setLocationRelativeTo(null);
-                accountSettings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                accountSettings.setVisible(true);
-            }
+        settingsButton.addActionListener((ActionEvent e) -> {
+            AccountSettingsWindow accountSettings = new AccountSettingsWindow(MainWindow.this);
+            accountSettings.setSize(450, 400);
+            accountSettings.setResizable(false);
+            accountSettings.setLocationRelativeTo(null);
+            accountSettings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            accountSettings.setVisible(true);
         });
 
         contentPane.add(menuPanel, "0,0");
     }
 
-    private void initListOfHangars() {
-        //DB connect Создать метод запроса данных из БД ангаров
-        WebPanel hangarTreePanel = new WebPanel();
-        hangarTreePanel.setLayout(new BoxLayout(hangarTreePanel, BoxLayout.Y_AXIS));
-        WebPanel buttons = new WebPanel();
-        buttons.setLayout(new BoxLayout(buttons, BoxLayout.X_AXIS));
+    private void initRightPanel() {
+        WebPanel rightPanel = new WebPanel();
+        WebPanel buttonsPanel = new WebPanel();
+        HangarsPane hangarsPane = new HangarsPane();
+
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
 
         WebButton addHangarButton = new WebButton("Добавить ангар");
         WebButton listOfPaddocksButton = new WebButton("Вывести список загонов");
 
-        final WebTree hangarsTree = new WebTree();
-        hangarsTree.setEditable(false);
-        hangarsTree.setSelectionMode(WebTree.DISCONTIGUOUS_TREE_SELECTION);
-        hangarsTree.setSelectionStyle(TreeSelectionStyle.group);
-        final WebScrollPane treeScroll = new WebScrollPane(hangarsTree);
-        treeScroll.setPreferredSize(new Dimension(200, 150));
+        buttonsPanel.add(addHangarButton);
+        buttonsPanel.add(listOfPaddocksButton);
 
-        buttons.add(addHangarButton);
-        buttons.add(listOfPaddocksButton);
-        hangarTreePanel.add(buttons);
-        hangarTreePanel.add(treeScroll);
+        if (hangarsPane.getHangarsListSize() != 0) {
+            WebButton addPaddock = new WebButton("Добавить загон");
 
-        contentPane.add(hangarTreePanel, "1,0");
+            buttonsPanel.add(addPaddock);
 
-        addHangarButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                AddHangarWindow addHangar = new AddHangarWindow(MainWindow.this);
-                addHangar.setSize(450, 250);
-                addHangar.setResizable(false);
-                addHangar.setLocationRelativeTo(null);
-                addHangar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                addHangar.setVisible(true);
+            addPaddock.addActionListener((ActionEvent e) -> {
+                AddPaddockWindow addPaddockWindow = new AddPaddockWindow(MainWindow.this);
+                addPaddockWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                addPaddockWindow.setSize(450, 250);
+                addPaddockWindow.setResizable(false);
+                addPaddockWindow.setLocationRelativeTo(null);
+                addPaddockWindow.setVisible(true);
+                Paddock paddock = AddPaddockWindow.getPaddock();
+                if (paddock != null) {
+                    ObjectService objectService = ServerConnection.getObjectConnecttion();
+
+                    Hangar hangar = hangarsPane.getSelectedHangar();
+
+                    paddock.setID(objectService.getObjectID('P'));
+                    hangar.addPaddock(paddock);
+                    objectService.saveObject(hangar);
+                    objectService.saveObject(paddock);
+
+                    NotificationManager.showNotification("Загон успешно добавлен!").setDisplayTime(5000);
+
+                    hangarsPane.setComponentAt(hangarsPane.getSelectedIndex(), hangarsPane.createPaddocksWebScrollPane(hangar));
+                    hangarsPane.refresh();
+                }
+            });
+        }
+
+        rightPanel.add(buttonsPanel);
+        rightPanel.add(hangarsPane);
+
+        contentPane.add(rightPanel, "1,0");
+
+        addHangarButton.addActionListener((ActionEvent e) -> {
+            AddHangarWindow addHangar = new AddHangarWindow(MainWindow.this);
+            addHangar.setSize(450, 250);
+            addHangar.setResizable(false);
+            addHangar.setLocationRelativeTo(null);
+            addHangar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            addHangar.setVisible(true);
+            Hangar hangar = AddHangarWindow.getHangar();
+            if (hangar != null) {
+                hangarsPane.addHangar(hangar);
+                hangarsPane.addTab(hangar.getName(), hangarsPane.createPaddocksWebScrollPane(hangar));
+                hangarsPane.refresh();
             }
         });
 
-        listOfPaddocksButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                TableOfPaddocksWindow tableOfPaddocks = new TableOfPaddocksWindow(MainWindow.this);
-                tableOfPaddocks.setSize(1000, 250);
-                tableOfPaddocks.setResizable(true);
-                tableOfPaddocks.setLocationRelativeTo(null);
-                tableOfPaddocks.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                tableOfPaddocks.setVisible(true);
-            }
+        listOfPaddocksButton.addActionListener((ActionEvent e) -> {
+            TableOfPaddocksWindow tableOfPaddocks = new TableOfPaddocksWindow(MainWindow.this);
+            tableOfPaddocks.setSize(1000, 250);
+            tableOfPaddocks.setResizable(true);
+            tableOfPaddocks.setLocationRelativeTo(null);
+            tableOfPaddocks.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            tableOfPaddocks.setVisible(true);
         });
     }
 }

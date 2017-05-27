@@ -14,14 +14,10 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import objects.Positions;
 import objects.User;
-import settings.ServerConnection;
+import scripts.ServerConnection;
 
 /**
  *
@@ -57,28 +53,22 @@ public class UserInfWindow extends WebDialog {
         secondNameField.setText(user.getSecondName());
         middleNameField.setText(user.getMiddleName());
 
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                user.setFirstName(firstNameField.getText());
-                user.setSecondName(secondNameField.getText());
-                user.setMiddleName(middleNameField.getText());
-                user.setLevelOfAccess((Positions) positionBox.getSelectedItem());
-                ObjectService objectService = ServerConnection.getObjectConnecttion();
-                objectService.updateObject(user);
-                UserInfWindow.this.dispose();
-            }
+        saveButton.addActionListener((ActionEvent e) -> {
+            user.setFirstName(firstNameField.getText());
+            user.setSecondName(secondNameField.getText());
+            user.setMiddleName(middleNameField.getText());
+            user.setLevelOfAccess((Positions) positionBox.getSelectedItem());
+            ObjectService objectService = ServerConnection.getObjectConnecttion();
+            objectService.saveObject(user);
+            UserInfWindow.this.dispose();
         });
 
-        deleteButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Вы уверены?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
-                if (сonfirm == JOptionPane.YES_OPTION) {
-                    ObjectService objectService = ServerConnection.getObjectConnecttion();
-                    objectService.deleteObject(user);
-                    UserInfWindow.this.dispose();
-                }
+        deleteButton.addActionListener((ActionEvent e) -> {
+            int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Вы уверены?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
+            if (сonfirm == JOptionPane.YES_OPTION) {
+                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                objectService.deleteObject(user);
+                UserInfWindow.this.dispose();
             }
         });
 
