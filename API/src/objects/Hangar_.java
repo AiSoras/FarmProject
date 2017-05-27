@@ -20,5 +20,5 @@ public class Hangar_ {
     public static volatile SingularAttribute<Hangar, String> name;
     public static volatile SingularAttribute<Hangar, Positions> minimalLevelOfAccess;
     public static volatile SingularAttribute<Hangar, TypeOfHangar> type;
-    public static volatile ListAttribute<Hangar,Paddock> paddocks;
+    public static volatile ListAttribute<Hangar, Paddock> paddocks;
 }

@@ -17,7 +17,8 @@ public class Hangar implements Serializable {
     private Positions minimalLevelOfAccess;
     @Column
     private TypeOfHangar type;
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "hangar")
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "Hangar_ID", nullable = false)
     private List<Paddock> paddocks;
 
     public Hangar() {
@@ -69,8 +70,8 @@ public class Hangar implements Serializable {
     public void setPaddocks(List<Paddock> paddocks) {
         this.paddocks = paddocks;
     }
-    
-    public void addPaddock(Paddock paddock){
+
+    public void addPaddock(Paddock paddock) {
         this.paddocks.add(paddock);
     }
 

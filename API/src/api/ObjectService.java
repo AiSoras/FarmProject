@@ -14,9 +14,7 @@ import objects.User;
  */
 public interface ObjectService {
     
-    public void createObject(Object object, char symbol);
-    
-    public void updateObject(Object object);
+    public void saveObject(Object object);
     
     public String getObjectID(Object object);
     
@@ -25,5 +23,7 @@ public interface ObjectService {
     public void deleteObject(Object object);
     
     public List<User> getListOfUsersLike(String query);
+    
+    public String getObjectID(char symbol);
     
 }

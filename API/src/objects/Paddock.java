@@ -1,8 +1,8 @@
 package objects;
 
 import java.io.Serializable;
-import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
@@ -17,25 +17,22 @@ public class Paddock implements Serializable {
     @Embedded
     private Ration ration;
     @Column
-    private SpeciesOfAnimal species; //Вид один для загона
+    private SpeciesOfAnimal species;
     @Column
-    private Time time; //Время последнего кормления (одинаково для всего загона)
-    @OneToMany (cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn (name = "Paddock_ID")
-    private List<Passport> animals;
-    @ManyToOne
-    @JoinColumn (name = "Hangar_ID", nullable = false)
-    private Hangar hangar;
+    private Date date;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "Paddock_ID", nullable = false)
+    private List<Animal> animals;
 
     public Paddock() {
     }
 
-    public Paddock(String name, Ration ration, SpeciesOfAnimal species, Time time, Hangar hangar) {
+    public Paddock(String name, Ration ration, SpeciesOfAnimal species, Date date) {
         this.name = name;
         this.ration = ration;
         this.species = species;
-        this.time = time;
-        this.hangar = hangar;
+        this.date = date;
+        this.animals = new ArrayList<Animal>();
     }
 
     public String getName() {
@@ -70,30 +67,20 @@ public class Paddock implements Serializable {
         this.species = species;
     }
 
-    public Time getTime() {
-        return time;
+    public Date getTime() {
+        return date;
     }
 
-    public void setTime(Time time) {
-        this.time = time;
+    public void setTime(Date time) {
+        this.date = time;
     }
 
-    public List<Passport> getAnimals() {
+    public List<Animal> getAnimals() {
         return animals;
     }
 
-    public void setAnimals(List<Passport> animals) {
+    public void setAnimals(List<Animal> animals) {
         this.animals = animals;
     }
 
-    public Hangar getHangar() {
-        return hangar;
-    }
-
-    public void setHangar(Hangar hangar) {
-        this.hangar = hangar;
-    }
-    
-    
-    
 }
