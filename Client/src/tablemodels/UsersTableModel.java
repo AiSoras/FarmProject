@@ -54,7 +54,7 @@ public class UsersTableModel extends AbstractTableModel {
             case 4:
                 return user.getToken().equals("USED") ? "Да" : "Нет";
         }
-        return ""; //для теста
+        return "";
     }
 
     public String getColumnName(int column) {
