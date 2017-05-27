@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.util.Properties;
 import objects.Hangar;
 import objects.Paddock;
-import objects.Passport;
+import objects.Animal;
 import objects.Ration;
 import objects.User;
 import objects.Vaccination;
@@ -36,7 +36,7 @@ public final class DBManager {
 //    public static void main(String[] args) {
 //        DBManager db = DBManager.getInstance();
 //    }
-    
+//    
     public static synchronized DBManager getInstance() {
         if (dBManager == null) {
             dBManager = new DBManager();
@@ -63,7 +63,7 @@ public final class DBManager {
                 .addAnnotatedClass(Hangar.class)
                 .addAnnotatedClass(Paddock.class)
                 .addAnnotatedClass(Ration.class)
-                .addAnnotatedClass(Passport.class)
+                .addAnnotatedClass(Animal.class)
                 .addAnnotatedClass(Vaccination.class)
                 .addAnnotatedClass(User.class);
 

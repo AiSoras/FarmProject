@@ -27,22 +27,6 @@ public class ObjectServiceImplementation implements ObjectService {
     /**
      *
      * @param object
-     * @param symbol
-     */
-    @Override
-    public void createObject(Object object, char symbol) {
-        try {
-            Method method = object.getClass().getMethod("setID", String.class);
-            method.invoke(object, UUIDGeneration.create(symbol));
-            DBService.saveObject(object);
-        } catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
-            Logger.getLogger(ObjectServiceImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     *
-     * @param object
      * @return
      */
     @Override
@@ -91,8 +75,14 @@ public class ObjectServiceImplementation implements ObjectService {
      * @param object
      */
     @Override
-    public void updateObject(Object object) {
+    public void saveObject(Object object) {
         DBService.saveObject(object);
     }
 
+    @Override
+    public String getObjectID(char symbol) {
+        return UUIDGeneration.create(symbol);
+    }
+
+    
 }

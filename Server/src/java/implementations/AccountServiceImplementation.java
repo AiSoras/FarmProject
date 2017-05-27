@@ -7,7 +7,13 @@ package implementations;
 
 import api.AccountService;
 import api.ObjectService;
+import com.caucho.hessian.server.HessianServlet;
 import database.DBService;
+import java.io.IOException;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import objects.User;
 import org.apache.logging.log4j.LogManager;
 import scripts.Crypt;
@@ -19,9 +25,16 @@ import scripts.TokenGeneration;
  *
  * @author OlesiaPC
  */
-public class AccountServiceImplementation implements AccountService {
+public class AccountServiceImplementation implements AccountService { //extends HessianServlet
 
     private static final org.apache.logging.log4j.Logger logger = LogManager.getLogger(AccountService.class.getName());
+
+//    @Override
+//    public void service(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+//        String seanceID = ((HttpServletRequest) request).getHeader("seanceID");
+//        System.out.println(seanceID);
+//        super.service(request, response);
+//    }
 
     /**
      *
@@ -34,6 +47,11 @@ public class AccountServiceImplementation implements AccountService {
         User user = DBService.getByLoginAndPassword(login, Crypt.encryptMD5(password));
         return user;
     }
+    
+//    public User getCurrentUser(){
+//        
+//        return null;
+//    }
 
     /**
      *
@@ -41,7 +59,7 @@ public class AccountServiceImplementation implements AccountService {
      * @return
      */
     @Override
-    public boolean saveAccountChanges(User user) { 
+    public boolean saveAccountChanges(User user) {
         if (DBService.isLoginOrEMailExists(user.getLogin(), user.geteMail())) { //Проверка на существование в БД такого логина и/или почты. 
             return false;
         } else {
@@ -64,7 +82,8 @@ public class AccountServiceImplementation implements AccountService {
         ObjectService objectService = new ObjectServiceImplementation();
         String token = TokenGeneration.create();
         user.setToken(token);
-        objectService.createObject(user, 'U');
+        user.setID(objectService.getObjectID('U'));
+        objectService.saveObject(user);
         return token;
     }
 
