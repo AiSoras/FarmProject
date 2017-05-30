@@ -28,6 +28,7 @@ public class WindowsSizes {
             File file = new File("WinSize.properties");
             InputStream inputStream = new FileInputStream(file);
             properties.load(inputStream);
+            inputStream.close();
         } catch (IOException ex) {
             //Логгер
         }
@@ -49,8 +50,9 @@ public class WindowsSizes {
             try {
                 properties.setProperty(className, size);
                 File file = new File("WinSize.properties");
-                OutputStream inputStream = new FileOutputStream(file);
-                properties.store(inputStream, "Sizes of windows");
+                OutputStream outputStream = new FileOutputStream(file);
+                properties.store(outputStream, "Sizes of windows");
+                outputStream.close();
             } catch (IOException ex) {
                 //Логгер
             }
