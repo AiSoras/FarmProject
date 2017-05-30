@@ -3,6 +3,7 @@ package scripts;
 import objects.Positions;
 import objects.SpeciesOfAnimal;
 import objects.TypeOfFood;
+import objects.TypeOfHangar;
 import objects.TypeOfVaccination;
 
 /**
@@ -10,10 +11,10 @@ import objects.TypeOfVaccination;
  * @author BG
  */
 public class EnumsRender {
-    
-    public static String PaddockSpeciesRender (SpeciesOfAnimal species){
+
+    public static String PaddockSpeciesRender(SpeciesOfAnimal species) {
         String spiciesRus = "";
-        switch(species){
+        switch (species) {
             case HORSE:
                 spiciesRus = "лошади";
                 break;
@@ -30,15 +31,15 @@ public class EnumsRender {
                 spiciesRus = "свиньи";
                 break;
             default:
-                break;       
+                break;
         }
-        return(spiciesRus);
+        return (spiciesRus);
     }
-    
-    public static String[] ListOfSpeciesRender (SpeciesOfAnimal [] species){
+
+    public static String[] ListOfSpeciesRender(SpeciesOfAnimal[] species) {
         String[] spiciesListRus = new String[5];
-        for(int i=0; i < species.length; i++){
-            switch(species[i]){
+        for (int i = 0; i < species.length; i++) {
+            switch (species[i]) {
                 case HORSE:
                     spiciesListRus[i] = "лошади";
                     break;
@@ -55,15 +56,15 @@ public class EnumsRender {
                     spiciesListRus[i] = "свиньи";
                     break;
                 default:
-                    break;       
+                    break;
             }
         }
-        return(spiciesListRus);
+        return (spiciesListRus);
     }
-    
-    public static String PositionsRender (Positions position){
+
+    public static String PositionsRender(Positions position) {
         String positionRus = "";
-        switch(position){
+        switch (position) {
             case CLEANER:
                 positionRus = "уборщик";
                 break;
@@ -80,14 +81,40 @@ public class EnumsRender {
                 positionRus = "администратор";
                 break;
             default:
-                break;       
+                break;
         }
-        return(positionRus);
+        return (positionRus);
     }
-    
-    public static String TypeOfFoodRender (TypeOfFood food){
+
+    public static String[] PositionsListRender(Positions[] position) {
+        String[] positionsListRus = new String[5];
+        for (int i = 0; i < position.length; i++) {
+            switch (position[i]) {
+                case CLEANER:
+                    positionsListRus[i] = "уборщик";
+                    break;
+                case BREADWINNER:
+                    positionsListRus[i] = "кормилец";
+                    break;
+                case VET:
+                    positionsListRus[i] = "ветеринар";
+                    break;
+                case TECHNOLOGIST:
+                    positionsListRus[i] = "технолог";
+                    break;
+                case ADMIN:
+                    positionsListRus[i] = "администратор";
+                    break;
+                default:
+                    break;
+            }
+        }
+        return (positionsListRus);
+    }
+
+    public static String TypeOfFoodRender(TypeOfFood food) {
         String foodRus = "";
-        switch(food){
+        switch (food) {
             case WET:
                 foodRus = "сухой";
                 break;
@@ -95,15 +122,15 @@ public class EnumsRender {
                 foodRus = "влажный";
                 break;
             default:
-                break;       
+                break;
         }
-        return(foodRus);
+        return (foodRus);
     }
-    
-    public static String [] TypeOfFoodListRender (TypeOfFood [] food){
+
+    public static String[] TypeOfFoodListRender(TypeOfFood[] food) {
         String[] foodListRus = new String[2];
-        for(int i=0; i < food.length; i++) {
-            switch(food[i]){
+        for (int i = 0; i < food.length; i++) {
+            switch (food[i]) {
                 case WET:
                     foodListRus[i] = "сухой";
                     break;
@@ -111,16 +138,16 @@ public class EnumsRender {
                     foodListRus[i] = "влажный";
                     break;
                 default:
-                    break;       
+                    break;
             }
         }
-        return(foodListRus);
+        return (foodListRus);
     }
-    
-    public static String[] ListOfVaccinationsRender (TypeOfVaccination [] type){
+
+    public static String[] ListOfVaccinationsRender(TypeOfVaccination[] type) {
         String[] typeListRus = new String[2];
-        for(int i=0; i < type.length; i++){
-            switch(type[i]){
+        for (int i = 0; i < type.length; i++) {
+            switch (type[i]) {
                 case SEASONAL:
                     typeListRus[i] = "сезонная";
                     break;
@@ -128,9 +155,41 @@ public class EnumsRender {
                     typeListRus[i] = "разовая";
                     break;
                 default:
-                    break;       
+                    break;
             }
         }
-        return(typeListRus);
+        return (typeListRus);
+    }
+
+    public static String[] TypeOfHangarListRender(TypeOfHangar[] type) {
+        String[] typeListRus = new String[2];
+        for (int i = 0; i < type.length; i++) {
+            switch (type[i]) {
+                case STANDARD:
+                    typeListRus[i] = "стандартный";
+                    break;
+                case REHABILITATION:
+                    typeListRus[i] = "реабилитационный";
+                    break;
+                default:
+                    break;
+            }
+        }
+        return (typeListRus);
+    }
+
+    public static String TypeOfHangarRender(TypeOfHangar type) {
+        String typeRus = "";
+        switch (type) {
+            case STANDARD:
+                typeRus = "стандартный";
+                break;
+            case REHABILITATION:
+                typeRus = "реабилитационный";
+                break;
+            default:
+                break;
+        }
+        return (typeRus);
     }
 }

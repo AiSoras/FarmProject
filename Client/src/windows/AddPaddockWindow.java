@@ -12,12 +12,17 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import objects.Paddock;
 import objects.Ration;
 import objects.SpeciesOfAnimal;
+import scripts.EnumsRender;
 import scripts.RegEx;
+import scripts.WindowsSizes;
 
 /**
  *
@@ -31,30 +36,29 @@ public class AddPaddockWindow extends WebDialog {
     public static Ration ration; //Думаю, что лучше сделать private и создать геттеры и сеттеры
     public static Boolean addRationMark = false;
 
-//    public static void main(String[] args) {
-//        WebLookAndFeel.install();
-//        AddPaddockWindow addPaddock = new AddPaddockWindow();
-//        addPaddock.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        addPaddock.setSize(450, 250);
-//        addPaddock.setResizable(false);
-//        addPaddock.setLocationRelativeTo(null);
-//        addPaddock.setVisible(true);
-//    }
     public AddPaddockWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавить загон", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
-        setLayout(new GridBagLayout());
+        contentPane.setLayout(new GridBagLayout());
         paddock = null;
         addRationMark = false;
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowsSizes.saveSize("AddPaddockWindow", AddPaddockWindow.this.getSize());
+                super.windowClosing(e);
+            }
+        };
+        addWindowListener(exitListener);
         initAddPaddock();
     }
 
     private void initAddPaddock() {
         WebLabel paddockNameLabel = new WebLabel("Желаемое название ");
         WebTextField paddockNameField = new WebTextField(20);
-        WebLabel animalsType = new WebLabel("Тип животных ");
-        WebComboBox setType = new WebComboBox(SpeciesOfAnimal.values());
-        WebButton addRation = new WebButton("Настроить рацион");
+        WebLabel animalsTypeLabel = new WebLabel("Тип животных ");
+        WebComboBox animalsTypeBox = new WebComboBox(EnumsRender.ListOfSpeciesRender(SpeciesOfAnimal.values()));
+        WebButton addRationButton = new WebButton("Настроить рацион");
         WebButton cancelButton = new WebButton("Отмена");
         WebButton saveButton = new WebButton("Сохранить");
 
@@ -65,7 +69,7 @@ public class AddPaddockWindow extends WebDialog {
         saveButton.addActionListener((ActionEvent e) -> {
             if (RegEx.checkSpecialName(paddockNameField.getText())) {
                 if (addRationMark) {
-                    paddock = new Paddock(paddockNameField.getText(), ration, (SpeciesOfAnimal) setType.getSelectedItem(), new Date(System.currentTimeMillis()));
+                    paddock = new Paddock(paddockNameField.getText(), ration, (SpeciesOfAnimal) SpeciesOfAnimal.values()[animalsTypeBox.getSelectedIndex()], new Date(System.currentTimeMillis()));
                     AddPaddockWindow.this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(new WebFrame(), "Необходимо настроить рацион!", "Внимание!", JOptionPane.WARNING_MESSAGE);
@@ -75,10 +79,10 @@ public class AddPaddockWindow extends WebDialog {
             }
         });
 
-        addRation.addActionListener((ActionEvent e) -> {
+        addRationButton.addActionListener((ActionEvent e) -> {
             AddRationWindow addRationWindow = new AddRationWindow(AddPaddockWindow.this);
-            addRationWindow.setSize(350, 200);
-            addRationWindow.setResizable(false);
+            addRationWindow.setSize(WindowsSizes.getDimension("AddRationWindow"));
+//            addRationWindow.setResizable(false);
             addRationWindow.setLocationRelativeTo(null);
             addRationWindow.setVisible(true);
         });
@@ -105,17 +109,17 @@ public class AddPaddockWindow extends WebDialog {
         c.gridy = 1;
         c.insets = new Insets(10, 0, 0, 0);
         c.anchor = GridBagConstraints.EAST;
-        contentPane.add(animalsType, c);
+        contentPane.add(animalsTypeLabel, c);
 
         c.gridx = 1;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(setType, c);
+        contentPane.add(animalsTypeBox, c);
 
         c.gridx = 0;
         c.gridy = 2;
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.CENTER;
-        contentPane.add(addRation, c);
+        contentPane.add(addRationButton, c);
 
         c.gridx = 0;
         c.gridy = 3;
@@ -136,5 +140,11 @@ public class AddPaddockWindow extends WebDialog {
 
     public static Paddock getPaddock() {
         return paddock;
+    }
+
+    @Override
+    public void dispose() {
+        WindowsSizes.saveSize("AddPaddockWindow", AddPaddockWindow.this.getSize());
+        super.dispose();
     }
 }

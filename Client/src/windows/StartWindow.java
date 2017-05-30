@@ -16,14 +16,17 @@ import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import layout.TableLayout;
 import objects.User;
 import scripts.RegEx;
 import scripts.ServerConnection;
+import scripts.WindowsSizes;
 
 /**
  *
@@ -38,13 +41,14 @@ public class StartWindow extends WebFrame {
 
     public StartWindow() throws HeadlessException {
         super("Стартовое окно");
-
-        //Локализация кнопок у диалоговых окон
-        UIManager.put("OptionPane.yesButtonText", "Да");
-        UIManager.put("OptionPane.noButtonText", "Нет");
-        UIManager.put("OptionPane.cancelButtonText", "Отмена");
-        UIManager.put("OptionPane.okButtonText", "ОК");
-
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowsSizes.saveSize("StartWindow", StartWindow.this.getSize());
+                super.windowClosing(e);
+            }
+        };
+        addWindowListener(exitListener);
         initWindow();
     }
 
@@ -80,7 +84,7 @@ public class StartWindow extends WebFrame {
         forgotPassword.addActionListener((ActionEvent e) -> {
             WebFrame requestLogin = new WebFrame();
             String eMail = JOptionPane.showInputDialog(requestLogin, "Введите почту", "Восстановление пароля", HEIGHT);
-            if (eMail != null && RegEx.checkEMail(eMail)) {
+            if (RegEx.checkEMail(eMail)) {
                 AccountService accountService = ServerConnection.getAccountConnecttion();
                 if (accountService.resetPassword(eMail)) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Письмо отправлено на указанный почтовый ящик!", "Успешно!", JOptionPane.INFORMATION_MESSAGE);
@@ -92,7 +96,7 @@ public class StartWindow extends WebFrame {
         });
 
         signInButton.addActionListener((ActionEvent e) -> {
-            if (loginField == null || passwordField == null || !RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText())) {
+            if (!RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText())) {
                 JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя строчные буквы,\nцифры и точку!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             } else {
                 AccountService accountService = ServerConnection.getAccountConnecttion();
@@ -102,12 +106,12 @@ public class StartWindow extends WebFrame {
                 } else {
                     StartWindow.this.dispose();
                     NotificationManager.showNotification("Успешный вход в систему!").setDisplayTime(5000);
-                    MainWindow mainFrame = new MainWindow();
-                    mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    mainFrame.setSize(600, 400);
+                    MainWindow mainWindow = new MainWindow(user1);
+                    mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                    mainWindow.setSize(WindowsSizes.getDimension("MainWindow"));
 //                        mainFrame.setResizable(false);
-                    mainFrame.setLocationRelativeTo(null);
-                    mainFrame.setVisible(true);
+                    mainWindow.setLocationRelativeTo(null);
+                    mainWindow.setVisible(true);
                 }
             }
         });
@@ -171,7 +175,7 @@ public class StartWindow extends WebFrame {
         WebButton returnToSignInPanel = new WebButton("Вернуться", new ImageIcon(StartWindow.class.getResource("../icons/arrow.png")));
 
         signUpButton.addActionListener((ActionEvent e) -> {
-            if (loginField == null || passwordField == null || passwordRepeatField == null || eMailField == null || !RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText()) || !RegEx.checkLoginAndPassword(passwordRepeatField.getText())) {
+            if (!RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText()) || !RegEx.checkLoginAndPassword(passwordRepeatField.getText())) {
                 JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя латинские буквы,\nцифры и знак нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (RegEx.checkEMail(eMailField.getText())) {
@@ -253,4 +257,10 @@ public class StartWindow extends WebFrame {
         contentPane.add(infPanel, "0,0");
     }
 
+    @Override
+    public void dispose() {
+        WindowsSizes.saveSize("StartWindow", StartWindow.this.getSize());
+        super.dispose();
+    }
+    
 }

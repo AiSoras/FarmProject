@@ -4,6 +4,8 @@ import com.alee.extended.date.WebDateField;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
+import com.alee.laf.rootpane.WebFrame;
+import com.alee.laf.spinner.WebSpinner;
 import com.alee.laf.text.WebTextField;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -11,85 +13,87 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import javax.swing.JOptionPane;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
+import objects.Animal;
+import scripts.RegEx;
+import scripts.WindowsSizes;
 
 public class AddAnimalWindow extends WebDialog {
 
     private final Container contentPane;
+    private static Animal animal;
 
-//    public static void main(String[] args) {
-//        WebLookAndFeel.install();
-//        AddAnimalWindow  addAnimal = new AddAnimalWindow();
-//        addAnimal.setSize(450, 300);
-//        addAnimal.setResizable(false);
-//        addAnimal.setLocationRelativeTo(null);
-//        addAnimal.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        addAnimal.setVisible(true);
-//    }
     public AddAnimalWindow(WebDialog owner) throws HeadlessException {
         super(owner, "Добавление животного", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
-        setLayout(new GridBagLayout());
+        contentPane.setLayout(new GridBagLayout());
+        animal = null;
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowsSizes.saveSize("AddAnimalWindow", AddAnimalWindow.this.getSize());
+                super.windowClosing(e);
+            }
+        };
+        addWindowListener(exitListener);
         initAddAnimal();
     }
 
     private void initAddAnimal() {
-        WebLabel animalName = new WebLabel("Желаемое имя ");
-        WebTextField name = new WebTextField(20);
-        WebLabel birth = new WebLabel("Дата рождения ");
-        WebLabel animalWeight = new WebLabel("Вес, кг ");
-        WebLabel animalBreed = new WebLabel("Порода (необязательно) ");
-        WebTextField setWeight = new WebTextField(15);
-        WebTextField setBreed = new WebTextField(15);
+        WebLabel animalNameLabel = new WebLabel("Желаемое имя: ");
+        WebTextField animalNameField = new WebTextField(20);
+        WebLabel birthLabel = new WebLabel("Дата рождения: ");
+        WebLabel weightLabel = new WebLabel("Вес, кг: ");
+        WebLabel breedLabel = new WebLabel("Порода (необязательно): ");
+//        WebTextField weightField = new WebTextField(15);
+        WebTextField breedField = new WebTextField(20);
+
+        WebSpinner weightSpinner = new WebSpinner(new SpinnerNumberModel(1, 1, 1000, 1));
+        WebSpinner.DefaultEditor weightEditor = (WebSpinner.DefaultEditor) weightSpinner.getEditor();
+        weightEditor.getTextField().setEditable(false);
 
         final WebDateField dateField = new WebDateField();
+        dateField.setEditable(false);
         dateField.setInputPrompt("дд.мм.гггг");
         dateField.setInputPromptPosition(SwingConstants.CENTER);
 
         WebButton vaccinationsButton = new WebButton("Прививки");
-//        WebButton addAndBack = new WebButton("Добавить и вернуться");
-//        WebButton addAndGo = new WebButton("Добавить и перейти к животному");
         WebButton addButton = new WebButton("Добавить");
         WebButton cancelButton = new WebButton("Отмена");
 
         cancelButton.addActionListener((ActionEvent e) -> {
             AddAnimalWindow.this.dispose();
+            System.out.println(Integer.parseInt(weightEditor.getTextField().getText()));
         });
 
         addButton.addActionListener((ActionEvent e) -> {
-            AddAnimalWindow.this.dispose();
+            if (RegEx.checkSpecialName(animalNameField.getText())) {
+                if (!dateField.getText().isEmpty()) {
+                    animal = new Animal(animalNameField.getText(), dateField.getDate(), Integer.parseInt(weightEditor.getTextField().getText()), breedField.getText());
+                    AddAnimalWindow.this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(new WebFrame(), "Необходимо указать дату рождения!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Желаемое имя\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         vaccinationsButton.addActionListener((ActionEvent e) -> {
-            TableOfVaccinationsWindow tableOfVaccinations = new TableOfVaccinationsWindow(AddAnimalWindow.this);
-            tableOfVaccinations.setSize(600, 150);
-            tableOfVaccinations.setResizable(false);
+            TableOfVaccinationsWindow tableOfVaccinations = new TableOfVaccinationsWindow(AddAnimalWindow.this, animal);
+            tableOfVaccinations.setSize(WindowsSizes.getDimension("TableOfVaccinationsWindow"));
+//            tableOfVaccinations.setResizable(false);
             tableOfVaccinations.setLocationRelativeTo(null);
             tableOfVaccinations.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             tableOfVaccinations.setVisible(true);
         });
 
-//        addAndBack.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                AddAnimalWindow.this.dispose();
-//            }
-//        });
-//        
-//        addAndGo.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                AddAnimalWindow.this.dispose();
-//                
-//                AnimalInfWindow  animalInf = new AnimalInfWindow();
-//                animalInf.setSize(500, 300);
-//                animalInf.setResizable(false);
-//                animalInf.setLocationRelativeTo(null);
-//                animalInf.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//                animalInf.setVisible(true);
-//            }
-//        });
         GridBagConstraints c = new GridBagConstraints();
 
         c.anchor = GridBagConstraints.EAST;
@@ -102,13 +106,13 @@ public class AddAnimalWindow extends WebDialog {
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        contentPane.add(animalName, c);
+        contentPane.add(animalNameLabel, c);
 
         c.gridx = 1;
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        contentPane.add(name, c);
+        contentPane.add(animalNameField, c);
 
         c.gridx = 0;
         c.gridy = 1;
@@ -116,7 +120,7 @@ public class AddAnimalWindow extends WebDialog {
         c.insets = new Insets(10, 0, 0, 0);
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.NONE;
-        contentPane.add(birth, c);
+        contentPane.add(birthLabel, c);
 
         c.gridx = 1;
         c.gridwidth = 2;
@@ -129,26 +133,26 @@ public class AddAnimalWindow extends WebDialog {
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.NONE;
-        contentPane.add(animalWeight, c);
+        contentPane.add(weightLabel, c);
 
         c.gridx = 1;
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        contentPane.add(setWeight, c);
+        contentPane.add(weightSpinner, c);
 
         c.gridx = 0;
         c.gridy = 3;
         c.gridwidth = 1;
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.NONE;
-        contentPane.add(animalBreed, c);
+        contentPane.add(breedLabel, c);
 
         c.gridx = 1;
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
         c.fill = GridBagConstraints.HORIZONTAL;
-        contentPane.add(setBreed, c);
+        contentPane.add(breedField, c);
 
         c.gridx = 1;
         c.gridy = 4;
@@ -165,4 +169,15 @@ public class AddAnimalWindow extends WebDialog {
         c.gridx = 2;
         contentPane.add(cancelButton, c);
     }
+
+    public static Animal getAnimal() {
+        return animal;
+    }
+
+    @Override
+    public void dispose() {
+        WindowsSizes.saveSize("AddAnimalWindow", AddAnimalWindow.this.getSize());
+        super.dispose();
+    }
+
 }

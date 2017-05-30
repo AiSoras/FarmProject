@@ -14,12 +14,16 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import objects.Hangar;
 import objects.Positions;
 import objects.TypeOfHangar;
 import scripts.RegEx;
 import scripts.ServerConnection;
+import scripts.WindowsSizes;
 
 /**
  * @author BG
@@ -30,20 +34,19 @@ public class AddHangarWindow extends WebDialog {
     private final Container contentPane;
     private static Hangar hangar;
 
-//    public static void main(String[] args) {
-//        WebLookAndFeel.install();
-//        AddHangarWindow addHangar = new AddHangarWindow(new WebFrame(""));
-//        addHangar.setSize(450, 250);
-//        addHangar.setResizable(false);
-//        addHangar.setLocationRelativeTo(null);
-//        addHangar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-//        addHangar.setVisible(true);
-//    }
     public AddHangarWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавление ангара", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
-        setLayout(new GridBagLayout());
+        contentPane.setLayout(new GridBagLayout());
         hangar = null;
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowsSizes.saveSize("AddHangarWindow", AddHangarWindow.this.getSize());
+                super.windowClosing(e);
+            }
+        };
+        addWindowListener(exitListener);
         initAddHangar();
     }
 
@@ -124,4 +127,11 @@ public class AddHangarWindow extends WebDialog {
     public static Hangar getHangar() {
         return hangar;
     }
+
+    @Override
+    public void dispose() {
+        WindowsSizes.saveSize("AddHangarWindow", AddHangarWindow.this.getSize());
+        super.dispose();
+    }
+
 }

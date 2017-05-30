@@ -5,6 +5,7 @@ import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
+import com.alee.laf.spinner.WebSpinner;
 import com.alee.laf.text.WebTextField;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
@@ -12,47 +13,52 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
+import javax.swing.SpinnerNumberModel;
 import objects.Ration;
 import objects.TypeOfFood;
+import scripts.EnumsRender;
+import scripts.WindowsSizes;
 
 public class AddRationWindow extends WebDialog {
 
     private final Container contentPane;
 
-//    public static void main(String[] args) {
-//        WebLookAndFeel.install();
-//        AddRationWindow addRation = new AddRationWindow();
-//        addRation.setSize(350, 200);
-//        addRation.setResizable(false);
-//        addRation.setLocationRelativeTo(null);
-//        addRation.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//        addRation.setVisible(true);
-//    }
-    public AddRationWindow(WebFrame owner) throws HeadlessException {
-        super(owner, "Настроить рацион", ModalityType.APPLICATION_MODAL);
-        contentPane = getContentPane();
-        setLayout(new GridBagLayout());
-        initAddRation();
-    }
-
     public AddRationWindow(WebDialog owner) throws HeadlessException {
         super(owner, "Настроить рацион", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
-        setLayout(new GridBagLayout());
+        contentPane.setLayout(new GridBagLayout());
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowsSizes.saveSize("AddRationWindow", AddRationWindow.this.getSize());
+                super.windowClosing(e);
+            }
+        };
+        addWindowListener(exitListener);
         initAddRation();
     }
 
     private void initAddRation() {
-        WebLabel type = new WebLabel("Тип корма ");
-        WebLabel volume = new WebLabel("Объем, г ");
-        WebLabel period = new WebLabel("Период ");
-        WebLabel hour = new WebLabel("ч");
-        WebLabel min = new WebLabel("м");
-        WebTextField setVolume = new WebTextField(10);
-        WebTextField setHour = new WebTextField(10);
-        WebTextField setMin = new WebTextField(10);
-        WebComboBox setType = new WebComboBox(TypeOfFood.values());
+        WebLabel typeOfFoodLabel = new WebLabel("Тип корма: ");
+        WebLabel volumeLabel = new WebLabel("Объем, г: ");
+        WebLabel periodLabel = new WebLabel("Период кормления: ");
+        WebLabel periodHourLabel = new WebLabel("ч");
+        WebLabel periodMinLabel = new WebLabel("м");
+        WebTextField volumeField = new WebTextField(10);
+
+        WebSpinner periodHourSpinner = new WebSpinner(new SpinnerNumberModel(0, 0, 24, 1));
+        WebSpinner.DefaultEditor periodHourEditor = (WebSpinner.DefaultEditor) periodHourSpinner.getEditor();
+        periodHourEditor.getTextField().setEditable(false);
+
+        WebSpinner periodMinSpinner = new WebSpinner(new SpinnerNumberModel(0, 0, 60, 1));
+        WebSpinner.DefaultEditor periodMinEditor = (WebSpinner.DefaultEditor) periodMinSpinner.getEditor();
+        periodMinEditor.getTextField().setEditable(false);
+
+        WebComboBox typeOfFoodBox = new WebComboBox(EnumsRender.TypeOfFoodListRender(TypeOfFood.values()));
         WebButton saveButton = new WebButton("Сохранить");
         WebButton cancelButton = new WebButton("Отмена");
 
@@ -61,18 +67,10 @@ public class AddRationWindow extends WebDialog {
         });
 
         saveButton.addActionListener((ActionEvent e) -> {
-            if (setVolume.getText().compareTo("") != 0) {
-                if (setHour.getText().compareTo("") != 0) {
-                    if (setMin.getText().compareTo("") != 0) {
-                        Ration ration = new Ration((TypeOfFood) setType.getSelectedItem(), Integer.parseInt(setVolume.getText()), Integer.parseInt(setHour.getText()) * 60 + Integer.parseInt(setMin.getText()));
-                        AddPaddockWindow.setRation(ration);
-                        AddRationWindow.this.dispose();
-                    } else {
-                        JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести количество минут!", "Внимание!", JOptionPane.WARNING_MESSAGE);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести количество часов!", "Внимание!", JOptionPane.WARNING_MESSAGE);
-                }
+            if (volumeField.getText().compareTo("") != 0) {
+                Ration ration = new Ration((TypeOfFood) TypeOfFood.values()[typeOfFoodBox.getSelectedIndex()], Integer.parseInt(volumeField.getText()), Integer.parseInt(periodHourEditor.getTextField().getText()) * 60 + Integer.parseInt(periodMinEditor.getTextField().getText()));
+                AddPaddockWindow.setRation(ration);
+                AddRationWindow.this.dispose();
             } else {
                 JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести объем!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             }
@@ -90,48 +88,58 @@ public class AddRationWindow extends WebDialog {
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        contentPane.add(type, c);
+        contentPane.add(typeOfFoodLabel, c);
 
         c.gridx = 1;
+        c.gridwidth = 2;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(setType, c);
+        contentPane.add(typeOfFoodBox, c);
 
         c.gridx = 0;
         c.gridy = 1;
+        c.gridwidth = 1;
         c.insets = new Insets(10, 0, 0, 0);
         c.anchor = GridBagConstraints.EAST;
-        contentPane.add(volume, c);
+        contentPane.add(volumeLabel, c);
 
         c.gridx = 1;
+        c.gridwidth = 3;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(setVolume, c);
+        contentPane.add(volumeField, c);
 
         c.gridx = 0;
         c.gridy = 2;
+        c.gridwidth = 1;
         c.anchor = GridBagConstraints.EAST;
-        contentPane.add(period, c);
+        contentPane.add(periodLabel, c);
 
         c.gridx = 1;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(setHour, c);
+        contentPane.add(periodHourSpinner, c);
 
         c.gridx = 2;
-        contentPane.add(hour, c);
+        contentPane.add(periodHourLabel, c);
 
         c.gridx = 3;
-        contentPane.add(setMin, c);
+        contentPane.add(periodMinSpinner, c);
 
         c.gridx = 4;
-        contentPane.add(min, c);
+        contentPane.add(periodMinLabel, c);
 
         c.gridx = 0;
         c.gridy = 3;
         c.gridwidth = 2;
-        c.anchor = GridBagConstraints.WEST;
         contentPane.add(saveButton, c);
 
         c.gridx = 3;
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(cancelButton, c);
     }
+
+    @Override
+    public void dispose() {
+        WindowsSizes.saveSize("AddRationWindow", AddRationWindow.this.getSize());
+        super.dispose();
+    }
+
 }

@@ -1,7 +1,6 @@
 package tablemodels;
 
 import api.ObjectService;
-import java.net.MalformedURLException;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import objects.User;

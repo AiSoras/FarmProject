@@ -12,6 +12,10 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import scripts.WindowsSizes;
 
 /**
  *
@@ -24,7 +28,15 @@ public class TokenWindow extends WebDialog {
     public TokenWindow(WebDialog owner, String token) throws HeadlessException {
         super(owner, "Пригласительный код", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
-        setLayout(new GridBagLayout());
+        contentPane.setLayout(new GridBagLayout());
+        WindowListener exitListener = new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                WindowsSizes.saveSize("TokenWindow", TokenWindow.this.getSize());
+                super.windowClosing(e);
+            }
+        };
+        addWindowListener(exitListener);
         initToken(token);
     }
 
@@ -73,4 +85,11 @@ public class TokenWindow extends WebDialog {
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(copyButton, c);
     }
+
+    @Override
+    public void dispose() {
+        WindowsSizes.saveSize("TokenWindow", TokenWindow.this.getSize());
+        super.dispose();
+    }
+
 }

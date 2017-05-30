@@ -1,17 +1,23 @@
 
 import com.alee.laf.WebLookAndFeel;
+import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import scripts.WindowsSizes;
 import windows.StartWindow;
 
 public class Start {
-    public static void main(String[] args){
-        WebLookAndFeel.install();
+
+    public static void main(String[] args) {
+        WebLookAndFeel.install();        
+        //Локализация кнопок у диалоговых окон
+        UIManager.put("OptionPane.yesButtonText", "Да");
+        UIManager.put("OptionPane.noButtonText", "Нет");
+        UIManager.put("OptionPane.cancelButtonText", "Отмена");
+        UIManager.put("OptionPane.okButtonText", "ОК");
         StartWindow startWindow = new StartWindow();
-//        startWindow.setResizable(false);
-        startWindow.setSize(600, 500);
+        startWindow.setSize(WindowsSizes.getDimension("StartWindow"));
         startWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //При закрытии можно сделать, чтобы программа запоминала размер окна
         startWindow.setLocationRelativeTo(null);
         startWindow.setVisible(true);
     }
-    
 }
