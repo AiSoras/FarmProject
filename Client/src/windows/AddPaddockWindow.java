@@ -33,8 +33,8 @@ public class AddPaddockWindow extends WebDialog {
 
     private final Container contentPane;
     private static Paddock paddock;
-    public static Ration ration; //Думаю, что лучше сделать private и создать геттеры и сеттеры
-    public static Boolean addRationMark = false;
+    private static Ration ration;
+    private static Boolean addRationMark = false;
 
     public AddPaddockWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавить загон", ModalityType.APPLICATION_MODAL);
@@ -82,7 +82,6 @@ public class AddPaddockWindow extends WebDialog {
         addRationButton.addActionListener((ActionEvent e) -> {
             AddRationWindow addRationWindow = new AddRationWindow(AddPaddockWindow.this);
             addRationWindow.setSize(WindowsSizes.getDimension("AddRationWindow"));
-//            addRationWindow.setResizable(false);
             addRationWindow.setLocationRelativeTo(null);
             addRationWindow.setVisible(true);
         });

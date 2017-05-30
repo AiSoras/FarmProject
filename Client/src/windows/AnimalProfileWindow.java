@@ -24,6 +24,8 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import objects.Animal;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -36,6 +38,7 @@ public class AnimalProfileWindow extends WebDialog {
     final private ObjectService objectService;
     final private Container contentPane;
     private Animal animal;
+    private static final Logger logger = LogManager.getLogger(AnimalProfileWindow.class.getName());
 
     public AnimalProfileWindow(WebDialog owner, Animal animal) throws HeadlessException {
         super(owner, "Информация о животном", ModalityType.APPLICATION_MODAL);
@@ -101,7 +104,6 @@ public class AnimalProfileWindow extends WebDialog {
         vaccinationsButton.addActionListener((ActionEvent e) -> {
             TableOfVaccinationsWindow tableOfVaccinations = new TableOfVaccinationsWindow(AnimalProfileWindow.this, animal);
             tableOfVaccinations.setSize(WindowsSizes.getDimension("TableOfVaccinationsWindow"));
-//            tableOfVaccinations.setResizable(false);
             tableOfVaccinations.setLocationRelativeTo(null);
             tableOfVaccinations.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             tableOfVaccinations.setVisible(true);
@@ -148,6 +150,7 @@ public class AnimalProfileWindow extends WebDialog {
 
             objectService.saveObject(animal);
             NotificationManager.showNotification("Животное было успешно обновлено!").setDisplayTime(5000);
+            logger.info("Animal [ID:" + animal.getID() + "] is edited successfully");
 
             animalNameField.setEditable(false);
             breedField.setEditable(false);

@@ -20,6 +20,8 @@ import javax.swing.BoxLayout;
 import javax.swing.WindowConstants;
 import objects.Animal;
 import objects.Paddock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -27,6 +29,7 @@ public class ListOfAnimalsWindow extends WebDialog {
 
     private Container contentPane;
     private Paddock paddock;
+    private static final Logger logger = LogManager.getLogger(ListOfAnimalsWindow.class.getName());
 
     public ListOfAnimalsWindow(WebDialog owner, Paddock paddock) throws HeadlessException {
         super(owner, "Список животных", ModalityType.APPLICATION_MODAL);
@@ -68,6 +71,8 @@ public class ListOfAnimalsWindow extends WebDialog {
                     animalProfileWindow.setLocationRelativeTo(null);
                     animalProfileWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     animalProfileWindow.setVisible(true);
+                    contentPane.removeAll();
+                    initListOfAnimals();
                 }
             }
 
@@ -105,9 +110,10 @@ public class ListOfAnimalsWindow extends WebDialog {
                 objectService.saveObject(animal);
 
                 NotificationManager.showNotification("Животное успешно добавлено в загон!").setDisplayTime(5000);
-
-                revalidate();
-                repaint();
+                logger.info("Animal [ID:" + animal.getID() + "] is saved");
+                
+                contentPane.removeAll();
+                initListOfAnimals();
             }
         });
         contentPane.add(addAnimalButton);

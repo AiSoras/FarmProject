@@ -21,8 +21,6 @@ import java.awt.event.WindowListener;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.WindowConstants;
@@ -30,6 +28,8 @@ import layout.TableLayout;
 import objects.Hangar;
 import objects.Paddock;
 import objects.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -41,9 +41,12 @@ import scripts.WindowsSizes;
 public class MainWindow extends WebFrame {
 
     private Container contentPane;
+    private User authorizedUser;
+    private static final Logger logger = LogManager.getLogger(MainWindow.class.getName());
 
-    public MainWindow(User user) throws HeadlessException {
+    public MainWindow(User authorizedUser) throws HeadlessException {
         super("Главное окно");
+        this.authorizedUser = authorizedUser;
         WindowListener exitListener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -52,24 +55,23 @@ public class MainWindow extends WebFrame {
             }
         };
         addWindowListener(exitListener);
-        initWindow(user);
+        initWindow();
     }
 
-    private void initWindow(User authorizedUser) {
+    private void initWindow() {
         contentPane = getContentPane();
         double[][] size = {{.26, .74}, {TableLayout.FILL}};
         contentPane.setLayout(new TableLayout(size));
-        initMenu(authorizedUser);
+        initMenu();
         initRightPanel();
     }
 
-    private void initMenu(User authorizedUser) {
+    private void initMenu() {
         WebPanel menuPanel = new WebPanel();
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
         WebLabel menuLabel = new WebLabel("Меню");
         WebButton addUserButton = new WebButton("Добавить пользователя");
         WebButton tableOfUsersButton = new WebButton("Список пользователей");
-        WebButton statisticButton = new WebButton("Статистика посещения");
         WebButton settingsButton = new WebButton("Настройки аккаунта");
         WebButton logOutButton = new WebButton("Выход");
 
@@ -78,13 +80,11 @@ public class MainWindow extends WebFrame {
         menuPanel.add(Box.createRigidArea(new Dimension(10, 10))); //делает отступы
         menuPanel.add(addUserButton);
         menuPanel.add(tableOfUsersButton);
-        menuPanel.add(statisticButton);
         menuPanel.add(Box.createRigidArea(new Dimension(10, 210)));
         menuPanel.add(settingsButton);
         menuPanel.add(logOutButton);
 
         logOutButton.addActionListener((ActionEvent e) -> {
-            //тут должен быть выход из аккаунта
             MainWindow.this.dispose();
             StartWindow startWindow = new StartWindow();
             startWindow.setSize(WindowsSizes.getDimension("StartWindow"));
@@ -92,6 +92,7 @@ public class MainWindow extends WebFrame {
             startWindow.setLocationRelativeTo(null);
             startWindow.setVisible(true);
             NotificationManager.showNotification("Успешный выход из системы!").setDisplayTime(5000);
+            logger.info("LogOut");
         });
 
         tableOfUsersButton.addActionListener((ActionEvent e) -> {
@@ -101,8 +102,9 @@ public class MainWindow extends WebFrame {
                 tableOfUsers.setLocationRelativeTo(null);
                 tableOfUsers.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 tableOfUsers.setVisible(true);
+                authorizedUser = TableOfUsersWindow.getAuthorizedUser();
             } catch (HeadlessException | MalformedURLException ex) {
-                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Exception: ", ex);
             }
         });
 
@@ -139,35 +141,37 @@ public class MainWindow extends WebFrame {
         buttonsPanel.add(addHangarButton);
         buttonsPanel.add(listOfPaddocksButton);
 
-        if (hangarsPane.getHangarsListSize() != 0) {
-            WebButton addPaddock = new WebButton("Добавить загон");
-
-            buttonsPanel.add(addPaddock);
-
-            addPaddock.addActionListener((ActionEvent e) -> {
-                AddPaddockWindow addPaddockWindow = new AddPaddockWindow(MainWindow.this);
-                addPaddockWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                addPaddockWindow.setSize(WindowsSizes.getDimension("AddPaddockWindow"));
-                addPaddockWindow.setLocationRelativeTo(null);
-                addPaddockWindow.setVisible(true);
-                Paddock paddock = AddPaddockWindow.getPaddock();
-                if (paddock != null) {
-                    ObjectService objectService = ServerConnection.getObjectConnecttion();
-
-                    Hangar hangar = hangarsPane.getSelectedHangar();
-
-                    paddock.setID(objectService.getObjectID('P'));
-                    hangar.addPaddock(paddock);
-                    objectService.saveObject(hangar);
-                    objectService.saveObject(paddock);
-
-                    NotificationManager.showNotification("Загон успешно добавлен!").setDisplayTime(5000);
-
-                    hangarsPane.setComponentAt(hangarsPane.getSelectedIndex(), hangarsPane.createPaddocksWebScrollPane(hangar));
-                    hangarsPane.refresh();
-                }
-            });
+        WebButton addPaddock = new WebButton("Добавить загон");
+        
+        if (hangarsPane.getHangarsListSize() == 0) {
+            addPaddock.setVisible(false);
         }
+        buttonsPanel.add(addPaddock);
+
+        addPaddock.addActionListener((ActionEvent e) -> {
+            AddPaddockWindow addPaddockWindow = new AddPaddockWindow(MainWindow.this);
+            addPaddockWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+            addPaddockWindow.setSize(WindowsSizes.getDimension("AddPaddockWindow"));
+            addPaddockWindow.setLocationRelativeTo(null);
+            addPaddockWindow.setVisible(true);
+            Paddock paddock = AddPaddockWindow.getPaddock();
+            if (paddock != null) {
+                ObjectService objectService = ServerConnection.getObjectConnecttion();
+
+                Hangar hangar = hangarsPane.getSelectedHangar();
+
+                paddock.setID(objectService.getObjectID('P'));
+                hangar.addPaddock(paddock);
+                objectService.saveObject(hangar);
+                objectService.saveObject(paddock);
+
+                NotificationManager.showNotification("Загон успешно добавлен!").setDisplayTime(5000);
+                logger.info("Paddock [ID:" + paddock.getID() + "] is saved successfully");
+
+                hangarsPane.setComponentAt(hangarsPane.getSelectedIndex(), hangarsPane.createPaddocksWebScrollPane(hangar));
+                hangarsPane.refresh();
+            }
+        });
 
         rightPanel.add(buttonsPanel);
         rightPanel.add(hangarsPane);
@@ -182,6 +186,9 @@ public class MainWindow extends WebFrame {
             addHangar.setVisible(true);
             Hangar hangar = AddHangarWindow.getHangar();
             if (hangar != null) {
+                if (hangarsPane.getHangarsListSize() == 0){
+                    addPaddock.setVisible(true);
+                }
                 hangarsPane.addHangar(hangar);
                 hangarsPane.addTab(hangar.getName(), hangarsPane.createPaddocksWebScrollPane(hangar));
                 hangarsPane.refresh();
@@ -223,12 +230,28 @@ public class MainWindow extends WebFrame {
                 @Override
                 public void mouseClicked(MouseEvent click) {
                     if (click.getClickCount() == 2) {
-                        HangarProfileWindow hangarProfile = new HangarProfileWindow(owner, hangarsList.get(getSelectedIndex()));
-                        hangarProfile.setSize(WindowsSizes.getDimension("HangarProfileWindow"));
-                        hangarProfile.setLocationRelativeTo(null);
-                        hangarProfile.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-                        hangarProfile.setVisible(true);
-                        refresh();
+                        if (getHangarsListSize() != 0) {
+                            int selectedTab = getSelectedIndex();
+                            Hangar hangar = hangarsList.get(selectedTab);
+                            HangarProfileWindow hangarProfile = new HangarProfileWindow(owner, hangar);
+                            hangarProfile.setSize(WindowsSizes.getDimension("HangarProfileWindow"));
+                            hangarProfile.setLocationRelativeTo(null);
+                            hangarProfile.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                            hangarProfile.setVisible(true);
+                            hangar = HangarProfileWindow.getHangar();
+                            if (HangarProfileWindow.isDeleted()) {
+                                hangarsList.remove(hangar);
+                                removeTabAt(selectedTab);
+
+                                if (getHangarsListSize() == 0) {
+                                    contentPane.remove(1);
+                                    initRightPanel();
+                                }
+                            } else {
+                                setTitleAt(selectedTab, hangar.getName());
+                            }
+                            refresh();
+                        }
                     }
                 }
 

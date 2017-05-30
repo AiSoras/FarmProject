@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+ 
+    <Appenders>        
+        <RollingFile name="fileLogger" filePattern="logs/log-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%c{1}:%L] %-5level %m%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="fileLogger"/>
+        </Root>
+        
+        <Logger name="scripts.ServerConnection" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="scripts.WindowsSizes" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="windows.AddPaddockWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+   
+        <Logger name="windows.StartWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="windows.TableOfPaddocksWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+        
+        <Logger name="windows.EditVaccinationWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.AnimalProfileWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.PaddockProfileWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="windows.AddVaccinationWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+        
+        <Logger name="windows.ListOfAnimalsWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="windows.AddAnimalWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+        
+        <Logger name="windows.TokenWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.AddHangarWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.TableOfVaccinationsWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.EditUserWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.AccountSettingsWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.HangarProfileWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="windows.AddRationWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+        
+        <Logger name="windows.MainWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="windows.ListOfVaccinationsWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="windows.TableOfUsersWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+        
+        <Logger name="windows.AddUserWindow" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+<!--        <Logger name="tablemodels.VaccinationsTableModel" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>-->
+        
+        <Logger name="tablemodels.PaddocksTableModel" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+        
+        <Logger name="tablemodels.UsersTableModel" additivity="false">
+            <AppenderRef ref="fileLogger"/>
+        </Logger>
+    </Loggers>
+ 
+</Configuration>

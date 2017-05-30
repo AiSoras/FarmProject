@@ -22,6 +22,8 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import objects.Animal;
 import objects.Vaccination;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -30,6 +32,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
     private Container contentPane;
     private VaccinationsTableModel vaccinationsTableModel;
     private Animal animal;
+    private static final Logger logger = LogManager.getLogger(TableOfVaccinationsWindow.class.getName());
 
     public TableOfVaccinationsWindow(WebDialog owner, Animal animal) throws HeadlessException {
         super(owner, "Список прививок", ModalityType.APPLICATION_MODAL);
@@ -76,6 +79,8 @@ public class TableOfVaccinationsWindow extends WebDialog {
                 objectService.saveObject(vaccination);
 
                 NotificationManager.showNotification("Прививка успешно добавлена животному!").setDisplayTime(5000);
+
+                logger.info("Vaccination [ID:" + vaccination.getID() + "] is saved successfully");
 
                 vaccinationsTableModel.updateList();
                 vaccinationsTableModel.fireTableDataChanged();

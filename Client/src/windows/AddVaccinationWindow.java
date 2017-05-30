@@ -7,6 +7,7 @@ import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebTextField;
+import com.alee.managers.notification.NotificationManager;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -84,6 +85,7 @@ public class AddVaccinationWindow extends WebDialog {
                 if (typeBox.getSelectedIndex() == 0) {
                     if (!dateField.getText().isEmpty()) {
                         vaccination = new Vaccination(nameField.getText(), new Date(System.currentTimeMillis()), (TypeOfVaccination) TypeOfVaccination.values()[typeBox.getSelectedIndex()], dateField.getDate());
+                        NotificationManager.showNotification("Прививка успешно добавлена животному!").setDisplayTime(5000);
                         AddVaccinationWindow.this.dispose();
                     } else {
                         JOptionPane.showMessageDialog(new WebFrame(), "Необходимо указать дату следующей прививки", "Внимание!", JOptionPane.WARNING_MESSAGE);

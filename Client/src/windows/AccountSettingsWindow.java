@@ -1,11 +1,13 @@
 package windows;
 
+import api.AccountService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
+import com.alee.managers.notification.NotificationManager;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
@@ -18,7 +20,11 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import objects.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
 import scripts.RegEx;
+import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
@@ -29,6 +35,7 @@ public class AccountSettingsWindow extends WebDialog {
 
     private final Container contentPane;
     private User user;
+    private static final Logger logger = LogManager.getLogger(AccountSettingsWindow.class.getName());
 
     public AccountSettingsWindow(WebFrame owner, User user) throws HeadlessException {
         super(owner, "Настройки аккаунта", Dialog.ModalityType.APPLICATION_MODAL);
@@ -56,7 +63,7 @@ public class AccountSettingsWindow extends WebDialog {
         WebLabel eMailLabel = new WebLabel("Почта: ");
         WebTextField eMailField = new WebTextField(user.geteMail());
         WebLabel positionLabel = new WebLabel("Должность: ");
-        WebLabel positionField = new WebLabel(user.getLevelOfAccess().name());
+        WebLabel positionField = new WebLabel(EnumsRender.PositionsRender(user.getLevelOfAccess()));
         WebLabel firstNameLabel = new WebLabel("Имя: ");
         WebLabel firstNameField = new WebLabel(user.getFirstName());
         WebLabel secondNamedLabel = new WebLabel("Фамилия: ");
@@ -73,16 +80,16 @@ public class AccountSettingsWindow extends WebDialog {
                 if (RegEx.checkEMail(eMailField.getText())) {
                     if (passwordField.getText().equals(passwordRepeatField.getText())) {
                         AccountSettingsWindow.this.dispose();
-//                            AccountService accountService = ServerConnection.getAccountConnecttion();
-//                            user.setLogin(loginField.getText());
-//                            user.seteMail(eMailField.getText());
-//                            user.setPassword(passwordField.getText());
-//                            if (!accountService.saveAccountChanges(user)) {
-//                                    JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
-//                                }
-//                                else{
-//                                    NotificationManager.showNotification("Данные успешно изменены!");
-//                                }
+                        AccountService accountService = ServerConnection.getAccountConnecttion();
+                        user.setLogin(loginField.getText());
+                        user.seteMail(eMailField.getText());
+                        user.setPassword(passwordField.getText());
+                        if (!accountService.saveAccountChanges(user)) {
+                            JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                        } else {
+                            NotificationManager.showNotification("Данные успешно изменены!");
+                            logger.info("User [ID:"+user.getID()+"] is edited");
+                        }
                     } else {
                         WebFrame warningMessage = new WebFrame();
                         JOptionPane.showMessageDialog(warningMessage, "Пароли должны совпадать!", "Внимание!", JOptionPane.WARNING_MESSAGE);

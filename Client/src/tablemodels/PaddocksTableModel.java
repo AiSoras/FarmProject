@@ -7,8 +7,15 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 import objects.Hangar;
 import objects.Paddock;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
 import scripts.ServerConnection;
 
+/**
+ * @author BG
+ * @author OlesiaPC
+ */
 public class PaddocksTableModel extends AbstractTableModel {
 
     private final ObjectService objectService;
@@ -16,6 +23,7 @@ public class PaddocksTableModel extends AbstractTableModel {
     private Paddock paddock;
     private String query;
     private final Map hangarsNames;
+    private static final Logger logger = LogManager.getLogger(PaddocksTableModel.class.getName());
 
     public PaddocksTableModel() {
         this.query = "";
@@ -23,7 +31,7 @@ public class PaddocksTableModel extends AbstractTableModel {
         this.paddockssList = objectService.getListOfPaddocksLike(query);
         hangarsNames = new HashMap<String, String>();
         for (Hangar hangar : (List<Hangar>) (List<?>) objectService.getListOfObjects(Hangar.class)) {
-            for (Paddock pddck : hangar.getPaddocks()) { //Т.к. связть односторонняя, то придется так сделать
+            for (Paddock pddck : hangar.getPaddocks()) { 
                 hangarsNames.put(pddck.getID(), hangar.getName());
             }
         }
@@ -50,13 +58,13 @@ public class PaddocksTableModel extends AbstractTableModel {
             case 0:
                 return paddock.getName();
             case 1:
-                return paddock.getSpecies();
+                return EnumsRender.PaddockSpeciesRender(paddock.getSpecies());
             case 2:
                 return paddock.getAnimals().size();
             case 3:
                 return paddock.getRation().getPeriod();
             case 4:
-                return paddock.getRation().getFood();
+                return EnumsRender.TypeOfFoodRender(paddock.getRation().getFood());
             case 5:
                 return paddock.getRation().getDose();
             case 6:
@@ -87,6 +95,7 @@ public class PaddocksTableModel extends AbstractTableModel {
 
     public void updateList() {
         this.paddockssList = objectService.getListOfPaddocksLike(query);
+        logger.info("Query: " + query + ". " + paddockssList.size() + " result(s) is(are) found.");
     }
 
     public Paddock getSelectedPaddock(int index) {

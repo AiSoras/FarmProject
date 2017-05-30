@@ -24,6 +24,8 @@ import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import layout.TableLayout;
 import objects.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
@@ -38,6 +40,7 @@ public class StartWindow extends WebFrame {
     private WebPanel rightPanel;
     private CardLayout cardLayout;
     private User user;
+    private static final Logger logger = LogManager.getLogger(StartWindow.class.getName());
 
     public StartWindow() throws HeadlessException {
         super("Стартовое окно");
@@ -88,6 +91,7 @@ public class StartWindow extends WebFrame {
                 AccountService accountService = ServerConnection.getAccountConnecttion();
                 if (accountService.resetPassword(eMail)) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Письмо отправлено на указанный почтовый ящик!", "Успешно!", JOptionPane.INFORMATION_MESSAGE);
+                    logger.info("EMail was sent to " + eMail);
                 } else {
                     JOptionPane.showMessageDialog(new WebFrame(), "Указанный почтовый ящик не существует,\nили при отправке письма произошла ошибка!", "Ошибка!", JOptionPane.ERROR_MESSAGE);
                 }
@@ -100,16 +104,16 @@ public class StartWindow extends WebFrame {
                 JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя строчные буквы,\nцифры и точку!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             } else {
                 AccountService accountService = ServerConnection.getAccountConnecttion();
-                User user1 = accountService.signIn(loginField.getText(), passwordField.getText());
-                if (user1 == null) {
+                user = accountService.signIn(loginField.getText(), passwordField.getText());
+                if (user == null) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Неверный логин и/или пароль!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                 } else {
                     StartWindow.this.dispose();
                     NotificationManager.showNotification("Успешный вход в систему!").setDisplayTime(5000);
-                    MainWindow mainWindow = new MainWindow(user1);
+                    logger.info("Sign in. User's ID is " + user.getID());
+                    MainWindow mainWindow = new MainWindow(user);
                     mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
                     mainWindow.setSize(WindowsSizes.getDimension("MainWindow"));
-//                        mainFrame.setResizable(false);
                     mainWindow.setLocationRelativeTo(null);
                     mainWindow.setVisible(true);
                 }
@@ -189,6 +193,7 @@ public class StartWindow extends WebFrame {
                                 JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                             } else {
                                 cardLayout.show(rightPanel, "SignIn");
+                                logger.info("User [ID:"+user.getID()+"] is sign up");
                                 NotificationManager.showNotification("Вы успешно зарегистрировались! Ввойдите в систему, используя ваш логин и пароль.").setDisplayTime(5000);
                             }
                         } else {
@@ -262,5 +267,5 @@ public class StartWindow extends WebFrame {
         WindowsSizes.saveSize("StartWindow", StartWindow.this.getSize());
         super.dispose();
     }
-    
+
 }

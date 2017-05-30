@@ -28,6 +28,8 @@ import javax.swing.JOptionPane;
 import objects.Hangar;
 import objects.Positions;
 import objects.TypeOfHangar;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
@@ -40,7 +42,9 @@ public class HangarProfileWindow extends WebDialog {
 
     private final Container contentPane;
     final private ObjectService objectService;
-    private Hangar hangar;
+    private static Hangar hangar;
+    private static boolean deletion;
+    private static final Logger logger = LogManager.getLogger(HangarProfileWindow.class.getName());
 
     public HangarProfileWindow(WebFrame owner, Hangar hangar) throws HeadlessException {
         super(owner, "Редактирование ангара", Dialog.ModalityType.APPLICATION_MODAL);
@@ -55,6 +59,7 @@ public class HangarProfileWindow extends WebDialog {
                 super.windowClosing(e);
             }
         };
+        deletion = false;
         addWindowListener(exitListener);
         initHangarProfile();
     }
@@ -66,8 +71,8 @@ public class HangarProfileWindow extends WebDialog {
         WebLabel paddocksLabel = new WebLabel("Количество загонов: ");
         WebTextField nameField = new WebTextField(hangar.getName());
         WebTextField paddocksField = new WebTextField(String.valueOf(hangar.getPaddocks().size()));
-        WebTextField levelField = new WebTextField(EnumsRender.TypeOfHangarRender(hangar.getType()));
-        WebTextField typeField = new WebTextField(EnumsRender.PositionsRender(hangar.getMinimalLevelOfAccess()));
+        WebTextField levelField = new WebTextField(EnumsRender.PositionsRender(hangar.getMinimalLevelOfAccess()));
+        WebTextField typeField = new WebTextField(EnumsRender.TypeOfHangarRender(hangar.getType()));
         WebComboBox levelBox = new WebComboBox(EnumsRender.PositionsListRender(Positions.values()));
         WebComboBox typeBox = new WebComboBox(EnumsRender.TypeOfHangarListRender(TypeOfHangar.values()));
         WebButton saveButton = new WebButton("Сохранить");
@@ -94,6 +99,8 @@ public class HangarProfileWindow extends WebDialog {
             int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Удалить ангар?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
             if (сonfirm == JOptionPane.YES_OPTION) {
                 objectService.deleteObject(hangar);
+                deletion = true;
+                logger.info("Hangar [ID:" + hangar.getID() + "] is deleted");
                 HangarProfileWindow.this.dispose();
             }
         });
@@ -133,7 +140,8 @@ public class HangarProfileWindow extends WebDialog {
 
             objectService.saveObject(hangar);
             NotificationManager.showNotification("Ангар был успешно обновлен!").setDisplayTime(5000);
-
+            logger.info("Hangar [ID:" + hangar.getID() + "] is edited");
+                
             nameField.setEditable(false);
 
             typeBox.setVisible(false);
@@ -146,8 +154,8 @@ public class HangarProfileWindow extends WebDialog {
             levelField.setVisible(true);
 
             nameField.setText(hangar.getName());
-            levelField.setText(EnumsRender.TypeOfHangarRender(hangar.getType()));
-            typeField.setText(EnumsRender.PositionsRender(hangar.getMinimalLevelOfAccess()));
+            levelField.setText(EnumsRender.PositionsRender(hangar.getMinimalLevelOfAccess()));
+            typeField.setText(EnumsRender.TypeOfHangarRender(hangar.getType()));
         });
 
         GridBagConstraints c = new GridBagConstraints();
@@ -208,7 +216,15 @@ public class HangarProfileWindow extends WebDialog {
         contentPane.add(cancelButton, c);
         contentPane.add(deleteButton, c);
     }
+    
+    public static boolean isDeleted(){
+        return deletion;
+    }
 
+    public static Hangar getHangar(){
+        return hangar;
+    }
+    
     @Override
     public void dispose() {
         WindowsSizes.saveSize("HangarProfileWindow", HangarProfileWindow.this.getSize());

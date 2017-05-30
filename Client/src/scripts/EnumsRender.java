@@ -143,6 +143,21 @@ public class EnumsRender {
         }
         return (foodListRus);
     }
+    
+    public static String VaccinationsRender(TypeOfVaccination type) {
+        String typeRus = "";
+        switch (type) {
+            case SEASONAL:
+                typeRus = "сезонная";
+                break;
+            case ONETIME:
+                typeRus = "разовая";
+                break;
+            default:
+                break;
+            }
+        return (typeRus);
+    }
 
     public static String[] ListOfVaccinationsRender(TypeOfVaccination[] type) {
         String[] typeListRus = new String[2];

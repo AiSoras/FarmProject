@@ -21,6 +21,9 @@ import javax.swing.JOptionPane;
 import objects.Hangar;
 import objects.Positions;
 import objects.TypeOfHangar;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
@@ -33,6 +36,7 @@ public class AddHangarWindow extends WebDialog {
 
     private final Container contentPane;
     private static Hangar hangar;
+    private static final Logger logger = LogManager.getLogger(MainWindow.class.getName());
 
     public AddHangarWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавление ангара", ModalityType.APPLICATION_MODAL);
@@ -51,12 +55,12 @@ public class AddHangarWindow extends WebDialog {
     }
 
     private void initAddHangar() {
-        WebLabel level = new WebLabel("Уровень доступа ");
-        WebLabel type = new WebLabel("Тип ангара ");
-        WebLabel hangarLabel = new WebLabel("Желаемое название ");
-        WebTextField hangarName = new WebTextField(20);
-        WebComboBox setLevel = new WebComboBox(Positions.values());
-        WebComboBox setType = new WebComboBox(TypeOfHangar.values());
+        WebLabel levelLabel = new WebLabel("Уровень доступа ");
+        WebLabel typeLabel = new WebLabel("Тип ангара ");
+        WebLabel hangarNameLabel = new WebLabel("Желаемое название ");
+        WebTextField hangarNameField = new WebTextField(20);
+        WebComboBox levelBox = new WebComboBox(EnumsRender.PositionsListRender(Positions.values()));
+        WebComboBox typeBox = new WebComboBox(EnumsRender.TypeOfHangarListRender(TypeOfHangar.values()));
         WebButton addButton = new WebButton("Добавить");
         WebButton cancelButton = new WebButton("Отмена");
 
@@ -65,12 +69,13 @@ public class AddHangarWindow extends WebDialog {
         });
 
         addButton.addActionListener((ActionEvent e) -> {
-            if (RegEx.checkSpecialName(hangarName.getText())) {
-                hangar = new Hangar(hangarName.getText(), (Positions) setLevel.getSelectedItem(), (TypeOfHangar) setType.getSelectedItem());
+            if (RegEx.checkSpecialName(hangarNameField.getText())) {
+                hangar = new Hangar(hangarNameField.getText(), (Positions) Positions.values()[levelBox.getSelectedIndex()], (TypeOfHangar) TypeOfHangar.values()[typeBox.getSelectedIndex()]);
                 ObjectService objectService = ServerConnection.getObjectConnecttion();
                 hangar.setID(objectService.getObjectID('H'));
                 objectService.saveObject(hangar);
                 NotificationManager.showNotification("Ангар успешно добавлен в БД!").setDisplayTime(5000);
+                logger.info("Hangar [ID:" + hangar.getID() + "] is saved successfully");
                 AddHangarWindow.this.dispose();
             } else {
                 JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Желаемое название\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
@@ -89,31 +94,31 @@ public class AddHangarWindow extends WebDialog {
         c.ipady = 0;
         c.weightx = 0.0;
         c.weighty = 0.0;
-        contentPane.add(hangarLabel, c);
+        contentPane.add(hangarNameLabel, c);
 
         c.gridx = 1;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(hangarName, c);
+        contentPane.add(hangarNameField, c);
 
         c.gridx = 0;
         c.gridy = 1;
         c.insets = new Insets(10, 0, 0, 0);
         c.anchor = GridBagConstraints.EAST;
-        contentPane.add(level, c);
+        contentPane.add(levelLabel, c);
 
         c.gridx = 1;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(setLevel, c);
+        contentPane.add(levelBox, c);
 
         c.gridx = 0;
         c.gridy = 2;
         c.insets = new Insets(10, 0, 0, 0);
         c.anchor = GridBagConstraints.EAST;
-        contentPane.add(type, c);
+        contentPane.add(typeLabel, c);
 
         c.gridx = 1;
         c.anchor = GridBagConstraints.WEST;
-        contentPane.add(setType, c);
+        contentPane.add(typeBox, c);
 
         c.gridx = 0;
         c.gridy = 3;

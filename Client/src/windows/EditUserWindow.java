@@ -20,7 +20,9 @@ import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import objects.Positions;
 import objects.User;
-import scripts.SameUser;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -32,12 +34,15 @@ public class EditUserWindow extends WebDialog {
 
     private final Container contentPane;
     private User user;
+    private static User authorizedUser;
+    private static final Logger logger = LogManager.getLogger(EditUserWindow.class.getName());
 
     public EditUserWindow(WebDialog owner, User user, User authorizedUser) throws HeadlessException {
-        super(owner, "Добавление пользователя", Dialog.ModalityType.APPLICATION_MODAL);
+        super(owner, "Редактирование пользователя", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.user = user;
+        this.authorizedUser = authorizedUser;
         WindowListener exitListener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -46,12 +51,13 @@ public class EditUserWindow extends WebDialog {
             }
         };
         addWindowListener(exitListener);
-        initUserInf(authorizedUser);
+        initUserInf();
     }
 
-    private void initUserInf(User authorizedUser) {
+    private void initUserInf() {
         WebLabel positionLabel = new WebLabel("Должность ");
-        WebComboBox positionBox = new WebComboBox(Positions.values());
+        WebComboBox positionBox = new WebComboBox(EnumsRender.PositionsListRender(Positions.values()));
+        positionBox.setSelectedItem(EnumsRender.PositionsRender(user.getLevelOfAccess()));
         WebLabel firstNameLabel = new WebLabel("Имя ");
         WebTextField firstNameField = new WebTextField(20);
         WebLabel secondNamedLabel = new WebLabel("Фамилия ");
@@ -60,7 +66,7 @@ public class EditUserWindow extends WebDialog {
         WebTextField middleNameField = new WebTextField(20);
         WebButton saveButton = new WebButton("Сохранить");
         WebButton deleteButton = new WebButton("Удалить");
-//Стоить добавить кнопку "Вернуться"
+
         positionBox.setSelectedItem(user.getLevelOfAccess());
         firstNameField.setText(user.getFirstName());
         secondNameField.setText(user.getSecondName());
@@ -70,18 +76,23 @@ public class EditUserWindow extends WebDialog {
             user.setFirstName(firstNameField.getText());
             user.setSecondName(secondNameField.getText());
             user.setMiddleName(middleNameField.getText());
-            user.setLevelOfAccess((Positions) positionBox.getSelectedItem());
+            user.setLevelOfAccess(Positions.values()[positionBox.getSelectedIndex()]);
             ObjectService objectService = ServerConnection.getObjectConnecttion();
             objectService.saveObject(user);
+            logger.info("User [ID:" + user.getID() + "] is edited");
+            if (user.getID().equals(authorizedUser.getID())) { //Сохраняем изменения для авторизованного пользователя
+                authorizedUser = user;
+            }
             EditUserWindow.this.dispose();
         });
 
         deleteButton.addActionListener((ActionEvent e) -> {
             int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Вы уверены?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
             if (сonfirm == JOptionPane.YES_OPTION) {
-                if (!SameUser.sameUser(user, authorizedUser)) {
+                if (!user.getID().equals(authorizedUser.getID())) {
                     ObjectService objectService = ServerConnection.getObjectConnecttion();
                     objectService.deleteObject(user);
+                    logger.info("User [ID:" + user.getID() + "] is deleted");
                     EditUserWindow.this.dispose();
                 } else {
                     JOptionPane.showMessageDialog(new WebFrame(), "Нельзя удалить самого себя!", "Ошибка!", JOptionPane.ERROR_MESSAGE);
@@ -151,4 +162,7 @@ public class EditUserWindow extends WebDialog {
         super.dispose();
     }
 
+    public static User getAuthorizedUser() {
+        return authorizedUser;
+    }
 }

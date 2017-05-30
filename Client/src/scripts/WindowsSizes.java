@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -21,7 +23,8 @@ import java.util.Properties;
 public class WindowsSizes {
 
     private static Properties properties;
-
+    private static final Logger logger = LogManager.getLogger(WindowsSizes.class.getName());
+    
     private static void loadProperties() {
         try {
             properties = new Properties();
@@ -29,8 +32,9 @@ public class WindowsSizes {
             InputStream inputStream = new FileInputStream(file);
             properties.load(inputStream);
             inputStream.close();
+            logger.info("Properties were loaded successfully");
         } catch (IOException ex) {
-            //Логгер
+            logger.error("Exception: ", ex);
         }
     }
 
@@ -53,8 +57,9 @@ public class WindowsSizes {
                 OutputStream outputStream = new FileOutputStream(file);
                 properties.store(outputStream, "Sizes of windows");
                 outputStream.close();
+                logger.info("Properties were saved successfully");
             } catch (IOException ex) {
-                //Логгер
+                logger.error("Exception: ", ex);
             }
         }
     }

@@ -37,11 +37,13 @@ public class TableOfUsersWindow extends WebDialog {
     private final Container contentPane;
     private String query;
     private UsersTableModel usersTableModel;
+    private static User authorizedUser;
 
     public TableOfUsersWindow(WebFrame owner, User authorizedUser) throws HeadlessException, MalformedURLException {
         super(owner, "Список пользователей", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
+        this.authorizedUser = authorizedUser;
         WindowListener exitListener = new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -50,10 +52,10 @@ public class TableOfUsersWindow extends WebDialog {
             }
         };
         addWindowListener(exitListener);
-        initTableOfUsers(authorizedUser);
+        initTableOfUsers();
     }
 
-    private void initTableOfUsers(User authorizedUser) throws MalformedURLException {
+    private void initTableOfUsers() throws MalformedURLException {
         WebTextField searchUsers = new WebTextField(40);
         searchUsers.setInputPrompt("Введите ключевое слово для поиска");
         searchUsers.setInputPromptFont(searchUsers.getFont().deriveFont(Font.ITALIC));
@@ -91,6 +93,7 @@ public class TableOfUsersWindow extends WebDialog {
                     editUserWindow.setLocationRelativeTo(null);
                     editUserWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     editUserWindow.setVisible(true);
+                    authorizedUser = EditUserWindow.getAuthorizedUser();
                     usersTableModel.updateList();
                     usersTableModel.fireTableDataChanged();
                 }
@@ -122,5 +125,8 @@ public class TableOfUsersWindow extends WebDialog {
         WindowsSizes.saveSize("TableOfUsersWindow", TableOfUsersWindow.this.getSize());
         super.dispose();
     }
-
+    
+    public static User getAuthorizedUser(){
+        return authorizedUser;
+    }
 }

@@ -20,12 +20,15 @@ import java.awt.event.WindowListener;
 import javax.swing.WindowConstants;
 import objects.Positions;
 import objects.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 public class AddUserWindow extends WebDialog {
 
     private final Container contentPane;
+    private static final Logger logger = LogManager.getLogger(AddUserWindow.class.getName());
 
     public AddUserWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавление пользователя", ModalityType.APPLICATION_MODAL);
@@ -63,9 +66,9 @@ public class AddUserWindow extends WebDialog {
             User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), (Positions) positionBox.getSelectedItem());
             String token = accountService.createUser(user);
             NotificationManager.showNotification("Пользователь успешно добавлен в БД!").setDisplayTime(5000);
+            logger.info("User [ID:" + user.getID() + "] is created. Token: " + token);
             TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
             tokenFrame.setSize(WindowsSizes.getDimension("TokenWindow"));
-//            tokenFrame.setResizable(false);
             tokenFrame.setLocationRelativeTo(null);
             tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             tokenFrame.setVisible(true);

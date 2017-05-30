@@ -15,6 +15,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.WindowsSizes;
 
 /**
@@ -22,9 +24,10 @@ import scripts.WindowsSizes;
  * @author BG
  */
 public class TokenWindow extends WebDialog {
-
+    
     private final Container contentPane;
-
+    private static final Logger logger = LogManager.getLogger(TokenWindow.class.getName());
+    
     public TokenWindow(WebDialog owner, String token) throws HeadlessException {
         super(owner, "Пригласительный код", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -39,26 +42,27 @@ public class TokenWindow extends WebDialog {
         addWindowListener(exitListener);
         initToken(token);
     }
-
+    
     private void initToken(String token) {
         WebLabel tokenLabel = new WebLabel("Пригласительный код ");
         WebTextField tokenField = new WebTextField(token);
         tokenField.setEditable(false);
         WebButton okButton = new WebButton("ОК");
         WebButton copyButton = new WebButton("Скопировать");
-
+        
         okButton.addActionListener((ActionEvent e) -> {
             TokenWindow.this.dispose();
         });
-
+        
         copyButton.addActionListener((ActionEvent e) -> {
             tokenField.selectAll();
             tokenField.copy();
             NotificationManager.showNotification("Скопировано!").setDisplayTime(5000);
+            logger.info("Token [" + token + "] is copied successfully");
         });
-
+        
         GridBagConstraints c = new GridBagConstraints();
-
+        
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.NONE;
         c.gridheight = 1;
@@ -70,26 +74,26 @@ public class TokenWindow extends WebDialog {
         c.weightx = 0.0;
         c.weighty = 0.0;
         contentPane.add(tokenLabel, c);
-
+        
         c.gridx = 1;
         c.anchor = GridBagConstraints.WEST;
         contentPane.add(tokenField, c);
-
+        
         c.gridx = 0;
         c.gridy = 1;
         c.insets = new Insets(10, 0, 0, 0);
         c.anchor = GridBagConstraints.WEST;
         contentPane.add(okButton, c);
-
+        
         c.gridx = 1;
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(copyButton, c);
     }
-
+    
     @Override
     public void dispose() {
         WindowsSizes.saveSize("TokenWindow", TokenWindow.this.getSize());
         super.dispose();
     }
-
+    
 }

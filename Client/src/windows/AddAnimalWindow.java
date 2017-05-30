@@ -63,7 +63,6 @@ public class AddAnimalWindow extends WebDialog {
         dateField.setInputPrompt("дд.мм.гггг");
         dateField.setInputPromptPosition(SwingConstants.CENTER);
 
-        WebButton vaccinationsButton = new WebButton("Прививки");
         WebButton addButton = new WebButton("Добавить");
         WebButton cancelButton = new WebButton("Отмена");
 
@@ -83,15 +82,6 @@ public class AddAnimalWindow extends WebDialog {
             } else {
                 JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Желаемое имя\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             }
-        });
-
-        vaccinationsButton.addActionListener((ActionEvent e) -> {
-            TableOfVaccinationsWindow tableOfVaccinations = new TableOfVaccinationsWindow(AddAnimalWindow.this, animal);
-            tableOfVaccinations.setSize(WindowsSizes.getDimension("TableOfVaccinationsWindow"));
-//            tableOfVaccinations.setResizable(false);
-            tableOfVaccinations.setLocationRelativeTo(null);
-            tableOfVaccinations.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            tableOfVaccinations.setVisible(true);
         });
 
         GridBagConstraints c = new GridBagConstraints();
@@ -154,14 +144,8 @@ public class AddAnimalWindow extends WebDialog {
         c.fill = GridBagConstraints.HORIZONTAL;
         contentPane.add(breedField, c);
 
-        c.gridx = 1;
-        c.gridy = 4;
-        c.gridwidth = 1;
-        c.anchor = GridBagConstraints.CENTER;
-        contentPane.add(vaccinationsButton, c);
-
         c.gridx = 0;
-        c.gridy = 5;
+        c.gridy = 4;
         c.anchor = GridBagConstraints.EAST;
         c.fill = GridBagConstraints.NONE;
         contentPane.add(addButton, c);

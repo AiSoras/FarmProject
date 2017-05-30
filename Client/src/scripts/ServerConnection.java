@@ -9,8 +9,8 @@ import api.AccountService;
 import api.ObjectService;
 import com.caucho.hessian.client.HessianProxyFactory;
 import java.net.MalformedURLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  *
@@ -22,6 +22,7 @@ public class ServerConnection {
     private static ObjectService objectService;
     private static HessianProxyFactory factory;
     private static String serverAddress = "localhost";
+    private static final Logger logger = LogManager.getLogger(ServerConnection.class.getName());
 
     public static synchronized AccountService getAccountConnecttion() { //
         if (accountService == null) {
@@ -29,8 +30,9 @@ public class ServerConnection {
                 getHessianProxyFactory();
                 String url = "http://" + serverAddress + ":8080/Server/AccountService";
                 accountService = (AccountService) factory.create(AccountService.class, url);
+                logger.info("Connection is established. URL: " + url);
             } catch (MalformedURLException ex) {
-                Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Exception: ", ex);
             }
         }
         return accountService;
@@ -42,8 +44,9 @@ public class ServerConnection {
                 getHessianProxyFactory();
                 String url = "http://" + serverAddress + ":8080/Server/ObjectService";
                 objectService = (ObjectService) factory.create(ObjectService.class, url);
+                logger.info("Connection is established. URL: " + url);
             } catch (MalformedURLException ex) {
-                Logger.getLogger(ServerConnection.class.getName()).log(Level.SEVERE, null, ex);
+                logger.error("Exception: ", ex);
             }
         }
         return objectService;

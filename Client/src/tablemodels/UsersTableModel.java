@@ -4,6 +4,9 @@ import api.ObjectService;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import objects.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
 import scripts.ServerConnection;
 
 /**
@@ -17,6 +20,7 @@ public class UsersTableModel extends AbstractTableModel {
     private List<User> usersList;
     private User user;
     private String query;
+    private static final Logger logger = LogManager.getLogger(UsersTableModel.class.getName());
 
     public UsersTableModel(){
         this.query = "";
@@ -49,7 +53,7 @@ public class UsersTableModel extends AbstractTableModel {
             case 2:
                 return user.getMiddleName();
             case 3:
-                return user.getLevelOfAccess();
+                return EnumsRender.PositionsRender(user.getLevelOfAccess());
             case 4:
                 return user.getToken().equals("USED") ? "Да" : "Нет";
         }
@@ -74,6 +78,7 @@ public class UsersTableModel extends AbstractTableModel {
 
     public void updateList() {
         this.usersList = objectService.getListOfUsersLike(query);
+        logger.info("Query: [" + query + "]. " + usersList.size() + " result(s) is(are) found.");
     }
 
     public User getSelectedUser(int index) {

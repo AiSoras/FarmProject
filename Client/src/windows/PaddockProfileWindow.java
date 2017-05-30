@@ -25,6 +25,8 @@ import javax.swing.WindowConstants;
 import objects.Paddock;
 import objects.SpeciesOfAnimal;
 import objects.TypeOfFood;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
@@ -38,6 +40,7 @@ public class PaddockProfileWindow extends WebDialog {
     final private ObjectService objectService;
     final private Container contentPane;
     private Paddock paddock;
+    private static final Logger logger = LogManager.getLogger(PaddockProfileWindow.class.getName());
 
     public PaddockProfileWindow(WebFrame owner, Paddock paddock) throws HeadlessException {
         super(owner, "Информация о загоне", ModalityType.APPLICATION_MODAL);
@@ -118,6 +121,7 @@ public class PaddockProfileWindow extends WebDialog {
             int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Удалить загон?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
             if (сonfirm == JOptionPane.YES_OPTION) {
                 objectService.deleteObject(paddock);
+                logger.info("Paddock [ID:" + paddock.getID() + "] was deleted");
                 PaddockProfileWindow.this.dispose();
             }
         });
@@ -180,7 +184,8 @@ public class PaddockProfileWindow extends WebDialog {
 
             objectService.saveObject(paddock);
             NotificationManager.showNotification("Загон был успешно обновлен!").setDisplayTime(5000);
-
+            logger.info("Paddock [ID:" + paddock.getID() + "] is edited");
+            
             paddockNameField.setEditable(false);
             animalsTypeField.setEditable(false);
             typeOfFoodField.setEditable(false);
@@ -214,7 +219,6 @@ public class PaddockProfileWindow extends WebDialog {
             ListOfAnimalsWindow listOfAnimals = new ListOfAnimalsWindow(PaddockProfileWindow.this, paddock);
             listOfAnimals.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             listOfAnimals.setSize(WindowsSizes.getDimension("ListOfAnimalsWindow"));
-//            listOfAnimals.setResizable(false);
             listOfAnimals.setLocationRelativeTo(null);
             listOfAnimals.setVisible(true);
         });

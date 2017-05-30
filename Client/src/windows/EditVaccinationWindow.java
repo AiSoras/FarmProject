@@ -52,16 +52,23 @@ public class EditVaccinationWindow extends WebDialog {
     }
 
     private void initEditVaccination() {
-        WebLabel nameLabel = new WebLabel("Название прививки ");
-        WebLabel typeLabel = new WebLabel("Тип прививки ");
-        WebLabel dateLabel = new WebLabel("Дата следующей прививки ");
-        WebTextField nameField = new WebTextField(20);
+        WebLabel nameLabel = new WebLabel("Название прививки: ");
+        WebLabel typeLabel = new WebLabel("Тип прививки: ");
+        WebLabel dateLabel = new WebLabel("Дата следующей прививки: ");
+        WebTextField nameField = new WebTextField(vaccination.getName());
         WebComboBox typeBox = new WebComboBox(EnumsRender.ListOfVaccinationsRender(TypeOfVaccination.values()));
+        typeBox.setSelectedItem(EnumsRender.VaccinationsRender(vaccination.getType()));
 
         final WebDateField dateField = new WebDateField();
         dateField.setEditable(false);
         dateField.setInputPrompt("дд.мм.гггг");
         dateField.setInputPromptPosition(SwingConstants.CENTER);
+        dateField.setDate(vaccination.getDate());
+
+        if (EnumsRender.VaccinationsRender(vaccination.getType()).equals("разовая")) {
+            dateLabel.setVisible(false);
+            dateField.setVisible(false);
+        }
 
         WebButton saveButton = new WebButton("Сохранить");
         WebButton cancelButton = new WebButton("Отмена");
