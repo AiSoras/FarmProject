@@ -63,7 +63,7 @@ public class AnimalProfileWindow extends WebDialog {
         WebLabel birthLabel = new WebLabel("Дата рождения ");
         WebLabel weightLabel = new WebLabel("Вес, кг ");
         WebLabel breedLabel = new WebLabel("Порода (необязательно) ");
-        WebTextField birthField = new WebTextField(String.valueOf(animal.getDateOfBirth()));
+        WebTextField birthField = new WebTextField(animal.getDateOfBirth().getDate() + "." + (int) (animal.getDateOfBirth().getMonth() + 1) + "." + (int) (animal.getDateOfBirth().getYear() + 1900));
         WebTextField weightField = new WebTextField(String.valueOf(animal.getWeight()));
         WebTextField breedField = new WebTextField(animal.getBreed());
 
@@ -166,7 +166,7 @@ public class AnimalProfileWindow extends WebDialog {
             deleteButton.setVisible(true);
 
             animalNameField.setText(animal.getName());
-            birthField.setText(String.valueOf(animal.getDateOfBirth()));
+            birthField.setText(animal.getDateOfBirth().getDate() + "." + (int) (animal.getDateOfBirth().getMonth() + 1) + "." + (int) (animal.getDateOfBirth().getYear() + 1900));
             weightField.setText(String.valueOf(animal.getWeight()));
             breedField.setText(animal.getBreed());
         });

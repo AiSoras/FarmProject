@@ -26,6 +26,7 @@ import layout.TableLayout;
 import objects.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
@@ -186,10 +187,7 @@ public class StartWindow extends WebFrame {
                     if (passwordField.getText().equals(passwordRepeatField.getText())) {
                         if (license.isSelected()) {
                             AccountService accountService = ServerConnection.getAccountConnecttion();
-                            user.setLogin(loginField.getText());
-                            user.seteMail(eMailField.getText());
-                            user.setPassword(passwordField.getText());
-                            if (!accountService.saveAccountChanges(user)) {
+                            if (!accountService.saveAccountChanges(user, loginField.getText(), eMailField.getText(), passwordField.getText())) {
                                 JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                             } else {
                                 cardLayout.show(rightPanel, "SignIn");
@@ -226,7 +224,7 @@ public class StartWindow extends WebFrame {
         signUpPanel.add(returnToSignInPanel, "1,17,2,17");
 
         WebLabel positionLabel = new WebLabel("Должность");
-        WebLabel positionField = new WebLabel(user.getLevelOfAccess().name());
+        WebLabel positionField = new WebLabel(EnumsRender.PositionsRender(user.getLevelOfAccess()));
         WebLabel firstNameLabel = new WebLabel("Имя");
         WebLabel firstNameField = new WebLabel(user.getFirstName());
         WebLabel secondNamedLabel = new WebLabel("Фамилия");

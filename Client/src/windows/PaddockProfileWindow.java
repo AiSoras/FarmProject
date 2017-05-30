@@ -28,6 +28,7 @@ import objects.TypeOfFood;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
+import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -176,43 +177,51 @@ public class PaddockProfileWindow extends WebDialog {
         });
 
         saveChangesButton.addActionListener((ActionEvent e) -> {
-            paddock.setName(paddockNameField.getText());
-            paddock.setSpecies((SpeciesOfAnimal) SpeciesOfAnimal.values()[animalsTypeBox.getSelectedIndex()]);
-            paddock.getRation().setFood((TypeOfFood) TypeOfFood.values()[typeOfFoodBox.getSelectedIndex()]);
-            paddock.getRation().setPeriod(Integer.parseInt(periodHourEditor.getTextField().getText()) * 60 + Integer.parseInt(periodMinEditor.getTextField().getText()));
-            paddock.getRation().setDose(Integer.parseInt(volumeField.getText()));
+            if (RegEx.checkSpecialName(paddockNameField.getText())) {
+                if (RegEx.checkDigits(volumeField.getText())) {
+                    paddock.setName(paddockNameField.getText());
+                    paddock.setSpecies((SpeciesOfAnimal) SpeciesOfAnimal.values()[animalsTypeBox.getSelectedIndex()]);
+                    paddock.getRation().setFood((TypeOfFood) TypeOfFood.values()[typeOfFoodBox.getSelectedIndex()]);
+                    paddock.getRation().setPeriod(Integer.parseInt(periodHourEditor.getTextField().getText()) * 60 + Integer.parseInt(periodMinEditor.getTextField().getText()));
+                    paddock.getRation().setDose(Integer.parseInt(volumeField.getText()));
 
-            objectService.saveObject(paddock);
-            NotificationManager.showNotification("Загон был успешно обновлен!").setDisplayTime(5000);
-            logger.info("Paddock [ID:" + paddock.getID() + "] is edited");
-            
-            paddockNameField.setEditable(false);
-            animalsTypeField.setEditable(false);
-            typeOfFoodField.setEditable(false);
-            volumeField.setEditable(false);
-            periodHourField.setEditable(false);
-            periodMinField.setEditable(false);
+                    objectService.saveObject(paddock);
+                    NotificationManager.showNotification("Загон был успешно обновлен!").setDisplayTime(5000);
+                    logger.info("Paddock [ID:" + paddock.getID() + "] is edited");
 
-            animalsTypeField.setVisible(true);
-            typeOfFoodField.setVisible(true);
-            periodHourField.setVisible(true);
-            periodMinField.setVisible(true);
-            editButton.setVisible(true);
-            deleteButton.setVisible(true);
+                    paddockNameField.setEditable(false);
+                    animalsTypeField.setEditable(false);
+                    typeOfFoodField.setEditable(false);
+                    volumeField.setEditable(false);
+                    periodHourField.setEditable(false);
+                    periodMinField.setEditable(false);
 
-            animalsTypeBox.setVisible(false);
-            typeOfFoodBox.setVisible(false);
-            periodHourSpinner.setVisible(false);
-            periodMinSpinner.setVisible(false);
-            saveChangesButton.setVisible(false);
-            cancelButton.setVisible(false);
+                    animalsTypeField.setVisible(true);
+                    typeOfFoodField.setVisible(true);
+                    periodHourField.setVisible(true);
+                    periodMinField.setVisible(true);
+                    editButton.setVisible(true);
+                    deleteButton.setVisible(true);
 
-            paddockNameField.setText(paddock.getName());
-            animalsTypeField.setText(EnumsRender.PaddockSpeciesRender(paddock.getSpecies()));
-            typeOfFoodField.setText(EnumsRender.TypeOfFoodRender(paddock.getRation().getFood()));
-            volumeField.setText(String.valueOf(paddock.getRation().getDose()));
-            periodHourField.setText(String.valueOf((int) (paddock.getRation().getPeriod() / 60)));
-            periodMinField.setText(String.valueOf((int) (paddock.getRation().getPeriod() % 60)));
+                    animalsTypeBox.setVisible(false);
+                    typeOfFoodBox.setVisible(false);
+                    periodHourSpinner.setVisible(false);
+                    periodMinSpinner.setVisible(false);
+                    saveChangesButton.setVisible(false);
+                    cancelButton.setVisible(false);
+
+                    paddockNameField.setText(paddock.getName());
+                    animalsTypeField.setText(EnumsRender.PaddockSpeciesRender(paddock.getSpecies()));
+                    typeOfFoodField.setText(EnumsRender.TypeOfFoodRender(paddock.getRation().getFood()));
+                    volumeField.setText(String.valueOf(paddock.getRation().getDose()));
+                    periodHourField.setText(String.valueOf((int) (paddock.getRation().getPeriod() / 60)));
+                    periodMinField.setText(String.valueOf((int) (paddock.getRation().getPeriod() % 60)));
+                } else {
+                    JOptionPane.showMessageDialog(new WebFrame(), "Проверьте формат ввода объема!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                }
+            } else {
+                JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Название загона\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         listOfAnimalsButton.addActionListener((ActionEvent e) -> {

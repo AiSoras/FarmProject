@@ -21,6 +21,7 @@ import javax.swing.SpinnerNumberModel;
 import objects.Ration;
 import objects.TypeOfFood;
 import scripts.EnumsRender;
+import scripts.RegEx;
 import scripts.WindowsSizes;
 
 public class AddRationWindow extends WebDialog {
@@ -67,12 +68,12 @@ public class AddRationWindow extends WebDialog {
         });
 
         saveButton.addActionListener((ActionEvent e) -> {
-            if (volumeField.getText().compareTo("") != 0) {
+            if (RegEx.checkDigits(volumeField.getText())) {
                 Ration ration = new Ration((TypeOfFood) TypeOfFood.values()[typeOfFoodBox.getSelectedIndex()], Integer.parseInt(volumeField.getText()), Integer.parseInt(periodHourEditor.getTextField().getText()) * 60 + Integer.parseInt(periodMinEditor.getTextField().getText()));
                 AddPaddockWindow.setRation(ration);
                 AddRationWindow.this.dispose();
             } else {
-                JOptionPane.showMessageDialog(new WebFrame(), "Необходимо ввести объем!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(new WebFrame(), "Проверьте ввод объема!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             }
         });
 

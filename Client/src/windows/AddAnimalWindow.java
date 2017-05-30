@@ -19,7 +19,6 @@ import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
-import javax.swing.WindowConstants;
 import objects.Animal;
 import scripts.RegEx;
 import scripts.WindowsSizes;

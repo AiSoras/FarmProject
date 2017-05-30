@@ -17,11 +17,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import objects.Positions;
 import objects.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import scripts.EnumsRender;
+import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -47,7 +50,7 @@ public class AddUserWindow extends WebDialog {
 
     private void initAddUser() {
         WebLabel positionLabel = new WebLabel("Должность ");
-        WebComboBox positionBox = new WebComboBox(Positions.values());
+        WebComboBox positionBox = new WebComboBox(EnumsRender.PositionsListRender(Positions.values()));
         WebLabel firstNameLabel = new WebLabel("Имя ");
         WebTextField firstNameField = new WebTextField(20);
         WebLabel secondNamedLabel = new WebLabel("Фамилия ");
@@ -62,17 +65,21 @@ public class AddUserWindow extends WebDialog {
         });
 
         addButton.addActionListener((ActionEvent e) -> {
-            AccountService accountService = ServerConnection.getAccountConnecttion();
-            User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), (Positions) positionBox.getSelectedItem());
-            String token = accountService.createUser(user);
-            NotificationManager.showNotification("Пользователь успешно добавлен в БД!").setDisplayTime(5000);
-            logger.info("User [ID:" + user.getID() + "] is created. Token: " + token);
-            TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
-            tokenFrame.setSize(WindowsSizes.getDimension("TokenWindow"));
-            tokenFrame.setLocationRelativeTo(null);
-            tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            tokenFrame.setVisible(true);
-            AddUserWindow.this.dispose();
+            if (RegEx.checkName(firstNameField.getText()) && RegEx.checkName(secondNameField.getText()) && RegEx.checkName(middleNameField.getText())) {
+                AccountService accountService = ServerConnection.getAccountConnecttion();
+                User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), Positions.values()[positionBox.getSelectedIndex()]);
+                String token = accountService.createUser(user);
+                NotificationManager.showNotification("Пользователь успешно добавлен в БД!").setDisplayTime(5000);
+                logger.info("User [ID:" + user.getID() + "] is created. Token: " + token);
+                TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
+                tokenFrame.setSize(WindowsSizes.getDimension("TokenWindow"));
+                tokenFrame.setLocationRelativeTo(null);
+                tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                tokenFrame.setVisible(true);
+                AddUserWindow.this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(new WebFrame(), "Проверьте ввод!\nИспользуются только буквы!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         GridBagConstraints c = new GridBagConstraints();

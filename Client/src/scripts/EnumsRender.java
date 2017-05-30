@@ -16,19 +16,19 @@ public class EnumsRender {
         String spiciesRus = "";
         switch (species) {
             case HORSE:
-                spiciesRus = "лошади";
+                spiciesRus = "Лошади";
                 break;
             case COW:
-                spiciesRus = "коровы";
+                spiciesRus = "Коровы";
                 break;
             case CHICKEN:
-                spiciesRus = "куры";
+                spiciesRus = "Куры";
                 break;
             case GOOSE:
-                spiciesRus = "гуси";
+                spiciesRus = "Гуси";
                 break;
             case PIG:
-                spiciesRus = "свиньи";
+                spiciesRus = "Свиньи";
                 break;
             default:
                 break;
@@ -41,19 +41,19 @@ public class EnumsRender {
         for (int i = 0; i < species.length; i++) {
             switch (species[i]) {
                 case HORSE:
-                    spiciesListRus[i] = "лошади";
+                    spiciesListRus[i] = "Лошади";
                     break;
                 case COW:
-                    spiciesListRus[i] = "коровы";
+                    spiciesListRus[i] = "Коровы";
                     break;
                 case CHICKEN:
-                    spiciesListRus[i] = "куры";
+                    spiciesListRus[i] = "Куры";
                     break;
                 case GOOSE:
-                    spiciesListRus[i] = "гуси";
+                    spiciesListRus[i] = "Гуси";
                     break;
                 case PIG:
-                    spiciesListRus[i] = "свиньи";
+                    spiciesListRus[i] = "Свиньи";
                     break;
                 default:
                     break;
@@ -66,19 +66,19 @@ public class EnumsRender {
         String positionRus = "";
         switch (position) {
             case CLEANER:
-                positionRus = "уборщик";
+                positionRus = "Уборщик";
                 break;
             case BREADWINNER:
-                positionRus = "кормилец";
+                positionRus = "Кормилец";
                 break;
             case VET:
-                positionRus = "ветеринар";
+                positionRus = "Ветеринар";
                 break;
             case TECHNOLOGIST:
-                positionRus = "технолог";
+                positionRus = "Технолог";
                 break;
             case ADMIN:
-                positionRus = "администратор";
+                positionRus = "Администратор";
                 break;
             default:
                 break;
@@ -91,19 +91,19 @@ public class EnumsRender {
         for (int i = 0; i < position.length; i++) {
             switch (position[i]) {
                 case CLEANER:
-                    positionsListRus[i] = "уборщик";
+                    positionsListRus[i] = "Уборщик";
                     break;
                 case BREADWINNER:
-                    positionsListRus[i] = "кормилец";
+                    positionsListRus[i] = "Кормилец";
                     break;
                 case VET:
-                    positionsListRus[i] = "ветеринар";
+                    positionsListRus[i] = "Ветеринар";
                     break;
                 case TECHNOLOGIST:
-                    positionsListRus[i] = "технолог";
+                    positionsListRus[i] = "Технолог";
                     break;
                 case ADMIN:
-                    positionsListRus[i] = "администратор";
+                    positionsListRus[i] = "Администратор";
                     break;
                 default:
                     break;
@@ -116,10 +116,10 @@ public class EnumsRender {
         String foodRus = "";
         switch (food) {
             case WET:
-                foodRus = "сухой";
+                foodRus = "Сухой";
                 break;
             case DRY:
-                foodRus = "влажный";
+                foodRus = "Влажный";
                 break;
             default:
                 break;
@@ -132,10 +132,10 @@ public class EnumsRender {
         for (int i = 0; i < food.length; i++) {
             switch (food[i]) {
                 case WET:
-                    foodListRus[i] = "сухой";
+                    foodListRus[i] = "Сухой";
                     break;
                 case DRY:
-                    foodListRus[i] = "влажный";
+                    foodListRus[i] = "Влажный";
                     break;
                 default:
                     break;
@@ -148,10 +148,10 @@ public class EnumsRender {
         String typeRus = "";
         switch (type) {
             case SEASONAL:
-                typeRus = "сезонная";
+                typeRus = "Сезонная";
                 break;
             case ONETIME:
-                typeRus = "разовая";
+                typeRus = "Разовая";
                 break;
             default:
                 break;
@@ -164,10 +164,10 @@ public class EnumsRender {
         for (int i = 0; i < type.length; i++) {
             switch (type[i]) {
                 case SEASONAL:
-                    typeListRus[i] = "сезонная";
+                    typeListRus[i] = "Сезонная";
                     break;
                 case ONETIME:
-                    typeListRus[i] = "разовая";
+                    typeListRus[i] = "Разовая";
                     break;
                 default:
                     break;
@@ -181,10 +181,10 @@ public class EnumsRender {
         for (int i = 0; i < type.length; i++) {
             switch (type[i]) {
                 case STANDARD:
-                    typeListRus[i] = "стандартный";
+                    typeListRus[i] = "Стандартный";
                     break;
                 case REHABILITATION:
-                    typeListRus[i] = "реабилитационный";
+                    typeListRus[i] = "Реабилитационный";
                     break;
                 default:
                     break;
@@ -197,10 +197,10 @@ public class EnumsRender {
         String typeRus = "";
         switch (type) {
             case STANDARD:
-                typeRus = "стандартный";
+                typeRus = "Стандартный";
                 break;
             case REHABILITATION:
-                typeRus = "реабилитационный";
+                typeRus = "Реабилитационный";
                 break;
             default:
                 break;

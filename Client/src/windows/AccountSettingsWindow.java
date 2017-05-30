@@ -78,16 +78,13 @@ public class AccountSettingsWindow extends WebDialog {
                 JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя латинские буквы,\nцифры и знак нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             } else {
                 if (RegEx.checkEMail(eMailField.getText())) {
-                    if (passwordField.getText().equals(passwordRepeatField.getText())) {
-                        AccountSettingsWindow.this.dispose();
-                        AccountService accountService = ServerConnection.getAccountConnecttion();
-                        user.setLogin(loginField.getText());
-                        user.seteMail(eMailField.getText());
-                        user.setPassword(passwordField.getText());
-                        if (!accountService.saveAccountChanges(user)) {
+                    if (passwordField.getText().equals(passwordRepeatField.getText())) {                  
+                        AccountService accountService = ServerConnection.getAccountConnecttion();       
+                        if (!accountService.saveAccountChanges(user, loginField.getText(), eMailField.getText(), passwordField.getText())) {
                             JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                         } else {
-                            NotificationManager.showNotification("Данные успешно изменены!");
+                            AccountSettingsWindow.this.dispose();
+                            NotificationManager.showNotification("Данные успешно изменены!").setDisplayTime(5000);
                             logger.info("User [ID:"+user.getID()+"] is edited");
                         }
                     } else {

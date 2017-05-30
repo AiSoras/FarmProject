@@ -31,6 +31,7 @@ import objects.TypeOfHangar;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
+import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -134,28 +135,33 @@ public class HangarProfileWindow extends WebDialog {
         });
 
         saveButton.addActionListener((ActionEvent e) -> {
-            hangar.setName(nameField.getText());
-            hangar.setType(TypeOfHangar.values()[typeBox.getSelectedIndex()]);
-            hangar.setMinimalLevelOfAccess(Positions.values()[levelBox.getSelectedIndex()]);
+            if (RegEx.checkSpecialName(nameField.getText())) {
+                hangar.setName(nameField.getText());
+                hangar.setType(TypeOfHangar.values()[typeBox.getSelectedIndex()]);
+                hangar.setMinimalLevelOfAccess(Positions.values()[levelBox.getSelectedIndex()]);
 
-            objectService.saveObject(hangar);
-            NotificationManager.showNotification("Ангар был успешно обновлен!").setDisplayTime(5000);
-            logger.info("Hangar [ID:" + hangar.getID() + "] is edited");
-                
-            nameField.setEditable(false);
+                objectService.saveObject(hangar);
+                NotificationManager.showNotification("Ангар был успешно обновлен!").setDisplayTime(5000);
+                logger.info("Hangar [ID:" + hangar.getID() + "] is edited");
 
-            typeBox.setVisible(false);
-            levelBox.setVisible(false);
-            saveButton.setVisible(false);
-            cancelButton.setVisible(false);
-            editButton.setVisible(true);
-            deleteButton.setVisible(true);
-            typeField.setVisible(true);
-            levelField.setVisible(true);
+                nameField.setEditable(false);
 
-            nameField.setText(hangar.getName());
-            levelField.setText(EnumsRender.PositionsRender(hangar.getMinimalLevelOfAccess()));
-            typeField.setText(EnumsRender.TypeOfHangarRender(hangar.getType()));
+                typeBox.setVisible(false);
+                levelBox.setVisible(false);
+                saveButton.setVisible(false);
+                cancelButton.setVisible(false);
+                editButton.setVisible(true);
+                deleteButton.setVisible(true);
+                typeField.setVisible(true);
+                levelField.setVisible(true);
+
+//            nameField.setText(hangar.getName());
+                levelField.setText(EnumsRender.PositionsRender(hangar.getMinimalLevelOfAccess()));
+                typeField.setText(EnumsRender.TypeOfHangarRender(hangar.getType()));
+            } else
+            {
+                JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Название прививки\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         GridBagConstraints c = new GridBagConstraints();

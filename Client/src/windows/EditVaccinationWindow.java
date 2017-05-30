@@ -25,6 +25,7 @@ import javax.swing.SwingConstants;
 import objects.TypeOfVaccination;
 import objects.Vaccination;
 import scripts.EnumsRender;
+import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -93,19 +94,24 @@ public class EditVaccinationWindow extends WebDialog {
         });
 
         saveButton.addActionListener((ActionEvent e) -> {
-            vaccination.setName(nameField.getText());
-            vaccination.setDateOfVaccination(new Date(System.currentTimeMillis()));
-            vaccination.setType((TypeOfVaccination) TypeOfVaccination.values()[typeBox.getSelectedIndex()]);
-            if (typeBox.getSelectedIndex() == 0) {
-                vaccination.setDate(dateField.getDate());
+            if (RegEx.checkSpecialName(nameField.getText())) {
+                vaccination.setName(nameField.getText());
+                vaccination.setDateOfVaccination(new Date(System.currentTimeMillis()));
+                vaccination.setType((TypeOfVaccination) TypeOfVaccination.values()[typeBox.getSelectedIndex()]);
+                if (typeBox.getSelectedIndex() == 0) {
+                    vaccination.setDate(dateField.getDate());
+                } else {
+                    vaccination.setDate(new Date(System.currentTimeMillis()));
+                }
+
+                objectService.saveObject(vaccination);
+                NotificationManager.showNotification("Прививка была успешно обновлена!").setDisplayTime(5000);
+
+                EditVaccinationWindow.this.dispose();
             } else {
-                vaccination.setDate(new Date(System.currentTimeMillis()));
+                JOptionPane.showMessageDialog(new WebFrame(), "Поле \"Название прививки\" не должно быть пустым,\nсодержать пробелы и спецсимволы, кроме знака нижнего подчеркивания!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             }
 
-            objectService.saveObject(vaccination);
-            NotificationManager.showNotification("Прививка была успешно обновлена!").setDisplayTime(5000);
-
-            EditVaccinationWindow.this.dispose();
         });
 
         deleteButton.addActionListener((ActionEvent e) -> {

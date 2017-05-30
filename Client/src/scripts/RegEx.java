@@ -63,4 +63,14 @@ public class RegEx {
             return matcher.matches();
         }
     }
+    
+    public static boolean checkDigits(String string) {
+        if (string == null) {
+            return false;
+        } else {
+            Pattern pattern = Pattern.compile("^[\\d]+$");
+            Matcher matcher = pattern.matcher(string);
+            return matcher.matches();
+        }
+    }
 }

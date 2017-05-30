@@ -23,6 +23,7 @@ import objects.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
+import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
@@ -73,17 +74,21 @@ public class EditUserWindow extends WebDialog {
         middleNameField.setText(user.getMiddleName());
 
         saveButton.addActionListener((ActionEvent e) -> {
-            user.setFirstName(firstNameField.getText());
-            user.setSecondName(secondNameField.getText());
-            user.setMiddleName(middleNameField.getText());
-            user.setLevelOfAccess(Positions.values()[positionBox.getSelectedIndex()]);
-            ObjectService objectService = ServerConnection.getObjectConnecttion();
-            objectService.saveObject(user);
-            logger.info("User [ID:" + user.getID() + "] is edited");
-            if (user.getID().equals(authorizedUser.getID())) { //Сохраняем изменения для авторизованного пользователя
-                authorizedUser = user;
+            if (RegEx.checkName(firstNameField.getText()) && RegEx.checkName(secondNameField.getText()) && RegEx.checkName(middleNameField.getText())) {
+                user.setFirstName(firstNameField.getText());
+                user.setSecondName(secondNameField.getText());
+                user.setMiddleName(middleNameField.getText());
+                user.setLevelOfAccess(Positions.values()[positionBox.getSelectedIndex()]);
+                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                objectService.saveObject(user);
+                logger.info("User [ID:" + user.getID() + "] is edited");
+                if (user.getID().equals(authorizedUser.getID())) { //Сохраняем изменения для авторизованного пользователя
+                    authorizedUser = user;
+                }
+                EditUserWindow.this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(new WebFrame(), "Проверьте ввод!\nИспользуются только буквы!", "Внимание!", JOptionPane.ERROR_MESSAGE);
             }
-            EditUserWindow.this.dispose();
         });
 
         deleteButton.addActionListener((ActionEvent e) -> {
