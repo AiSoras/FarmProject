@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.ObjectService;
 import com.alee.extended.date.WebDateField;
 import com.alee.laf.button.WebButton;
@@ -15,9 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
@@ -27,7 +25,6 @@ import objects.Animal;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 
 /**
@@ -36,7 +33,7 @@ import scripts.WindowsSizes;
  * @author BG
  * @author OlesiaPC
  */
-public class AnimalProfileWindow extends WebDialog {
+public class AnimalProfileWindow extends ImprovedWebDialog {
 
     final private ObjectService objectService;
     final private Container contentPane;
@@ -55,14 +52,6 @@ public class AnimalProfileWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.animal = animal;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AnimalProfileWindow", AnimalProfileWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAnimalInf();
     }
 
@@ -114,8 +103,6 @@ public class AnimalProfileWindow extends WebDialog {
 
         vaccinationsButton.addActionListener((ActionEvent e) -> {
             TableOfVaccinationsWindow tableOfVaccinations = new TableOfVaccinationsWindow(AnimalProfileWindow.this, animal);
-            tableOfVaccinations.setSize(WindowsSizes.getDimension("TableOfVaccinationsWindow"));
-            tableOfVaccinations.setLocationRelativeTo(null);
             tableOfVaccinations.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             tableOfVaccinations.setVisible(true);
         });
@@ -261,12 +248,6 @@ public class AnimalProfileWindow extends WebDialog {
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(deleteButton, c);
         contentPane.add(cancelButton, c);
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AnimalProfileWindow", AnimalProfileWindow.this.getSize());
-        super.dispose();
     }
 
 }

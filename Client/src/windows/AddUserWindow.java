@@ -1,10 +1,10 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.AccountService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
-import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebTextField;
 import com.alee.managers.notification.NotificationManager;
@@ -14,9 +14,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
 import objects.Positions;
@@ -26,14 +23,13 @@ import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Allows add user
  * 
  * @author BG
  */
-public class AddUserWindow extends WebDialog {
+public class AddUserWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private static final Logger logger = LogManager.getLogger(AddUserWindow.class.getName());
@@ -47,14 +43,6 @@ public class AddUserWindow extends WebDialog {
         super(owner, "Добавление пользователя", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AddUserWindow", AddUserWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAddUser();
     }
 
@@ -82,8 +70,6 @@ public class AddUserWindow extends WebDialog {
                 NotificationManager.showNotification("Пользователь успешно добавлен в БД!").setDisplayTime(5000);
                 logger.info("User [ID:" + user.getID() + "] is created. Token: " + token);
                 TokenWindow tokenFrame = new TokenWindow(AddUserWindow.this, token);
-                tokenFrame.setSize(WindowsSizes.getDimension("TokenWindow"));
-                tokenFrame.setLocationRelativeTo(null);
                 tokenFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 tokenFrame.setVisible(true);
                 AddUserWindow.this.dispose();
@@ -149,9 +135,4 @@ public class AddUserWindow extends WebDialog {
         contentPane.add(cancelButton, c);
     }
 
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AddUserWindow", AddUserWindow.this.getSize());
-        super.dispose();
-    }
 }

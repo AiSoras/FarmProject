@@ -1,8 +1,8 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import tablemodels.PaddocksTableModel;
 import com.alee.extended.image.WebImage;
-import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
@@ -16,14 +16,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import objects.Paddock;
-import scripts.WindowsSizes;
 
 /**
  * Contains table of paddocks
@@ -31,7 +27,7 @@ import scripts.WindowsSizes;
  * @author BG
  * @author OlesiaPC
  */
-public class TableOfPaddocksWindow extends WebDialog {
+public class TableOfPaddocksWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private String query;
@@ -47,14 +43,6 @@ public class TableOfPaddocksWindow extends WebDialog {
         super(owner, "Список загонов", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("TableOfPaddocksWindow", TableOfPaddocksWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initTableOfPaddocksWindow();
     }
 
@@ -92,8 +80,6 @@ public class TableOfPaddocksWindow extends WebDialog {
                 if (click.getClickCount() == 2) {
                     Paddock paddock = paddocksTableModel.getSelectedPaddock(tableOfPaddocks.getSelectedRow());
                     PaddockProfileWindow paddockProfileWindow = new PaddockProfileWindow(TableOfPaddocksWindow.this, paddock);
-                    paddockProfileWindow.setSize(WindowsSizes.getDimension("PaddockProfileWindow"));
-                    paddockProfileWindow.setLocationRelativeTo(null);
                     paddockProfileWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     paddockProfileWindow.setVisible(true);
                     paddocksTableModel.updateList();
@@ -120,12 +106,6 @@ public class TableOfPaddocksWindow extends WebDialog {
 
         contentPane.add(searchPaddocks, BorderLayout.NORTH);
         contentPane.add(scrollPane);
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("TableOfPaddocksWindow", TableOfPaddocksWindow.this.getSize());
-        super.dispose();
     }
 
 }

@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.ObjectService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
@@ -15,9 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
@@ -30,7 +28,6 @@ import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Contains paddock's profile 
@@ -38,7 +35,7 @@ import scripts.WindowsSizes;
  * @author BG
  * @author OlesiaPC
  */
-public class PaddockProfileWindow extends WebDialog {
+public class PaddockProfileWindow extends ImprovedWebDialog {
 
     final private ObjectService objectService;
     final private Container contentPane;
@@ -57,14 +54,6 @@ public class PaddockProfileWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.paddock = paddock;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("PaddockProfileWindow", PaddockProfileWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initPaddockInf();
     }
 
@@ -236,8 +225,6 @@ public class PaddockProfileWindow extends WebDialog {
         listOfAnimalsButton.addActionListener((ActionEvent e) -> {
             ListOfAnimalsWindow listOfAnimals = new ListOfAnimalsWindow(PaddockProfileWindow.this, paddock);
             listOfAnimals.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            listOfAnimals.setSize(WindowsSizes.getDimension("ListOfAnimalsWindow"));
-            listOfAnimals.setLocationRelativeTo(null);
             listOfAnimals.setVisible(true);
             paddock = ListOfAnimalsWindow.getPaddock();
             animalsNumberField.setText(String.valueOf(paddock.getAnimals().size()));
@@ -362,10 +349,5 @@ public class PaddockProfileWindow extends WebDialog {
         contentPane.add(cancelButton, c);
     }
 
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("PaddockProfileWindow", PaddockProfileWindow.this.getSize());
-        super.dispose();
-    }
 
 }

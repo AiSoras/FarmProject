@@ -1,9 +1,9 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
-import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebTextField;
 import java.awt.Container;
@@ -12,17 +12,14 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import javax.swing.WindowConstants;
 import objects.Paddock;
 import objects.Ration;
 import objects.SpeciesOfAnimal;
 import scripts.EnumsRender;
 import scripts.RegEx;
-import scripts.WindowsSizes;
 
 /**
  * Allows add paddock
@@ -30,7 +27,7 @@ import scripts.WindowsSizes;
  * @author BG
  * @author OlesiaPC
  */
-public class AddPaddockWindow extends WebDialog {
+public class AddPaddockWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private static Paddock paddock;
@@ -48,14 +45,6 @@ public class AddPaddockWindow extends WebDialog {
         contentPane.setLayout(new GridBagLayout());
         paddock = null;
         addRationMark = false;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AddPaddockWindow", AddPaddockWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAddPaddock();
     }
 
@@ -87,8 +76,7 @@ public class AddPaddockWindow extends WebDialog {
 
         addRationButton.addActionListener((ActionEvent e) -> {
             AddRationWindow addRationWindow = new AddRationWindow(AddPaddockWindow.this);
-            addRationWindow.setSize(WindowsSizes.getDimension("AddRationWindow"));
-            addRationWindow.setLocationRelativeTo(null);
+            addRationWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             addRationWindow.setVisible(true);
         });
 
@@ -147,9 +135,4 @@ public class AddPaddockWindow extends WebDialog {
         return paddock;
     }
 
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AddPaddockWindow", AddPaddockWindow.this.getSize());
-        super.dispose();
-    }
 }

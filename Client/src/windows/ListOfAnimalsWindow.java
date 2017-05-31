@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.ObjectService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.list.WebList;
@@ -11,9 +12,6 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BoxLayout;
@@ -23,14 +21,13 @@ import objects.Paddock;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Contains edit vaccination
  * 
  * @author BG
  */
-public class ListOfAnimalsWindow extends WebDialog {
+public class ListOfAnimalsWindow extends ImprovedWebDialog {
 
     private Container contentPane;
     private static Paddock paddock;
@@ -47,14 +44,6 @@ public class ListOfAnimalsWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         this.paddock = paddock;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("ListOfAnimalsWindow", ListOfAnimalsWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initListOfAnimals();
     }
 
@@ -67,8 +56,6 @@ public class ListOfAnimalsWindow extends WebDialog {
 
         addAnimalButton.addActionListener((ActionEvent e) -> {
             AddAnimalWindow addAnimalWindow = new AddAnimalWindow(ListOfAnimalsWindow.this);
-            addAnimalWindow.setSize(WindowsSizes.getDimension("AddAnimalWindow"));
-            addAnimalWindow.setLocationRelativeTo(null);
             addAnimalWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             addAnimalWindow.setVisible(true);
             Animal animal = AddAnimalWindow.getAnimal();
@@ -110,8 +97,6 @@ public class ListOfAnimalsWindow extends WebDialog {
             public void mouseClicked(MouseEvent click) {
                 if (click.getClickCount() == 2) {
                     AnimalProfileWindow animalProfileWindow = new AnimalProfileWindow(ListOfAnimalsWindow.this, animalsOfPaddock.get(animalsWebList.getSelectedIndex()));
-                    animalProfileWindow.setSize(WindowsSizes.getDimension("AnimalProfileWindow"));
-                    animalProfileWindow.setLocationRelativeTo(null);
                     animalProfileWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     animalProfileWindow.setVisible(true);
 
@@ -143,12 +128,6 @@ public class ListOfAnimalsWindow extends WebDialog {
 
         });
         return animalsWebList;
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("ListOfAnimalsWindow", ListOfAnimalsWindow.this.getSize());
-        super.dispose();
     }
 
     public static synchronized Paddock getPaddock() {

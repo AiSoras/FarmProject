@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
@@ -13,23 +14,19 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import objects.Ration;
 import objects.TypeOfFood;
 import scripts.EnumsRender;
 import scripts.RegEx;
-import scripts.WindowsSizes;
 
 /**
  * Allows add ration
  * 
  * @author BG
  */
-public class AddRationWindow extends WebDialog {
+public class AddRationWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
 
@@ -42,14 +39,6 @@ public class AddRationWindow extends WebDialog {
         super(owner, "Настроить рацион", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AddRationWindow", AddRationWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAddRation();
     }
 
@@ -145,12 +134,6 @@ public class AddRationWindow extends WebDialog {
         c.gridx = 3;
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(cancelButton, c);
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AddRationWindow", AddRationWindow.this.getSize());
-        super.dispose();
     }
 
 }

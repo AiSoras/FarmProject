@@ -1,7 +1,7 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import com.alee.extended.image.WebImage;
-import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
@@ -16,15 +16,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.net.MalformedURLException;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import objects.User;
-import scripts.WindowsSizes;
 import tablemodels.UsersTableModel;
 
 /**
@@ -33,7 +29,7 @@ import tablemodels.UsersTableModel;
  * @author BG
  * @author OlesiaPC
  */
-public class TableOfUsersWindow extends WebDialog {
+public class TableOfUsersWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private String query;
@@ -51,14 +47,6 @@ public class TableOfUsersWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         this.authorizedUser = authorizedUser;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("TableOfUsersWindow", TableOfUsersWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initTableOfUsers();
     }
 
@@ -96,8 +84,6 @@ public class TableOfUsersWindow extends WebDialog {
                 if (click.getClickCount() == 2) {
                     User user = usersTableModel.getSelectedUser(tableOfUsers.getSelectedRow());
                     EditUserWindow editUserWindow = new EditUserWindow(TableOfUsersWindow.this, user, authorizedUser);
-                    editUserWindow.setSize(WindowsSizes.getDimension("EditUserWindow"));
-                    editUserWindow.setLocationRelativeTo(null);
                     editUserWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     editUserWindow.setVisible(true);
                     authorizedUser = EditUserWindow.getAuthorizedUser();
@@ -127,12 +113,6 @@ public class TableOfUsersWindow extends WebDialog {
         contentPane.add(scrollPane);
     }
 
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("TableOfUsersWindow", TableOfUsersWindow.this.getSize());
-        super.dispose();
-    }
-    
     public static synchronized User getAuthorizedUser(){
         return authorizedUser;
     }

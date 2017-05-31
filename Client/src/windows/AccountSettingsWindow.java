@@ -1,9 +1,9 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.AccountService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
-import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
@@ -15,9 +15,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import objects.User;
 import org.apache.logging.log4j.LogManager;
@@ -25,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 
 /**
@@ -33,7 +29,7 @@ import scripts.WindowsSizes;
  * 
  * @author BG
  */
-public class AccountSettingsWindow extends WebDialog {
+public class AccountSettingsWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private User user;
@@ -50,14 +46,6 @@ public class AccountSettingsWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.user = user;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AccountSettingsWindow", AccountSettingsWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAccountSettings();
     }
 
@@ -200,14 +188,7 @@ public class AccountSettingsWindow extends WebDialog {
         contentPane.add(saveButton, c);
 
         c.gridx = 1;
-        c.anchor = GridBagConstraints.EAST;
-        contentPane.add(cancelButton, c);
     }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AccountSettingsWindow", AccountSettingsWindow.this.getSize());
-        super.dispose();
-    }
+    
 
 }

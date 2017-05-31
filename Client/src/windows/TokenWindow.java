@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
@@ -12,19 +13,15 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import scripts.WindowsSizes;
 
 /**
  * Contains token window
  * 
  * @author BG
  */
-public class TokenWindow extends WebDialog {
+public class TokenWindow extends ImprovedWebDialog {
     
     private final Container contentPane;
     private static final Logger logger = LogManager.getLogger(TokenWindow.class.getName());
@@ -39,14 +36,6 @@ public class TokenWindow extends WebDialog {
         super(owner, "Пригласительный код", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("TokenWindow", TokenWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initToken(token);
     }
     
@@ -95,12 +84,6 @@ public class TokenWindow extends WebDialog {
         c.gridx = 1;
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(copyButton, c);
-    }
-    
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("TokenWindow", TokenWindow.this.getSize());
-        super.dispose();
     }
     
 }

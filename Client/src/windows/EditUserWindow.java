@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.ObjectService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
@@ -15,9 +16,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import objects.Positions;
 import objects.User;
@@ -26,14 +24,13 @@ import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Allows edit user
  * 
  * @author BG
  */
-public class EditUserWindow extends WebDialog {
+public class EditUserWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private User user;
@@ -53,14 +50,6 @@ public class EditUserWindow extends WebDialog {
         contentPane.setLayout(new GridBagLayout());
         this.user = user;
         this.authorizedUser = authorizedUser;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("EditUserWindow", EditUserWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initUserInf();
     }
 
@@ -170,12 +159,6 @@ public class EditUserWindow extends WebDialog {
         c.gridx = 1;
         c.anchor = GridBagConstraints.EAST;
         contentPane.add(deleteButton, c);
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("EditUserWindow", EditUserWindow.this.getSize());
-        super.dispose();
     }
 
     public static synchronized User getAuthorizedUser() {

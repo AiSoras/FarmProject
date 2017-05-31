@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.ObjectService;
 import com.alee.extended.date.WebDateField;
 import com.alee.laf.button.WebButton;
@@ -16,9 +17,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -27,14 +25,13 @@ import objects.Vaccination;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Allows edit vaccination
  * 
  * @author BG
  */
-public class EditVaccinationWindow extends WebDialog {
+public class EditVaccinationWindow extends ImprovedWebDialog {
 
     final private ObjectService objectService;
     final private Container contentPane;
@@ -52,14 +49,6 @@ public class EditVaccinationWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.vaccination = vaccination;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("EditVaccinationWindow", EditVaccinationWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initEditVaccination();
     }
 
@@ -188,12 +177,6 @@ public class EditVaccinationWindow extends WebDialog {
         c.gridwidth = 2;
         c.anchor = GridBagConstraints.CENTER;
         contentPane.add(deleteButton, c);
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("EditVaccinationWindow", EditVaccinationWindow.this.getSize());
-        super.dispose();
     }
 
 }

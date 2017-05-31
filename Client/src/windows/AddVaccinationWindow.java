@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import com.alee.extended.date.WebDateField;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
@@ -14,9 +15,6 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
@@ -24,13 +22,12 @@ import objects.TypeOfVaccination;
 import objects.Vaccination;
 import scripts.EnumsRender;
 import scripts.RegEx;
-import scripts.WindowsSizes;
 /**
  * Allows add vaccination
  * 
  * @author BG
  */
-public class AddVaccinationWindow extends WebDialog {
+public class AddVaccinationWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private static Vaccination vaccination;
@@ -45,14 +42,6 @@ public class AddVaccinationWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         vaccination = null;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AddVaccinationWindow", AddVaccinationWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAddVaccination();
     }
 
@@ -160,12 +149,6 @@ public class AddVaccinationWindow extends WebDialog {
 
     public static synchronized Vaccination getVaccination() {
         return vaccination;
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AddVaccinationWindow", AddVaccinationWindow.this.getSize());
-        super.dispose();
     }
 
 }

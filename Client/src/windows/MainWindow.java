@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebFrame;
 import api.ObjectService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
@@ -15,9 +16,6 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,6 @@ import objects.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Contains main window
@@ -39,7 +36,7 @@ import scripts.WindowsSizes;
  * @author BG
  * @author OlesiaPC
  */
-public class MainWindow extends WebFrame {
+public class MainWindow extends ImprovedWebFrame {
 
     private Container contentPane;
     private User authorizedUser;
@@ -53,14 +50,6 @@ public class MainWindow extends WebFrame {
     public MainWindow(User authorizedUser) throws HeadlessException {
         super("Главное окно");
         this.authorizedUser = authorizedUser;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("MainWindow", MainWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initWindow();
     }
 
@@ -93,9 +82,7 @@ public class MainWindow extends WebFrame {
         logOutButton.addActionListener((ActionEvent e) -> {
             MainWindow.this.dispose();
             StartWindow startWindow = new StartWindow();
-            startWindow.setSize(WindowsSizes.getDimension("StartWindow"));
             startWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-            startWindow.setLocationRelativeTo(null);
             startWindow.setVisible(true);
             NotificationManager.showNotification("Успешный выход из системы!").setDisplayTime(5000);
             logger.info("LogOut");
@@ -104,8 +91,6 @@ public class MainWindow extends WebFrame {
         tableOfUsersButton.addActionListener((ActionEvent e) -> {
             try {
                 TableOfUsersWindow tableOfUsers = new TableOfUsersWindow(MainWindow.this, authorizedUser);
-                tableOfUsers.setSize(WindowsSizes.getDimension("TableOfUsersWindow"));
-                tableOfUsers.setLocationRelativeTo(null);
                 tableOfUsers.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 tableOfUsers.setVisible(true);
                 authorizedUser = TableOfUsersWindow.getAuthorizedUser();
@@ -116,16 +101,12 @@ public class MainWindow extends WebFrame {
 
         addUserButton.addActionListener((ActionEvent e) -> {
             AddUserWindow addUser = new AddUserWindow(MainWindow.this);
-            addUser.setSize(WindowsSizes.getDimension("AddUserWindow"));
-            addUser.setLocationRelativeTo(null);
             addUser.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             addUser.setVisible(true);
         });
 
         settingsButton.addActionListener((ActionEvent e) -> {
             AccountSettingsWindow accountSettings = new AccountSettingsWindow(MainWindow.this, authorizedUser);
-            accountSettings.setSize(WindowsSizes.getDimension("AccountSettingsWindow"));
-            accountSettings.setLocationRelativeTo(null);
             accountSettings.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             accountSettings.setVisible(true);
         });
@@ -158,8 +139,6 @@ public class MainWindow extends WebFrame {
             int indexOfselectedHangar = hangarsPane.getSelectedIndex();
             AddPaddockWindow addPaddockWindow = new AddPaddockWindow(MainWindow.this);
             addPaddockWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-            addPaddockWindow.setSize(WindowsSizes.getDimension("AddPaddockWindow"));
-            addPaddockWindow.setLocationRelativeTo(null);
             addPaddockWindow.setVisible(true);
             Paddock paddock = AddPaddockWindow.getPaddock();
             if (paddock != null) {
@@ -189,8 +168,6 @@ public class MainWindow extends WebFrame {
 
         addHangarButton.addActionListener((ActionEvent e) -> {
             AddHangarWindow addHangar = new AddHangarWindow(MainWindow.this);
-            addHangar.setSize(WindowsSizes.getDimension("AddHangarWindow"));
-            addHangar.setLocationRelativeTo(null);
             addHangar.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             addHangar.setVisible(true);
             Hangar hangar = AddHangarWindow.getHangar();
@@ -206,8 +183,6 @@ public class MainWindow extends WebFrame {
 
         listOfPaddocksButton.addActionListener((ActionEvent e) -> {
             TableOfPaddocksWindow tableOfPaddocks = new TableOfPaddocksWindow(MainWindow.this);
-            tableOfPaddocks.setSize(WindowsSizes.getDimension("TableOfPaddocksWindow"));
-            tableOfPaddocks.setLocationRelativeTo(null);
             tableOfPaddocks.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             tableOfPaddocks.setVisible(true);
             rightPanel.remove(hangarsPane);
@@ -247,8 +222,6 @@ public class MainWindow extends WebFrame {
                             int selectedTab = getSelectedIndex();
                             Hangar hangar = hangarsList.get(selectedTab);
                             HangarProfileWindow hangarProfile = new HangarProfileWindow(owner, hangar);
-                            hangarProfile.setSize(WindowsSizes.getDimension("HangarProfileWindow"));
-                            hangarProfile.setLocationRelativeTo(null);
                             hangarProfile.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                             hangarProfile.setVisible(true);
                             hangar = HangarProfileWindow.getHangar();
@@ -303,9 +276,6 @@ public class MainWindow extends WebFrame {
                 public void mouseClicked(MouseEvent click) {
                     if (click.getClickCount() == 2) {
                         PaddockProfileWindow paddockProfileWindow = new PaddockProfileWindow(owner, paddocksOfHangar.get(paddocksList.getSelectedIndex()));
-                        paddockProfileWindow.setSize(WindowsSizes.getDimension("PaddockProfileWindow"));
-                        paddockProfileWindow.setResizable(false);
-                        paddockProfileWindow.setLocationRelativeTo(null);
                         paddockProfileWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                         paddockProfileWindow.setVisible(true);
                         Hangar updatedHangar = (Hangar) objectService.updateObject(hangar);
@@ -351,12 +321,6 @@ public class MainWindow extends WebFrame {
         public Hangar getSelectedHangar(int index) {
             return hangarsList.get(index);
         }
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("MainWindow", MainWindow.this.getSize());
-        super.dispose();
     }
 
 }

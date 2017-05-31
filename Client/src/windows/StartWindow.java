@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebFrame;
 import api.AccountService;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.checkbox.WebCheckBox;
@@ -16,9 +17,6 @@ import java.awt.CardLayout;
 import java.awt.Container;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.WindowConstants;
@@ -29,14 +27,13 @@ import org.apache.logging.log4j.Logger;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Contains start window
  * 
  * @author OlesiaPC
  */
-public class StartWindow extends WebFrame {
+public class StartWindow extends ImprovedWebFrame {
 
     private Container contentPane;
     private WebPanel rightPanel;
@@ -49,14 +46,6 @@ public class StartWindow extends WebFrame {
     */
     public StartWindow() throws HeadlessException {
         super("Стартовое окно");
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("StartWindow", StartWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initWindow();
     }
 
@@ -118,8 +107,6 @@ public class StartWindow extends WebFrame {
                     logger.info("Sign in. User's ID is " + user.getID());
                     MainWindow mainWindow = new MainWindow(user);
                     mainWindow.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                    mainWindow.setSize(WindowsSizes.getDimension("MainWindow"));
-                    mainWindow.setLocationRelativeTo(null);
                     mainWindow.setVisible(true);
                 }
             }
@@ -263,11 +250,5 @@ public class StartWindow extends WebFrame {
         infPanel.add(scrollPane, "1,2");
         contentPane.add(infPanel, "0,0");
     }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("StartWindow", StartWindow.this.getSize());
-        super.dispose();
-    }
-
+    
 }

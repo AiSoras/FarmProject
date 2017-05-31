@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import com.alee.extended.date.WebDateField;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
@@ -13,22 +14,18 @@ import java.awt.GridBagLayout;
 import java.awt.HeadlessException;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import objects.Animal;
 import scripts.RegEx;
-import scripts.WindowsSizes;
 
 /**
  * Allows add animal
  * 
  * @author BG
  */
-public class AddAnimalWindow extends WebDialog {
+public class AddAnimalWindow extends ImprovedWebDialog {
 
     private final Container contentPane;
     private static Animal animal;
@@ -43,14 +40,6 @@ public class AddAnimalWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         animal = null;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("AddAnimalWindow", AddAnimalWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initAddAnimal();
     }
 
@@ -165,12 +154,6 @@ public class AddAnimalWindow extends WebDialog {
 
     public static synchronized Animal getAnimal() {
         return animal;
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("AddAnimalWindow", AddAnimalWindow.this.getSize());
-        super.dispose();
     }
 
 }

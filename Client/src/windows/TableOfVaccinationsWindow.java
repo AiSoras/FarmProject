@@ -1,5 +1,6 @@
 package windows;
 
+import abstractwindows.ImprovedWebDialog;
 import api.ObjectService;
 import tablemodels.VaccinationsTableModel;
 import com.alee.laf.button.WebButton;
@@ -13,9 +14,6 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import javax.swing.BoxLayout;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableColumn;
@@ -25,7 +23,6 @@ import objects.Vaccination;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
-import scripts.WindowsSizes;
 
 /**
  * Contains table of vaccinations
@@ -33,7 +30,7 @@ import scripts.WindowsSizes;
  * @author BG
  * @author OlesiaPC
  */
-public class TableOfVaccinationsWindow extends WebDialog {
+public class TableOfVaccinationsWindow extends ImprovedWebDialog {
 
     private Container contentPane;
     private VaccinationsTableModel vaccinationsTableModel;
@@ -51,14 +48,6 @@ public class TableOfVaccinationsWindow extends WebDialog {
         contentPane = getContentPane();
         contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS));
         this.animal = animal;
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                WindowsSizes.saveSize("TableOfVaccinationsWindow", TableOfVaccinationsWindow.this.getSize());
-                super.windowClosing(e);
-            }
-        };
-        addWindowListener(exitListener);
         initTableOfVaccinations();
     }
 
@@ -77,8 +66,6 @@ public class TableOfVaccinationsWindow extends WebDialog {
 
         addVaccinationButton.addActionListener((ActionEvent e) -> {
             AddVaccinationWindow addVaccination = new AddVaccinationWindow(TableOfVaccinationsWindow.this);
-            addVaccination.setSize(WindowsSizes.getDimension("AddVaccinationWindow"));
-            addVaccination.setLocationRelativeTo(null);
             addVaccination.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             addVaccination.setVisible(true);
             Vaccination vaccination = AddVaccinationWindow.getVaccination();
@@ -105,8 +92,6 @@ public class TableOfVaccinationsWindow extends WebDialog {
                 if (click.getClickCount() == 2) {
                     Vaccination vaccination = vaccinationsTableModel.getSelectedVaccination(tableOfVaccinations.getSelectedRow());
                     EditVaccinationWindow editVaccinationWindow = new EditVaccinationWindow(TableOfVaccinationsWindow.this, vaccination);
-                    editVaccinationWindow.setSize(WindowsSizes.getDimension("EditVaccinationWindow"));
-                    editVaccinationWindow.setLocationRelativeTo(null);
                     editVaccinationWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     editVaccinationWindow.setVisible(true);
                     ObjectService objectService = ServerConnection.getObjectConnection();
@@ -135,12 +120,6 @@ public class TableOfVaccinationsWindow extends WebDialog {
 
         contentPane.add(addVaccinationButton);
         contentPane.add(scrollPane);
-    }
-
-    @Override
-    public void dispose() {
-        WindowsSizes.saveSize("TableOfVaccinationsWindow", TableOfVaccinationsWindow.this.getSize());
-        super.dispose();
     }
 
 }
