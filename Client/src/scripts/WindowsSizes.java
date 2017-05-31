@@ -29,11 +29,10 @@ public class WindowsSizes {
     private static synchronized void loadProperties() {
         try {
             properties = new Properties();
-            File file = new File("WinSize.properties");
-            InputStream inputStream = new FileInputStream(file);
-            properties.load(inputStream);
-            inputStream.close();
-            logger.info("Properties were loaded successfully");
+            try (InputStream inputStream = WindowsSizes.class.getResourceAsStream("WinSize.properties")) {
+                properties.load(inputStream);
+                logger.info("Properties were loaded successfully");
+            }
         } catch (IOException ex) {
             logger.error("Exception: ", ex);
         }
