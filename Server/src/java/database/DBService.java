@@ -140,7 +140,7 @@ public class DBService {
     }
 
     /**
-     * Returns the user whose {@link User.eMail} is equal to <code>eMail</code>.
+     * Returns the user whose {@link api.User.eMail} is equal to <code>eMail</code>.
      *
      * @param eMail The string containing the user's eMail.
      * @return The user whose {@link User.eMail} is equal to <code>eMail</code>

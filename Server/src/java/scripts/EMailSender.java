@@ -13,7 +13,7 @@ import objects.User;
 import org.apache.logging.log4j.LogManager;
 
 /**
- *
+ * Sends reset password eMail to user's eMail.
  * @author OlesiaPC
  */
 public class EMailSender {
@@ -23,8 +23,8 @@ public class EMailSender {
     /**
      * Sends eMail with <code>token</code> to <code>user</code>.
      *
-     * @param user
-     * @param token
+     * @param user User which request reset password.
+     * @param token The string contains user's token.
      * @return <code>true</code> if the message is sent successfully, otherwise
      * <code>false</code>.
      */

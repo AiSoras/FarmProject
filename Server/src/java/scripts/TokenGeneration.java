@@ -8,7 +8,7 @@ package scripts;
 import org.apache.commons.lang3.RandomStringUtils;
 
 /**
- * 
+ * Generates user's token.
  * @author OlesiaPC
  */
 public class TokenGeneration {

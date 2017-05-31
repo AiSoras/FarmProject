@@ -11,7 +11,7 @@ import java.security.NoSuchAlgorithmException;
 import org.apache.logging.log4j.LogManager;
 
 /**
- * 
+ * Encrypts user's password.
  * @author OlesiaPC
  */
 public class Crypt {
@@ -21,7 +21,7 @@ public class Crypt {
     /**
      * Encrypts the <code>password</code>.
      *
-     * @param string
+     * @param string The string contains user's password.
      * @return The encrypted <code>password</code> or empty string if exceptions are catched.
      */
     public static String encryptMD5(String string) {

@@ -8,7 +8,7 @@ package scripts;
 import java.util.UUID;
 
 /**
- *
+ * Generates object's ID.
  * @author OlesiaPC
  */
 public class UUIDGeneration {
@@ -17,7 +17,7 @@ public class UUIDGeneration {
      * Generates the string that consists of a special <code>symbol</code> and
      * {@link UUID}.
      *
-     * @param symbol
+     * @param symbol The string contains a char using in generation of <code>ID</code>.
      * @return The string consisting of a special <code>symbol</code> and
      * {@link UUID}.
      */
