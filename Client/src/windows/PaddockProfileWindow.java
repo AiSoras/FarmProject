@@ -33,6 +33,8 @@ import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
+ * Contains paddock's profile 
+ * 
  * @author BG
  * @author OlesiaPC
  */
@@ -43,6 +45,12 @@ public class PaddockProfileWindow extends WebDialog {
     private Paddock paddock;
     private static final Logger logger = LogManager.getLogger(PaddockProfileWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param paddock Paddock, selected in list of paddock or in table of paddocks
+    */
     public PaddockProfileWindow(WebFrame owner, Paddock paddock) throws HeadlessException {
         super(owner, "Информация о загоне", ModalityType.APPLICATION_MODAL);
         objectService = ServerConnection.getObjectConnecttion();
@@ -230,6 +238,11 @@ public class PaddockProfileWindow extends WebDialog {
             listOfAnimals.setSize(WindowsSizes.getDimension("ListOfAnimalsWindow"));
             listOfAnimals.setLocationRelativeTo(null);
             listOfAnimals.setVisible(true);
+            paddock = ListOfAnimalsWindow.getPaddock();
+            animalsNumberField.setText(String.valueOf(paddock.getAnimals().size()));
+            contentPane.revalidate();
+            contentPane.repaint();
+            
         });
 
         GridBagConstraints c = new GridBagConstraints();

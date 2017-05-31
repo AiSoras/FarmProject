@@ -1,26 +1,26 @@
 package tablemodels;
 
-import api.ObjectService;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import objects.Animal;
 import objects.TypeOfVaccination;
 import objects.Vaccination;
 import scripts.EnumsRender;
-import scripts.ServerConnection;
 
 /**
- *
+ * Contains model for table of vaccinations
+ * 
  * @author BG
  */
 public class VaccinationsTableModel extends AbstractTableModel {
 
-    private final ObjectService objectService;
     private List<Vaccination> vaccinationsList;
     private Vaccination vaccination;
-
-    public VaccinationsTableModel() {
-        this.objectService = ServerConnection.getObjectConnecttion();
-        this.vaccinationsList = (List<Vaccination>) (List<?>) objectService.getListOfObjects(Vaccination.class);
+    private Animal animal;
+        
+    public VaccinationsTableModel(Animal animal) {
+        this.animal = animal;
+        this.vaccinationsList = this.animal.getVaccinations();
     }
 
     @Override
@@ -63,12 +63,17 @@ public class VaccinationsTableModel extends AbstractTableModel {
         return "";
     }
 
-    public void updateList() {
-        this.vaccinationsList = (List<Vaccination>) (List<?>) objectService.getListOfObjects(Vaccination.class);
+    public void updateList(Animal animal) {
+        this.animal = animal;
+        this.vaccinationsList = this.animal.getVaccinations();
 
     }
 
     public Vaccination getSelectedVaccination(int index) {
         return vaccinationsList.get(index);
+    }
+    
+    public void addVaccination(Vaccination vaccination){
+        vaccinationsList.add(vaccination);
     }
 }

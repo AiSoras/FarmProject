@@ -28,11 +28,21 @@ import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
+/**
+ * Allows add user
+ * 
+ * @author BG
+ */
 public class AddUserWindow extends WebDialog {
 
     private final Container contentPane;
     private static final Logger logger = LogManager.getLogger(AddUserWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public AddUserWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавление пользователя", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();

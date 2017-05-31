@@ -27,6 +27,12 @@ import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
+/**
+ * Contains table of vaccinations
+ * 
+ * @author BG
+ * @author OlesiaPC
+ */
 public class TableOfVaccinationsWindow extends WebDialog {
 
     private Container contentPane;
@@ -34,6 +40,12 @@ public class TableOfVaccinationsWindow extends WebDialog {
     private Animal animal;
     private static final Logger logger = LogManager.getLogger(TableOfVaccinationsWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param animal Animal, selected in list of animals
+    */
     public TableOfVaccinationsWindow(WebDialog owner, Animal animal) throws HeadlessException {
         super(owner, "Список прививок", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -53,7 +65,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
     private void initTableOfVaccinations() {
         WebButton addVaccinationButton = new WebButton("Добавить прививку");
 
-        vaccinationsTableModel = new VaccinationsTableModel();
+        vaccinationsTableModel = new VaccinationsTableModel(animal);
         WebTable tableOfVaccinations = new WebTable(vaccinationsTableModel);
         WebScrollPane scrollPane = new WebScrollPane(tableOfVaccinations);
 
@@ -73,7 +85,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
             if (vaccination != null) {
                 ObjectService objectService = ServerConnection.getObjectConnecttion();
 
-                vaccination.setID(objectService.getObjectID('V'));
+                vaccination.setID(objectService.getGeneratedObjectID('V'));
                 animal.addVaccination(vaccination);
                 objectService.saveObject(animal);
                 objectService.saveObject(vaccination);
@@ -82,7 +94,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
 
                 logger.info("Vaccination [ID:" + vaccination.getID() + "] is saved successfully");
 
-                vaccinationsTableModel.updateList();
+                vaccinationsTableModel.addVaccination(vaccination);
                 vaccinationsTableModel.fireTableDataChanged();
             }
         });
@@ -97,7 +109,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
                     editVaccinationWindow.setLocationRelativeTo(null);
                     editVaccinationWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     editVaccinationWindow.setVisible(true);
-                    vaccinationsTableModel.updateList();
+                    vaccinationsTableModel.updateList(animal);
                     vaccinationsTableModel.fireTableDataChanged();
                 }
             }

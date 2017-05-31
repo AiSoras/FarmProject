@@ -26,7 +26,9 @@ import objects.Paddock;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Contains table of paddocks
+ * 
+ * @author BG
  * @author OlesiaPC
  */
 public class TableOfPaddocksWindow extends WebDialog {
@@ -35,6 +37,12 @@ public class TableOfPaddocksWindow extends WebDialog {
     private String query;
     private PaddocksTableModel paddocksTableModel;
 
+    /**
+    * 
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public TableOfPaddocksWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Список загонов", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();

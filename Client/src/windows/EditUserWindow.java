@@ -28,7 +28,8 @@ import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Allows edit user
+ * 
  * @author BG
  */
 public class EditUserWindow extends WebDialog {
@@ -38,6 +39,13 @@ public class EditUserWindow extends WebDialog {
     private static User authorizedUser;
     private static final Logger logger = LogManager.getLogger(EditUserWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param user User, selected in table of users
+    * @param authorizedUser Aauthorized User
+    */
     public EditUserWindow(WebDialog owner, User user, User authorizedUser) throws HeadlessException {
         super(owner, "Редактирование пользователя", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -167,7 +175,7 @@ public class EditUserWindow extends WebDialog {
         super.dispose();
     }
 
-    public static User getAuthorizedUser() {
+    public static synchronized User getAuthorizedUser() {
         return authorizedUser;
     }
 }

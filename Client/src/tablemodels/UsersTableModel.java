@@ -10,7 +10,8 @@ import scripts.EnumsRender;
 import scripts.ServerConnection;
 
 /**
- *
+ * Contains model for table of users
+ * 
  * @author BG
  * @author OlesiaPC
  */

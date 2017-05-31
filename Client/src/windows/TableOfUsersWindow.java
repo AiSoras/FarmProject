@@ -28,7 +28,8 @@ import scripts.WindowsSizes;
 import tablemodels.UsersTableModel;
 
 /**
- *
+ * Contains table of users
+ * 
  * @author BG
  * @author OlesiaPC
  */
@@ -39,6 +40,12 @@ public class TableOfUsersWindow extends WebDialog {
     private UsersTableModel usersTableModel;
     private static User authorizedUser;
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param authorizedUser Authorized user
+    */
     public TableOfUsersWindow(WebFrame owner, User authorizedUser) throws HeadlessException, MalformedURLException {
         super(owner, "Список пользователей", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -126,7 +133,7 @@ public class TableOfUsersWindow extends WebDialog {
         super.dispose();
     }
     
-    public static User getAuthorizedUser(){
+    public static synchronized User getAuthorizedUser(){
         return authorizedUser;
     }
 }

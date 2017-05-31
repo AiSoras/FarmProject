@@ -29,7 +29,10 @@ import org.apache.logging.log4j.Logger;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
+
 /**
+ * Contains animal's profile 
+ * 
  * @author BG
  * @author OlesiaPC
  */
@@ -40,6 +43,12 @@ public class AnimalProfileWindow extends WebDialog {
     private Animal animal;
     private static final Logger logger = LogManager.getLogger(AnimalProfileWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param animal Animal, selected in list of animals
+    */
     public AnimalProfileWindow(WebDialog owner, Animal animal) throws HeadlessException {
         super(owner, "Информация о животном", ModalityType.APPLICATION_MODAL);
         objectService = ServerConnection.getObjectConnecttion();
@@ -97,6 +106,7 @@ public class AnimalProfileWindow extends WebDialog {
             int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Удалить животное?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
             if (сonfirm == JOptionPane.YES_OPTION) {
                 objectService.deleteObject(animal);
+                logger.info("Animal [ID:" + animal.getID() + "] is deleted");
                 AnimalProfileWindow.this.dispose();
             }
         });

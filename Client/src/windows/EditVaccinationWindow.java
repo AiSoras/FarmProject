@@ -29,12 +29,23 @@ import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
+/**
+ * Allows edit vaccination
+ * 
+ * @author BG
+ */
 public class EditVaccinationWindow extends WebDialog {
 
     final private ObjectService objectService;
     final private Container contentPane;
     private Vaccination vaccination;
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param vaccination Vaccination, selected in table of vaccinations
+    */
     public EditVaccinationWindow(WebDialog owner, Vaccination vaccination) throws HeadlessException {
         super(owner, "Редактировать прививку", Dialog.ModalityType.APPLICATION_MODAL);
         objectService = ServerConnection.getObjectConnecttion();

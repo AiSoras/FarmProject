@@ -25,7 +25,8 @@ import scripts.RegEx;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Allows add paddock
+ * 
  * @author BG
  * @author OlesiaPC
  */
@@ -36,6 +37,11 @@ public class AddPaddockWindow extends WebDialog {
     private static Ration ration;
     private static Boolean addRationMark = false;
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public AddPaddockWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавить загон", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -132,12 +138,12 @@ public class AddPaddockWindow extends WebDialog {
         contentPane.add(cancelButton, c);
     }
 
-    public static void setRation(Ration r) {
+    public static synchronized void setRation(Ration r) {
         ration = r;
         addRationMark = true;
     }
 
-    public static Paddock getPaddock() {
+    public static synchronized Paddock getPaddock() {
         return paddock;
     }
 

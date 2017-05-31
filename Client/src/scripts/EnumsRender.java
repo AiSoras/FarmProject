@@ -7,12 +7,19 @@ import objects.TypeOfHangar;
 import objects.TypeOfVaccination;
 
 /**
+ * Contains renders for enums
  *
  * @author BG
  */
 public class EnumsRender {
 
-    public static String PaddockSpeciesRender(SpeciesOfAnimal species) {
+    /**
+     * Contains render for spesies of animals in paddock
+     *
+     * @param species Species of animals in selected paddock
+     * @return localized species
+     */
+    public static synchronized String PaddockSpeciesRender(SpeciesOfAnimal species) {
         String spiciesRus = "";
         switch (species) {
             case HORSE:
@@ -36,7 +43,13 @@ public class EnumsRender {
         return (spiciesRus);
     }
 
-    public static String[] ListOfSpeciesRender(SpeciesOfAnimal[] species) {
+    /**
+     * Contains render for list of spesies of animals
+     *
+     * @param species SpeciesOfAnimal enum values
+     * @return localized list of species
+     */
+    public static synchronized String[] ListOfSpeciesRender(SpeciesOfAnimal[] species) {
         String[] spiciesListRus = new String[5];
         for (int i = 0; i < species.length; i++) {
             switch (species[i]) {
@@ -62,7 +75,13 @@ public class EnumsRender {
         return (spiciesListRus);
     }
 
-    public static String PositionsRender(Positions position) {
+    /**
+     * Contains render for user position (level of access)
+     *
+     * @param position Position of user
+     * @return localized position
+     */
+    public static synchronized String PositionsRender(Positions position) {
         String positionRus = "";
         switch (position) {
             case CLEANER:
@@ -86,7 +105,13 @@ public class EnumsRender {
         return (positionRus);
     }
 
-    public static String[] PositionsListRender(Positions[] position) {
+    /**
+     * Contains render for list of positions
+     *
+     * @param position Positions enum values
+     * @return localized list of positions
+     */
+    public static synchronized String[] PositionsListRender(Positions[] position) {
         String[] positionsListRus = new String[5];
         for (int i = 0; i < position.length; i++) {
             switch (position[i]) {
@@ -112,7 +137,13 @@ public class EnumsRender {
         return (positionsListRus);
     }
 
-    public static String TypeOfFoodRender(TypeOfFood food) {
+    /**
+     * Contains render for type of food
+     *
+     * @param food Type of food in selected ration
+     * @return localized type of food
+     */
+    public static synchronized String TypeOfFoodRender(TypeOfFood food) {
         String foodRus = "";
         switch (food) {
             case WET:
@@ -127,7 +158,13 @@ public class EnumsRender {
         return (foodRus);
     }
 
-    public static String[] TypeOfFoodListRender(TypeOfFood[] food) {
+    /**
+     * Contains render for list of type of food
+     *
+     * @param food TypeOfFood enum values
+     * @return localized list of type of food
+     */
+    public static synchronized String[] TypeOfFoodListRender(TypeOfFood[] food) {
         String[] foodListRus = new String[2];
         for (int i = 0; i < food.length; i++) {
             switch (food[i]) {
@@ -143,8 +180,14 @@ public class EnumsRender {
         }
         return (foodListRus);
     }
-    
-    public static String VaccinationsRender(TypeOfVaccination type) {
+
+    /**
+     * Contains render for type of vaccination
+     *
+     * @param type Type of vaccination in selected vaccination
+     * @return localized type of vaccination
+     */
+    public static synchronized String VaccinationsRender(TypeOfVaccination type) {
         String typeRus = "";
         switch (type) {
             case SEASONAL:
@@ -155,11 +198,17 @@ public class EnumsRender {
                 break;
             default:
                 break;
-            }
+        }
         return (typeRus);
     }
 
-    public static String[] ListOfVaccinationsRender(TypeOfVaccination[] type) {
+    /**
+     * Contains render for list of types of vaccination
+     *
+     * @param type TypeOfVaccination values
+     * @return localized list of types of vaccination
+     */
+    public static synchronized String[] ListOfVaccinationsRender(TypeOfVaccination[] type) {
         String[] typeListRus = new String[2];
         for (int i = 0; i < type.length; i++) {
             switch (type[i]) {
@@ -176,7 +225,13 @@ public class EnumsRender {
         return (typeListRus);
     }
 
-    public static String[] TypeOfHangarListRender(TypeOfHangar[] type) {
+    /**
+     * Contains render for list of types of hangar
+     *
+     * @param type TypeOfHangar values
+     * @return localized list of types of hangar
+     */
+    public static synchronized String[] TypeOfHangarListRender(TypeOfHangar[] type) {
         String[] typeListRus = new String[2];
         for (int i = 0; i < type.length; i++) {
             switch (type[i]) {
@@ -193,7 +248,13 @@ public class EnumsRender {
         return (typeListRus);
     }
 
-    public static String TypeOfHangarRender(TypeOfHangar type) {
+    /**
+     * Contains render for type of hangar
+     *
+     * @param type Type of selected hangar
+     * @return localized type of hangar
+     */
+    public static synchronized String TypeOfHangarRender(TypeOfHangar type) {
         String typeRus = "";
         switch (type) {
             case STANDARD:

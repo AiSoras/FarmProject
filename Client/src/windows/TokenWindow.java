@@ -20,7 +20,8 @@ import org.apache.logging.log4j.Logger;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Contains token window
+ * 
  * @author BG
  */
 public class TokenWindow extends WebDialog {
@@ -28,6 +29,12 @@ public class TokenWindow extends WebDialog {
     private final Container contentPane;
     private static final Logger logger = LogManager.getLogger(TokenWindow.class.getName());
     
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param token Token, generated for user
+    */
     public TokenWindow(WebDialog owner, String token) throws HeadlessException {
         super(owner, "Пригласительный код", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();

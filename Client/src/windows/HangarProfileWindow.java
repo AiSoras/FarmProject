@@ -36,8 +36,10 @@ import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Contains hsngar's profile 
+ * 
  * @author BG
+ * @author OlesiaPC
  */
 public class HangarProfileWindow extends WebDialog {
 
@@ -47,6 +49,12 @@ public class HangarProfileWindow extends WebDialog {
     private static boolean deletion;
     private static final Logger logger = LogManager.getLogger(HangarProfileWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param hangar Hangar, selected in hangar's pane
+    */
     public HangarProfileWindow(WebFrame owner, Hangar hangar) throws HeadlessException {
         super(owner, "Редактирование ангара", Dialog.ModalityType.APPLICATION_MODAL);
         objectService = ServerConnection.getObjectConnecttion();
@@ -223,11 +231,11 @@ public class HangarProfileWindow extends WebDialog {
         contentPane.add(deleteButton, c);
     }
     
-    public static boolean isDeleted(){
+    public static synchronized boolean isDeleted(){
         return deletion;
     }
 
-    public static Hangar getHangar(){
+    public static synchronized Hangar getHangar(){
         return hangar;
     }
     

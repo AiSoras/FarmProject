@@ -5,8 +5,18 @@ import javax.swing.WindowConstants;
 import scripts.WindowsSizes;
 import windows.StartWindow;
 
+/**
+ * Starts the program
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
 public class Start {
 
+    /**
+    * Opens the start window, localizes dialog buttons
+    * 
+    */
     public static void main(String[] args) {
         WebLookAndFeel.install();        
         //Локализация кнопок у диалоговых окон

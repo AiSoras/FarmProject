@@ -25,12 +25,21 @@ import objects.Vaccination;
 import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.WindowsSizes;
-
+/**
+ * Allows add vaccination
+ * 
+ * @author BG
+ */
 public class AddVaccinationWindow extends WebDialog {
 
     private final Container contentPane;
     private static Vaccination vaccination;
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public AddVaccinationWindow(WebDialog owner) throws HeadlessException {
         super(owner, "Добавить прививку", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -149,7 +158,7 @@ public class AddVaccinationWindow extends WebDialog {
         contentPane.add(cancelButton, c);
     }
 
-    public static Vaccination getVaccination() {
+    public static synchronized Vaccination getVaccination() {
         return vaccination;
     }
 

@@ -13,6 +13,8 @@ import scripts.EnumsRender;
 import scripts.ServerConnection;
 
 /**
+ * Contains model for table of paddocks
+ * 
  * @author BG
  * @author OlesiaPC
  */

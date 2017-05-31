@@ -32,7 +32,8 @@ import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Contains start window
+ * 
  * @author OlesiaPC
  */
 public class StartWindow extends WebFrame {
@@ -43,6 +44,9 @@ public class StartWindow extends WebFrame {
     private User user;
     private static final Logger logger = LogManager.getLogger(StartWindow.class.getName());
 
+    /**
+    * Contains window settings
+    */
     public StartWindow() throws HeadlessException {
         super("Стартовое окно");
         WindowListener exitListener = new WindowAdapter() {

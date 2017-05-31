@@ -34,7 +34,8 @@ import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
- *
+ * Contains main window
+ * 
  * @author BG
  * @author OlesiaPC
  */
@@ -44,6 +45,11 @@ public class MainWindow extends WebFrame {
     private User authorizedUser;
     private static final Logger logger = LogManager.getLogger(MainWindow.class.getName());
 
+    /**
+    * Contains window settings
+    * 
+    * @param authorizedUser Authorized user
+    */
     public MainWindow(User authorizedUser) throws HeadlessException {
         super("Главное окно");
         this.authorizedUser = authorizedUser;
@@ -142,7 +148,7 @@ public class MainWindow extends WebFrame {
         buttonsPanel.add(listOfPaddocksButton);
 
         WebButton addPaddock = new WebButton("Добавить загон");
-        
+
         if (hangarsPane.getHangarsListSize() == 0) {
             addPaddock.setVisible(false);
         }
@@ -160,7 +166,7 @@ public class MainWindow extends WebFrame {
 
                 Hangar hangar = hangarsPane.getSelectedHangar();
 
-                paddock.setID(objectService.getObjectID('P'));
+                paddock.setID(objectService.getGeneratedObjectID('P'));
                 hangar.addPaddock(paddock);
                 objectService.saveObject(hangar);
                 objectService.saveObject(paddock);
@@ -186,7 +192,7 @@ public class MainWindow extends WebFrame {
             addHangar.setVisible(true);
             Hangar hangar = AddHangarWindow.getHangar();
             if (hangar != null) {
-                if (hangarsPane.getHangarsListSize() == 0){
+                if (hangarsPane.getHangarsListSize() == 0) {
                     addPaddock.setVisible(true);
                 }
                 hangarsPane.addHangar(hangar);
@@ -201,6 +207,10 @@ public class MainWindow extends WebFrame {
             tableOfPaddocks.setLocationRelativeTo(null);
             tableOfPaddocks.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             tableOfPaddocks.setVisible(true);
+            rightPanel.remove(hangarsPane);
+            rightPanel.add(new HangarsPane(MainWindow.this));
+            contentPane.revalidate();
+            contentPane.repaint();
         });
     }
 
@@ -295,6 +305,9 @@ public class MainWindow extends WebFrame {
                         paddockProfileWindow.setLocationRelativeTo(null);
                         paddockProfileWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                         paddockProfileWindow.setVisible(true);
+                        Hangar updatedHangar = (Hangar) objectService.updateObject(hangar);
+                        setComponentAt(getSelectedIndex(), createPaddocksWebScrollPane(updatedHangar));
+                        refresh();
                     }
                 }
 

@@ -29,6 +29,8 @@ import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
 /**
+ * Allows add hangar
+ * 
  * @author BG
  * @author OlesiaPC
  */
@@ -38,6 +40,11 @@ public class AddHangarWindow extends WebDialog {
     private static Hangar hangar;
     private static final Logger logger = LogManager.getLogger(MainWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public AddHangarWindow(WebFrame owner) throws HeadlessException {
         super(owner, "Добавление ангара", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -72,7 +79,7 @@ public class AddHangarWindow extends WebDialog {
             if (RegEx.checkSpecialName(hangarNameField.getText())) {
                 hangar = new Hangar(hangarNameField.getText(), (Positions) Positions.values()[levelBox.getSelectedIndex()], (TypeOfHangar) TypeOfHangar.values()[typeBox.getSelectedIndex()]);
                 ObjectService objectService = ServerConnection.getObjectConnecttion();
-                hangar.setID(objectService.getObjectID('H'));
+                hangar.setID(objectService.getGeneratedObjectID('H'));
                 objectService.saveObject(hangar);
                 NotificationManager.showNotification("Ангар успешно добавлен в БД!").setDisplayTime(5000);
                 logger.info("Hangar [ID:" + hangar.getID() + "] is saved successfully");
@@ -129,7 +136,7 @@ public class AddHangarWindow extends WebDialog {
         contentPane.add(cancelButton, c);
     }
 
-    public static Hangar getHangar() {
+    public static synchronized Hangar getHangar() {
         return hangar;
     }
 

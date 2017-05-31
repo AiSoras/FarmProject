@@ -13,7 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Contains methods for establishing a connection to the server
+ * 
  * @author OlesiaPC
  */
 public class ServerConnection {

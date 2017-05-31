@@ -17,7 +17,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- *
+ * Contains methods for load, get and save windows size properties
+ * 
  * @author OlesiaPC
  */
 public class WindowsSizes {
@@ -25,7 +26,7 @@ public class WindowsSizes {
     private static Properties properties;
     private static final Logger logger = LogManager.getLogger(WindowsSizes.class.getName());
     
-    private static void loadProperties() {
+    private static synchronized void loadProperties() {
         try {
             properties = new Properties();
             File file = new File("WinSize.properties");
@@ -38,7 +39,7 @@ public class WindowsSizes {
         }
     }
 
-    public static Dimension getDimension(String className) {
+    public static synchronized Dimension getDimension(String className) {
         if (properties == null) {
             loadProperties();
         }
@@ -48,7 +49,7 @@ public class WindowsSizes {
         return new Dimension(width, height);
     }
 
-    public static void saveSize(String className, Dimension dimension) {
+    public static synchronized void saveSize(String className, Dimension dimension) {
         String size = Integer.toString(dimension.width) + ", " + Integer.toString(dimension.height);
         if (!properties.getProperty(className).equals(size)) {
             try {

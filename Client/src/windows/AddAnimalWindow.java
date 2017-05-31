@@ -23,11 +23,21 @@ import objects.Animal;
 import scripts.RegEx;
 import scripts.WindowsSizes;
 
+/**
+ * Allows add animal
+ * 
+ * @author BG
+ */
 public class AddAnimalWindow extends WebDialog {
 
     private final Container contentPane;
     private static Animal animal;
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public AddAnimalWindow(WebDialog owner) throws HeadlessException {
         super(owner, "Добавление животного", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
@@ -153,7 +163,7 @@ public class AddAnimalWindow extends WebDialog {
         contentPane.add(cancelButton, c);
     }
 
-    public static Animal getAnimal() {
+    public static synchronized Animal getAnimal() {
         return animal;
     }
 

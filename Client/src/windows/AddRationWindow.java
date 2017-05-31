@@ -24,10 +24,20 @@ import scripts.EnumsRender;
 import scripts.RegEx;
 import scripts.WindowsSizes;
 
+/**
+ * Allows add ration
+ * 
+ * @author BG
+ */
 public class AddRationWindow extends WebDialog {
 
     private final Container contentPane;
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    */
     public AddRationWindow(WebDialog owner) throws HeadlessException {
         super(owner, "Настроить рацион", ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();

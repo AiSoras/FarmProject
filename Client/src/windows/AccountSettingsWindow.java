@@ -27,8 +27,10 @@ import scripts.RegEx;
 import scripts.ServerConnection;
 import scripts.WindowsSizes;
 
+
 /**
- *
+ * Contains account settings
+ * 
  * @author BG
  */
 public class AccountSettingsWindow extends WebDialog {
@@ -37,6 +39,12 @@ public class AccountSettingsWindow extends WebDialog {
     private User user;
     private static final Logger logger = LogManager.getLogger(AccountSettingsWindow.class.getName());
 
+    /**
+    * Contains dialog settings
+    * 
+    * @param owner Dialog's owner
+    * @param user Authorized user for whom the settings will be carried out
+    */
     public AccountSettingsWindow(WebFrame owner, User user) throws HeadlessException {
         super(owner, "Настройки аккаунта", Dialog.ModalityType.APPLICATION_MODAL);
         contentPane = getContentPane();
