@@ -93,7 +93,7 @@ public class StartWindow extends WebFrame {
             WebFrame requestLogin = new WebFrame();
             String eMail = JOptionPane.showInputDialog(requestLogin, "Введите почту", "Восстановление пароля", HEIGHT);
             if (RegEx.checkEMail(eMail)) {
-                AccountService accountService = ServerConnection.getAccountConnecttion();
+                AccountService accountService = ServerConnection.getAccountConnection();
                 if (accountService.resetPassword(eMail)) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Письмо отправлено на указанный почтовый ящик!", "Успешно!", JOptionPane.INFORMATION_MESSAGE);
                     logger.info("EMail was sent to " + eMail);
@@ -108,7 +108,7 @@ public class StartWindow extends WebFrame {
             if (!RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText())) {
                 JOptionPane.showMessageDialog(new WebFrame(), "Все поля должны содержать от 4 до 20 символов,\nвключающие в себя строчные буквы,\nцифры и точку!", "Внимание!", JOptionPane.WARNING_MESSAGE);
             } else {
-                AccountService accountService = ServerConnection.getAccountConnecttion();
+                AccountService accountService = ServerConnection.getAccountConnection();
                 user = accountService.signIn(loginField.getText(), passwordField.getText());
                 if (user == null) {
                     JOptionPane.showMessageDialog(new WebFrame(), "Неверный логин и/или пароль!", "Внимание!", JOptionPane.WARNING_MESSAGE);
@@ -131,7 +131,7 @@ public class StartWindow extends WebFrame {
                 if (RegEx.checkToken(token)) {
                     user = null; //Если человек вернулся на окно входа
 
-                    AccountService accountService = ServerConnection.getAccountConnecttion();
+                    AccountService accountService = ServerConnection.getAccountConnection();
                     user = accountService.getByToken(token);
                     if (user != null) {
                         initSignUpPanel();
@@ -181,7 +181,7 @@ public class StartWindow extends WebFrame {
         WebTextField eMailField = new WebTextField();
         WebCheckBox license = new WebCheckBox("Соглас(ен/на) с соглашением");
         WebButton signUpButton = new WebButton("Ввод");
-        WebButton returnToSignInPanel = new WebButton("Вернуться", new ImageIcon(StartWindow.class.getResource("../icons/arrow.png")));
+        WebButton returnToSignInPanel = new WebButton("Вернуться", new ImageIcon(StartWindow.class.getResource("/icons/arrow.png")));
 
         signUpButton.addActionListener((ActionEvent e) -> {
             if (!RegEx.checkLoginAndPassword(loginField.getText()) || !RegEx.checkLoginAndPassword(passwordField.getText()) || !RegEx.checkLoginAndPassword(passwordRepeatField.getText())) {
@@ -190,7 +190,7 @@ public class StartWindow extends WebFrame {
                 if (RegEx.checkEMail(eMailField.getText())) {
                     if (passwordField.getText().equals(passwordRepeatField.getText())) {
                         if (license.isSelected()) {
-                            AccountService accountService = ServerConnection.getAccountConnecttion();
+                            AccountService accountService = ServerConnection.getAccountConnection();
                             if (!accountService.saveAccountChanges(user, loginField.getText(), eMailField.getText(), passwordField.getText())) {
                                 JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                             } else {
@@ -252,7 +252,7 @@ public class StartWindow extends WebFrame {
         double[][] size = {{.03, .95, .02}, {.05, .54, .41}};
         WebPanel infPanel = new WebPanel(new TableLayout(size));
         WebLabel generalInf = new WebLabel("Общая информация");
-        WebLabel photo = new WebLabel(new ImageIcon(StartWindow.class.getResource("../icons/start_photo.jpg")));
+        WebLabel photo = new WebLabel(new ImageIcon(StartWindow.class.getResource("/icons/start_photo.jpg")));
         WebTextPane description = new WebTextPane();
         description.setText("Добро пожаловать на стартовое окно нашей программы! \nЗдесь Вы сможете полностью контролировать свою ферму. \nПри наличии проблем, связанных с этим программным обеспечением, пишите на электронным адрес службы поддержки nobodyhelps@hell.com или звоните на телефон горячей линии 8(800)555-35-35.");
         WebScrollPane scrollPane = new WebScrollPane(description);

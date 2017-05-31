@@ -66,7 +66,7 @@ public class TableOfUsersWindow extends WebDialog {
         WebTextField searchUsers = new WebTextField(40);
         searchUsers.setInputPrompt("Введите ключевое слово для поиска");
         searchUsers.setInputPromptFont(searchUsers.getFont().deriveFont(Font.ITALIC));
-        searchUsers.setTrailingComponent(new WebImage(TableOfUsersWindow.class.getResource("../icons/search.png")));
+        searchUsers.setTrailingComponent(new WebImage(TableOfUsersWindow.class.getResource("/icons/search.png")));
 
         usersTableModel = new UsersTableModel();
         WebTable tableOfUsers = new WebTable(usersTableModel);

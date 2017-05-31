@@ -25,7 +25,7 @@ public class UsersTableModel extends AbstractTableModel {
 
     public UsersTableModel(){
         this.query = "";
-        this.objectService = ServerConnection.getObjectConnecttion();
+        this.objectService = ServerConnection.getObjectConnection();
         this.usersList = objectService.getListOfUsersLike(query);
     }
 

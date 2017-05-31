@@ -83,7 +83,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
             addVaccination.setVisible(true);
             Vaccination vaccination = AddVaccinationWindow.getVaccination();
             if (vaccination != null) {
-                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                ObjectService objectService = ServerConnection.getObjectConnection();
 
                 vaccination.setID(objectService.getGeneratedObjectID('V'));
                 animal.addVaccination(vaccination);
@@ -94,7 +94,7 @@ public class TableOfVaccinationsWindow extends WebDialog {
 
                 logger.info("Vaccination [ID:" + vaccination.getID() + "] is saved successfully");
 
-                vaccinationsTableModel.addVaccination(vaccination);
+              //  vaccinationsTableModel.addVaccination(vaccination);
                 vaccinationsTableModel.fireTableDataChanged();
             }
         });
@@ -109,6 +109,8 @@ public class TableOfVaccinationsWindow extends WebDialog {
                     editVaccinationWindow.setLocationRelativeTo(null);
                     editVaccinationWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     editVaccinationWindow.setVisible(true);
+                    ObjectService objectService = ServerConnection.getObjectConnection();
+                    animal = (Animal) objectService.updateObject(animal);
                     vaccinationsTableModel.updateList(animal);
                     vaccinationsTableModel.fireTableDataChanged();
                 }

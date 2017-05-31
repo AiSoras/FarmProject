@@ -87,7 +87,7 @@ public class AccountSettingsWindow extends WebDialog {
             } else {
                 if (RegEx.checkEMail(eMailField.getText())) {
                     if (passwordField.getText().equals(passwordRepeatField.getText())) {                  
-                        AccountService accountService = ServerConnection.getAccountConnecttion();       
+                        AccountService accountService = ServerConnection.getAccountConnection();       
                         if (!accountService.saveAccountChanges(user, loginField.getText(), eMailField.getText(), passwordField.getText())) {
                             JOptionPane.showMessageDialog(new WebFrame(), "Данные логин и/или почта уже существуют в системе!", "Внимание!", JOptionPane.WARNING_MESSAGE);
                         } else {

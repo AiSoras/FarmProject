@@ -155,6 +155,7 @@ public class MainWindow extends WebFrame {
         buttonsPanel.add(addPaddock);
 
         addPaddock.addActionListener((ActionEvent e) -> {
+            int indexOfselectedHangar = hangarsPane.getSelectedIndex();
             AddPaddockWindow addPaddockWindow = new AddPaddockWindow(MainWindow.this);
             addPaddockWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             addPaddockWindow.setSize(WindowsSizes.getDimension("AddPaddockWindow"));
@@ -162,19 +163,21 @@ public class MainWindow extends WebFrame {
             addPaddockWindow.setVisible(true);
             Paddock paddock = AddPaddockWindow.getPaddock();
             if (paddock != null) {
-                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                ObjectService objectService = ServerConnection.getObjectConnection();
 
-                Hangar hangar = hangarsPane.getSelectedHangar();
+                               
+                Hangar hangar = hangarsPane.getSelectedHangar(indexOfselectedHangar);
 
                 paddock.setID(objectService.getGeneratedObjectID('P'));
                 hangar.addPaddock(paddock);
                 objectService.saveObject(hangar);
                 objectService.saveObject(paddock);
 
+                Hangar updateHangar = (Hangar) objectService.updateObject(hangar);
                 NotificationManager.showNotification("Загон успешно добавлен!").setDisplayTime(5000);
                 logger.info("Paddock [ID:" + paddock.getID() + "] is saved successfully");
 
-                hangarsPane.setComponentAt(hangarsPane.getSelectedIndex(), hangarsPane.createPaddocksWebScrollPane(hangar));
+                hangarsPane.setComponentAt(hangarsPane.getSelectedIndex(), hangarsPane.createPaddocksWebScrollPane(updateHangar));
                 hangarsPane.refresh();
             }
         });
@@ -220,7 +223,7 @@ public class MainWindow extends WebFrame {
      */
     private class HangarsPane extends WebTabbedPane {
 
-        final private ObjectService objectService = ServerConnection.getObjectConnecttion();
+        final private ObjectService objectService = ServerConnection.getObjectConnection();
         private List<Hangar> hangarsList = (List<Hangar>) (List<?>) objectService.getListOfObjects(Hangar.class);
         private WebFrame owner;
 
@@ -345,8 +348,8 @@ public class MainWindow extends WebFrame {
             return hangarsList.size();
         }
 
-        public Hangar getSelectedHangar() {
-            return hangarsList.get(getSelectedIndex());
+        public Hangar getSelectedHangar(int index) {
+            return hangarsList.get(index);
         }
     }
 

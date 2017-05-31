@@ -73,7 +73,7 @@ public class ListOfAnimalsWindow extends WebDialog {
             addAnimalWindow.setVisible(true);
             Animal animal = AddAnimalWindow.getAnimal();
             if (animal != null) {
-                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                ObjectService objectService = ServerConnection.getObjectConnection();
 
                 animal.setID(objectService.getGeneratedObjectID('A'));
                 paddock.addAnimal(animal);
@@ -115,7 +115,7 @@ public class ListOfAnimalsWindow extends WebDialog {
                     animalProfileWindow.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                     animalProfileWindow.setVisible(true);
 
-                    ObjectService objectService = ServerConnection.getObjectConnecttion();
+                    ObjectService objectService = ServerConnection.getObjectConnection();
                     paddock = (Paddock) objectService.updateObject(paddock);
                     contentPane.remove(1);
                     contentPane.remove(0);

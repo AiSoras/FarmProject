@@ -62,7 +62,7 @@ public class TableOfPaddocksWindow extends WebDialog {
         WebTextField searchPaddocks = new WebTextField(40);
         searchPaddocks.setInputPrompt("Введите ключевое слово для поиска");
         searchPaddocks.setInputPromptFont(searchPaddocks.getFont().deriveFont(Font.ITALIC));
-        searchPaddocks.setTrailingComponent(new WebImage(TableOfPaddocksWindow.class.getResource("../icons/search.png")));
+        searchPaddocks.setTrailingComponent(new WebImage(TableOfPaddocksWindow.class.getResource("/icons/search.png")));
 
         paddocksTableModel = new PaddocksTableModel();
         WebTable tableOfPaddocks = new WebTable(paddocksTableModel);

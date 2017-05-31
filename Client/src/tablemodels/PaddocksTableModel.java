@@ -29,7 +29,7 @@ public class PaddocksTableModel extends AbstractTableModel {
 
     public PaddocksTableModel() {
         this.query = "";
-        this.objectService = ServerConnection.getObjectConnecttion();
+        this.objectService = ServerConnection.getObjectConnection();
         this.paddockssList = objectService.getListOfPaddocksLike(query);
         hangarsNames = new HashMap<String, String>();
         for (Hangar hangar : (List<Hangar>) (List<?>) objectService.getListOfObjects(Hangar.class)) {

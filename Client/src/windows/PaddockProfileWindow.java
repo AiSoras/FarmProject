@@ -53,7 +53,7 @@ public class PaddockProfileWindow extends WebDialog {
     */
     public PaddockProfileWindow(WebFrame owner, Paddock paddock) throws HeadlessException {
         super(owner, "Информация о загоне", ModalityType.APPLICATION_MODAL);
-        objectService = ServerConnection.getObjectConnecttion();
+        objectService = ServerConnection.getObjectConnection();
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.paddock = paddock;
@@ -70,7 +70,7 @@ public class PaddockProfileWindow extends WebDialog {
 
     public PaddockProfileWindow(WebDialog owner, Paddock paddock) throws HeadlessException {
         super(owner, "Информация о загоне", ModalityType.APPLICATION_MODAL);
-        objectService = ServerConnection.getObjectConnecttion();
+        objectService = ServerConnection.getObjectConnection();
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.paddock = paddock;
@@ -106,7 +106,7 @@ public class PaddockProfileWindow extends WebDialog {
         WebComboBox animalsTypeBox = new WebComboBox(EnumsRender.ListOfSpeciesRender(SpeciesOfAnimal.values()));
         WebComboBox typeOfFoodBox = new WebComboBox(EnumsRender.TypeOfFoodListRender(TypeOfFood.values()));
         WebButton listOfAnimalsButton = new WebButton("Вывести список животных");
-        WebButton editButton = new WebButton(new ImageIcon(PaddockProfileWindow.class.getResource("../icons/cogwheel.png")));
+        WebButton editButton = new WebButton(new ImageIcon(PaddockProfileWindow.class.getResource("/icons/cogwheel.png")));
         WebButton deleteButton = new WebButton("Удалить загон");
         WebButton saveChangesButton = new WebButton("Сохранить изменения");
         WebButton cancelButton = new WebButton("Отмена");
@@ -131,6 +131,7 @@ public class PaddockProfileWindow extends WebDialog {
             if (сonfirm == JOptionPane.YES_OPTION) {
                 objectService.deleteObject(paddock);
                 logger.info("Paddock [ID:" + paddock.getID() + "] was deleted");
+                NotificationManager.showNotification("Загон успешно удален!").setDisplayTime(5000);
                 PaddockProfileWindow.this.dispose();
             }
         });

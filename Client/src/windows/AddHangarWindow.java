@@ -78,7 +78,7 @@ public class AddHangarWindow extends WebDialog {
         addButton.addActionListener((ActionEvent e) -> {
             if (RegEx.checkSpecialName(hangarNameField.getText())) {
                 hangar = new Hangar(hangarNameField.getText(), (Positions) Positions.values()[levelBox.getSelectedIndex()], (TypeOfHangar) TypeOfHangar.values()[typeBox.getSelectedIndex()]);
-                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                ObjectService objectService = ServerConnection.getObjectConnection();
                 hangar.setID(objectService.getGeneratedObjectID('H'));
                 objectService.saveObject(hangar);
                 NotificationManager.showNotification("Ангар успешно добавлен в БД!").setDisplayTime(5000);

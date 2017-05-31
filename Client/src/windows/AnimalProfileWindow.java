@@ -51,7 +51,7 @@ public class AnimalProfileWindow extends WebDialog {
     */
     public AnimalProfileWindow(WebDialog owner, Animal animal) throws HeadlessException {
         super(owner, "Информация о животном", ModalityType.APPLICATION_MODAL);
-        objectService = ServerConnection.getObjectConnecttion();
+        objectService = ServerConnection.getObjectConnection();
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.animal = animal;
@@ -87,7 +87,7 @@ public class AnimalProfileWindow extends WebDialog {
         dateField.setInputPromptPosition(SwingConstants.CENTER);
 
         WebButton vaccinationsButton = new WebButton("Прививки");
-        WebButton editButton = new WebButton(new ImageIcon(PaddockProfileWindow.class.getResource("../icons/cogwheel.png")));
+        WebButton editButton = new WebButton(new ImageIcon(PaddockProfileWindow.class.getResource("/icons/cogwheel.png")));
         WebButton deleteButton = new WebButton("Удалить животное");
         WebButton saveChangesButton = new WebButton("Сохранить изменения");
         WebButton cancelButton = new WebButton("Отмена");
@@ -107,6 +107,7 @@ public class AnimalProfileWindow extends WebDialog {
             if (сonfirm == JOptionPane.YES_OPTION) {
                 objectService.deleteObject(animal);
                 logger.info("Animal [ID:" + animal.getID() + "] is deleted");
+                NotificationManager.showNotification("Ангар успешно удален!").setDisplayTime(5000);
                 AnimalProfileWindow.this.dispose();
             }
         });

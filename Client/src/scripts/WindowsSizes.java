@@ -12,7 +12,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,12 +56,13 @@ public class WindowsSizes {
         if (!properties.getProperty(className).equals(size)) {
             try {
                 properties.setProperty(className, size);
-                File file = new File("WinSize.properties");
+                URL resourceUrl = WindowsSizes.class.getResource("WinSize.properties");
+                File file = new File(resourceUrl.toURI());
                 OutputStream outputStream = new FileOutputStream(file);
                 properties.store(outputStream, "Sizes of windows");
                 outputStream.close();
                 logger.info("Properties were saved successfully");
-            } catch (IOException ex) {
+            } catch (IOException | URISyntaxException ex) {
                 logger.error("Exception: ", ex);
             }
         }

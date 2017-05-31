@@ -7,6 +7,7 @@ import com.alee.laf.label.WebLabel;
 import com.alee.laf.rootpane.WebDialog;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.text.WebTextField;
+import com.alee.managers.notification.NotificationManager;
 import java.awt.Container;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
@@ -87,9 +88,10 @@ public class EditUserWindow extends WebDialog {
                 user.setSecondName(secondNameField.getText());
                 user.setMiddleName(middleNameField.getText());
                 user.setLevelOfAccess(Positions.values()[positionBox.getSelectedIndex()]);
-                ObjectService objectService = ServerConnection.getObjectConnecttion();
+                ObjectService objectService = ServerConnection.getObjectConnection();
                 objectService.saveObject(user);
                 logger.info("User [ID:" + user.getID() + "] is edited");
+                NotificationManager.showNotification("Пользователь успешно обновлен!").setDisplayTime(5000);
                 if (user.getID().equals(authorizedUser.getID())) { //Сохраняем изменения для авторизованного пользователя
                     authorizedUser = user;
                 }
@@ -103,8 +105,9 @@ public class EditUserWindow extends WebDialog {
             int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Вы уверены?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
             if (сonfirm == JOptionPane.YES_OPTION) {
                 if (!user.getID().equals(authorizedUser.getID())) {
-                    ObjectService objectService = ServerConnection.getObjectConnecttion();
+                    ObjectService objectService = ServerConnection.getObjectConnection();
                     objectService.deleteObject(user);
+                    NotificationManager.showNotification("Пользователь успешно удален!").setDisplayTime(5000);
                     logger.info("User [ID:" + user.getID() + "] is deleted");
                     EditUserWindow.this.dispose();
                 } else {

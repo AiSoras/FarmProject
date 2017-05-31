@@ -25,7 +25,7 @@ public class ServerConnection {
     private static String serverAddress = "localhost";
     private static final Logger logger = LogManager.getLogger(ServerConnection.class.getName());
 
-    public static synchronized AccountService getAccountConnecttion() { //
+    public static synchronized AccountService getAccountConnection() { //
         if (accountService == null) {
             try {
                 getHessianProxyFactory();
@@ -39,7 +39,7 @@ public class ServerConnection {
         return accountService;
     }
 
-    public static synchronized ObjectService getObjectConnecttion() {
+    public static synchronized ObjectService getObjectConnection() {
         if (objectService == null) {
             try {
                 getHessianProxyFactory();

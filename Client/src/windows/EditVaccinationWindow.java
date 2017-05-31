@@ -48,7 +48,7 @@ public class EditVaccinationWindow extends WebDialog {
     */
     public EditVaccinationWindow(WebDialog owner, Vaccination vaccination) throws HeadlessException {
         super(owner, "Редактировать прививку", Dialog.ModalityType.APPLICATION_MODAL);
-        objectService = ServerConnection.getObjectConnecttion();
+        objectService = ServerConnection.getObjectConnection();
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.vaccination = vaccination;
@@ -129,6 +129,7 @@ public class EditVaccinationWindow extends WebDialog {
             int сonfirm = JOptionPane.showConfirmDialog(new WebFrame(), "Удалить прививку?\nЭто действие нельзя отменить!", "Внимание!", JOptionPane.YES_NO_OPTION);
             if (сonfirm == JOptionPane.YES_OPTION) {
                 objectService.deleteObject(vaccination);
+                NotificationManager.showNotification("Прививка успешна удалена!").setDisplayTime(5000);
                 EditVaccinationWindow.this.dispose();
             }
         });

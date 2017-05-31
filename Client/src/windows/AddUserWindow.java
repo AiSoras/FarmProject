@@ -76,7 +76,7 @@ public class AddUserWindow extends WebDialog {
 
         addButton.addActionListener((ActionEvent e) -> {
             if (RegEx.checkName(firstNameField.getText()) && RegEx.checkName(secondNameField.getText()) && RegEx.checkName(middleNameField.getText())) {
-                AccountService accountService = ServerConnection.getAccountConnecttion();
+                AccountService accountService = ServerConnection.getAccountConnection();
                 User user = new User(firstNameField.getText(), middleNameField.getText(), secondNameField.getText(), Positions.values()[positionBox.getSelectedIndex()]);
                 String token = accountService.createUser(user);
                 NotificationManager.showNotification("Пользователь успешно добавлен в БД!").setDisplayTime(5000);

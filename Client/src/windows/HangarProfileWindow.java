@@ -57,7 +57,7 @@ public class HangarProfileWindow extends WebDialog {
     */
     public HangarProfileWindow(WebFrame owner, Hangar hangar) throws HeadlessException {
         super(owner, "Редактирование ангара", Dialog.ModalityType.APPLICATION_MODAL);
-        objectService = ServerConnection.getObjectConnecttion();
+        objectService = ServerConnection.getObjectConnection();
         contentPane = getContentPane();
         contentPane.setLayout(new GridBagLayout());
         this.hangar = hangar;
@@ -86,7 +86,7 @@ public class HangarProfileWindow extends WebDialog {
         WebComboBox typeBox = new WebComboBox(EnumsRender.TypeOfHangarListRender(TypeOfHangar.values()));
         WebButton saveButton = new WebButton("Сохранить");
         WebButton cancelButton = new WebButton("Отмена");
-        WebButton editButton = new WebButton(new ImageIcon(HangarProfileWindow.class.getResource("../icons/cogwheel.png")));
+        WebButton editButton = new WebButton(new ImageIcon(HangarProfileWindow.class.getResource("/icons/cogwheel.png")));
         WebButton deleteButton = new WebButton("Удалить");
 
         nameField.setEditable(false);
