@@ -11,6 +11,8 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import objects.Paddock;
+import objects.Paddock_;
 import objects.User;
 import objects.User_;
 import org.apache.logging.log4j.LogManager;
@@ -23,14 +25,14 @@ import org.hibernate.Session;
  *
  * @author OlesiaPC
  */
-public class DBService {    
+public class DBService {
 
     private static final Logger logger = LogManager.getLogger(DBService.class.getName());
 
     /**
      * Creates or updates object in the database.
      *
-     * @param object
+     * @param object The object which will be saved in the database.
      */
     public static synchronized void saveObject(Object object) {
         final DBManager dBManager = DBManager.getInstance();
@@ -45,7 +47,7 @@ public class DBService {
     /**
      * Returns the list of objects of which class is <code>classObject</code>.
      *
-     * @param classObject
+     * @param classObject Class of the objects.
      *
      * @return The list of objects of which class is <code>classObject</code> or
      * <code>null</code> if nothing found.
@@ -72,8 +74,8 @@ public class DBService {
     /**
      * Deletes object with <code>ID</code> in the database.
      *
-     * @param object
-     * @param ID
+     * @param object The object which will be deleted.
+     * @param ID The string containing the object's ID.
      */
     public static synchronized void deleteObject(Object object, String ID) {
         final DBManager dBManager = DBManager.getInstance();
@@ -81,7 +83,7 @@ public class DBService {
             session.beginTransaction();
             try {
                 Object persistentInstance = session.load(object.getClass(), ID);
-                session.remove(persistentInstance);
+                session.delete(persistentInstance);
                 session.flush();
                 logger.info("The object [" + object.getClass().toString() + "] has been removed successfully");
             } catch (HibernateException e) {
@@ -94,7 +96,7 @@ public class DBService {
      * Gets the user from the database whose {@link User#token} equal to
      * <code>token</code>.
      *
-     * @param token
+     * @param token The string containing the user's token.
      * @return The user whose {@link User#token} equal to <code>token</code> or
      * <code>null</code> if nothing found.
      */
@@ -121,7 +123,7 @@ public class DBService {
      * <code>ID</code>.
      *
      * @param classObject Class of the object.
-     * @param ID
+     * @param ID The string containing the object's ID.
      * @return The object of which ID in the database is equal to
      * <code>ID</code> or <code>null</code> if nothing found.
      */
@@ -140,7 +142,7 @@ public class DBService {
     /**
      * Returns the user whose {@link User.eMail} is equal to <code>eMail</code>.
      *
-     * @param eMail
+     * @param eMail The string containing the user's eMail.
      * @return The user whose {@link User.eMail} is equal to <code>eMail</code>
      * or <code>null</code> if nothing found.
      */
@@ -166,8 +168,8 @@ public class DBService {
      * Returns the user whose {@link User#login} and {@link User#password} are
      * equal to <code>login</code> and <code>password</code>.
      *
-     * @param login
-     * @param password
+     * @param login The string containing the user's login.
+     * @param password The string containing the user's password.
      * @return The user whose {@link User#login} and {@link User#password} are
      * equal to <code>login</code> and <code>password</code> or
      * <code>null</code> if nothing found.
@@ -194,24 +196,27 @@ public class DBService {
 
     /**
      * Checks for existence in the database of the user with <code>login</code>
-     * or <code>eMail</code>.
+     * or <code>eMail</code>, and different <code>ID</code>.
      *
-     * @param login
-     * @param eMail
+     * @param login The string containing the user's login.
+     * @param eMail The string containing the user's eMail.
+     * @param ID The string containing the user's ID.
      * @return <code>true</code> if the user with <code>login</code> or
-     * <code>eMail</code> is already in the database, otherwise
-     * <code>false</code>.
+     * <code>eMail</code>, and different <code>ID</code> is already in the
+     * database, otherwise <code>false</code>.
      */
-    public static synchronized boolean isLoginOrEMailExists(String login, String eMail) {
+    public static synchronized boolean isLoginOrEMailExists(String login, String eMail, String ID) {
         final DBManager dBManager = DBManager.getInstance();
         try (Session session = dBManager.getSession()) {
             session.beginTransaction();
             final CriteriaBuilder builder = session.getCriteriaBuilder();
             final CriteriaQuery<User> criteriaQuery = builder.createQuery(User.class);
             Root<User> root = criteriaQuery.from(User.class);
-            criteriaQuery.where(builder.or(
-                    builder.equal(root.get(User_.login), login),
-                    builder.equal(root.get(User_.eMail), eMail)));
+            criteriaQuery.where(builder.and(
+                    builder.or(
+                            builder.equal(root.get(User_.login), login),
+                            builder.equal(root.get(User_.eMail), eMail))),
+                    builder.not(builder.equal(root.get(User_.ID), ID)));
             final TypedQuery<User> typed = session.createQuery(criteriaQuery);
             try {
                 return typed.getSingleResult() != null;
@@ -227,7 +232,7 @@ public class DBService {
      * {@link User#middleName} or {@link User#secondName} contains
      * <code>query</code>.
      *
-     * @param query
+     * @param query The string containing a search query.
      * @return The list of users whose {@link User#firstName} or
      * {@link User#middleName} or {@link User#secondName} contains
      * <code>query</code> or <code>null</code> if nothing found.
@@ -243,8 +248,8 @@ public class DBService {
                     builder.like(root.<String>get(User_.firstName), "%" + query + "%"),
                     builder.like(root.<String>get(User_.secondName), "%" + query + "%"),
                     builder.like(root.<String>get(User_.middleName), "%" + query + "%")));
-            criteriaQuery.orderBy(builder.asc(root.get(User_.secondName)));
-//            criteriaQuery.orderBy(builder.asc(builder.coalesce(root.get(User_.secondName),root.get(User_.firstName))));
+//            criteriaQuery.orderBy(builder.asc(root.get(User_.secondName)));
+            criteriaQuery.orderBy(builder.asc(builder.coalesce(root.get(User_.secondName), root.get(User_.firstName))));
             try {
                 TypedQuery<User> typed = session.createQuery(criteriaQuery);
                 return typed.getResultList();
@@ -253,6 +258,35 @@ public class DBService {
                 return null;
             }
         }
+    }
+
+    /**
+     * Returns the list of paddocks of which  {@link Paddock#name} contains
+     * <code>query</code>.
+     *
+     * @param query The string containing a search query.
+     * @return The list of paddocks of which  {@link Paddock#name} contains
+     * <code>query</code>.
+     */
+    public static synchronized List<Paddock> getPaddockLikeList(String query) {
+        final DBManager dBManager = DBManager.getInstance();
+        try (Session session = dBManager.getSession()) {
+            session.beginTransaction();
+            final CriteriaBuilder builder = session.getCriteriaBuilder();
+            final CriteriaQuery<Paddock> criteriaQuery = builder.createQuery(Paddock.class);
+            Root<Paddock> root = criteriaQuery.from(Paddock.class);
+            criteriaQuery.where(//Какие еще поля? 
+                    builder.like(root.<String>get(Paddock_.name), "%" + query + "%"));
+            criteriaQuery.orderBy(builder.asc(root.get(Paddock_.name)));
+            try {
+                TypedQuery<Paddock> typed = session.createQuery(criteriaQuery);
+                return typed.getResultList();
+            } catch (final NoResultException ignore) {
+                logger.error("Exception: ", ignore);
+                return null;
+            }
+        }
 
     }
+
 }

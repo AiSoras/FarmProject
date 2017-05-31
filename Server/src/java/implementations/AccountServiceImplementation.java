@@ -51,7 +51,7 @@ public class AccountServiceImplementation implements AccountService {
         ObjectService objectService = new ObjectServiceImplementation();
         String token = TokenGeneration.create();
         user.setToken(token);
-        user.setID(objectService.getObjectID('U'));
+        user.setID(objectService.getGeneratedObjectID('U'));
         objectService.saveObject(user);
         return token;
     }

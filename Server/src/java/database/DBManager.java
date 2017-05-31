@@ -31,12 +31,8 @@ public final class DBManager {
 
     private static DBManager dBManager;
     private SessionFactory sessionFactory;
-    private Properties properties;
+    private static Properties properties;
     
-//    public static void main(String[] args) {
-//        DBManager db = DBManager.getInstance();
-//    }
-//    
     public static synchronized DBManager getInstance() {
         if (dBManager == null) {
             dBManager = new DBManager();

@@ -58,7 +58,7 @@ public class ObjectServiceImplementation implements ObjectService {
     }
 
     @Override
-    public String getObjectID(char symbol) {
+    public String getGeneratedObjectID(char symbol) {
         return UUIDGeneration.create(symbol);
     }
 
@@ -66,6 +66,11 @@ public class ObjectServiceImplementation implements ObjectService {
     public List<Paddock> getListOfPaddocksLike(String query) {
         List<Paddock> paddocksList = DBService.getPaddockLikeList(query);
         return paddocksList == null ? new ArrayList<Paddock>() : paddocksList;
+    }
+
+    @Override
+    public Object updateObject(Object object) {
+        return DBService.getObjectByID(object.getClass(), getObjectID(object));
     }
 
     
