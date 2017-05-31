@@ -10,7 +10,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import javax.persistence.metamodel.StaticMetamodel;
 
 /**
- *
+ * 
  * @author OlesiaPC
  */
 @StaticMetamodel(Hangar.class)

@@ -4,6 +4,13 @@ import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.*;
 
+/**
+ * Contains information about vaccination and methods of working with it (set and get)
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
+
 @Entity
 @Table(name = "List_of_vaccinations")
 public class Vaccination implements Serializable {

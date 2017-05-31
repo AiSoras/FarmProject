@@ -3,6 +3,13 @@ package objects;
 import java.io.Serializable;
 import javax.persistence.*;
 
+/**
+ * Contains information about user and methods of working with it (set and get)
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
+
 @Entity
 @Table(name = "List_of_users")
 public class User implements Serializable {

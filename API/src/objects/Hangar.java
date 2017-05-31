@@ -5,6 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
+/**
+ * Contains information about hangar and methods of working with it (set and get)
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
+
 @Entity
 @Table(name = "List_of_hangars")
 public class Hangar implements Serializable {

@@ -6,6 +6,13 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
+/**
+ * Contains information about paddock and methods of working with it (set and get)
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
+
 @Entity
 @Table(name = "List_of_paddocks")
 public class Paddock implements Serializable {
@@ -82,5 +89,8 @@ public class Paddock implements Serializable {
     public void setAnimals(List<Animal> animals) {
         this.animals = animals;
     }
-
+    
+    public void addAnimal(Animal animal) {
+        this.animals.add(animal);
+    }
 }

@@ -6,12 +6,21 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
 
+/**
+ * Contains information about animal and methods of working with it (set and get)
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
+
 @Entity
 @Table(name = "List_of_animals")
 public class Animal implements Serializable {
 
     @Id
     private String ID;
+    @Column
+    private String name;
     @Column
     private Date dateOfBirth;
     @Column
@@ -25,11 +34,12 @@ public class Animal implements Serializable {
     public Animal() {
     }
 
-    public Animal(Date dateOfBirth, float weight, String breed) {
-        this.dateOfBirth = dateOfBirth;
-        this.weight = weight;
-        this.breed = breed;
-        this.vaccinations = new ArrayList<Vaccination>();
+    public Animal(String name, Date dateOfBirth, float weight, String breed) {
+    this.name = name;
+    this.dateOfBirth = dateOfBirth;
+    this.weight = weight;
+    this.breed = breed;
+    this.vaccinations = new ArrayList<Vaccination>();
     }
 
     public String getID() {
@@ -38,6 +48,14 @@ public class Animal implements Serializable {
 
     public void setID(String ID) {
         this.ID = ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getDateOfBirth() {
@@ -71,5 +89,8 @@ public class Animal implements Serializable {
     public void setVaccinations(List<Vaccination> vaccinations) {
         this.vaccinations = vaccinations;
     }
-
+    
+    public void addVaccination(Vaccination vaccination) {
+        this.vaccinations.add(vaccination);
+    }
 }

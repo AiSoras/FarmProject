@@ -6,6 +6,7 @@
 package api;
 
 import java.util.List;
+import objects.Paddock;
 import objects.User;
 
 /**
@@ -23,6 +24,8 @@ public interface ObjectService {
     public void deleteObject(Object object);
     
     public List<User> getListOfUsersLike(String query);
+    
+    public List<Paddock> getListOfPaddocksLike(String query);
     
     public String getObjectID(char symbol);
     

@@ -3,6 +3,13 @@ package objects;
 import java.io.Serializable;
 import javax.persistence.*;
 
+/**
+ * Contains information about ration and methods of working with it (set and get)
+ * 
+ * @author OlesiaPC
+ * @author BG
+ */
+
 @Embeddable
 public class Ration implements Serializable{
     @Column

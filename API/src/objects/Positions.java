@@ -9,8 +9,10 @@ import java.io.Serializable;
 
 
 /**
- *
- * @author Student
+ * Contains positions values
+ * 
+ * @author OlesiaPC
+ * @author BG
  */
 public enum Positions implements Serializable{
     CLEANER,
