@@ -24,7 +24,7 @@ public class Animal implements Serializable {
     @Column
     private Date dateOfBirth;
     @Column
-    private float weight; //В кг
+    private float weight; 
     @Column
     private String breed;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
